@@ -3,24 +3,20 @@ export const CardStack = ({ stack, onClick, onContextMenu }) => {
     (stack.tapped ? -30 : 0) + (stack.reversed ? 180 : 0) + (stack.laid ? -90 : 0)
   );
 
-  const containerExtraStyle = stack.cards.length === 0 ? null : {
+  const container = stack.cards.length === 0 ? null : {
     backgroundImage: `url(${stack.cards[0]})`,
     transform: `rotate(${angle}deg)`,
   };
 
-  const innerExtraStyle = {
+  const inner = {
     background: stack.cards.length > 0 && stack.flipped ? "#006" : "transparent",
     cursor: "pointer",
   };
 
   return (
-    <div class="dmpg-card-container" style={containerExtraStyle}>
+    <div class="dmpg-card-container" style={container}>
       {stack.cards.length > 0 && (
-        <div
-            class="dmpg-card-inner"
-            style={innerExtraStyle}
-            onClick={onClick}
-            onContextMenu={onContextMenu}>
+        <div class="dmpg-card-inner" style={inner} onClick={onClick} onContextMenu={onContextMenu}>
           {stack.cards.length > 1 && (
             <div
                 class="dmpg-card-counter"

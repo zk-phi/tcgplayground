@@ -1,6 +1,6 @@
 import { render, h } from "preact";
 import { App } from "./app.jsx";
-import styles from "./styles.css?raw";
+import styles from "./styles.min.css?raw";
 
 const div = document.createElement("div");
 div.id = "dmplayground";

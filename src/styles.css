@@ -3,6 +3,7 @@
   --dmpg-area-padding: 8px;
   --dmpg-card-height: 145px;
   --dmpg-card-width: 100px;
+  /* estimated padding INCLUDED in the card images */
   --dmpg-card-padding: 2px;
 
   position: fixed;
