@@ -1,5 +1,13 @@
-import { signal } from "@preact/signals";
-import { shuffle, put } from "./utils/array.js";
+import { signal, computed } from "@preact/signals";
+import { shuffle as shuffleArray, put } from "./utils/array.js";
+
+const stack = ({
+  cards,
+  flipped = false,
+  reversed = false,
+  tapped = false,
+  laid = false,
+}) => ({ cards, flipped, reversed, tapped, laid });
 
 export const state = signal({
   field: [],
@@ -10,9 +18,11 @@ export const state = signal({
   deck: [stack({ cards: [], flipped: true })],
 });
 
+export const deckLength = computed(() => state.value.deck[0].cards.length);
+
 export const reset = (cardSrcs) => {
-  const pile = shuffle(cards);
-  state = {
+  const pile = shuffleArray(cardSrcs);
+  state.value = {
     field: [],
     lands: [],
     graveyard: [stack({ cards: [] })],
@@ -20,85 +30,127 @@ export const reset = (cardSrcs) => {
     shields: pile.splice(0, 5).map(src => stack({ cards: [src], flipped: true })),
     deck: [stack({ cards: pile, flipped: true })],
   };
-}
+};
+
+export const shuffle = () => {
+  const shuffled = shuffleArray(state.value.deck[0].cards);
+  state.value = {
+    ...state.value,
+    deck: [{ ...state.value.deck[0], cards: shuffled }],
+  };
+};
 
 export const unshift = (src, si, dest, di) => {
-  state = {
-    ...state,
-    [src]: state[src].filter((_, i) => i !== si),
-    [dest]: put(state[dest], di, {
-      ...state[dest][di],
-      cards: [...state[dest][di].cards, ...state[src][si].cards],
+  state.value = {
+    ...state.value,
+    [src]: state.value[src].filter((_, i) => i !== si),
+    [dest]: put(state.value[dest], di, {
+      ...state.value[dest][di],
+      cards: [...state.value[dest][di].cards, ...state.value[src][si].cards],
     }),
   };
 };
 
-const push = (src, si, dest, di) => {
-  state = {
-    ...state,
-    [src]: state[src].filter((_, i) => i !== si),
-    [dest]: put(state[dest], di, {
-      ...state[dest][di],
-      cards: [...state[src][si].cards, ...state[dest][di].cards],
+export const push = (src, si, dest, di) => {
+  state.value = {
+    ...state.value,
+    [src]: state.value[src].filter((_, i) => i !== si),
+    [dest]: put(state.value[dest], di, {
+      ...state.value[dest][di],
+      cards: [...state.value[src][si].cards, ...state.value[dest][di].cards],
     }),
   };
 };
 
-const move = (src, si, dest) => {
-  state = {
-    ...state,
-    [src]: state[src].filter((_, i) => i !== si),
-    [dest]: [...state[dest], state[src][si]],
+export const move = (src, si, dest, attrs = {}) => {
+  state.value = {
+    ...state.value,
+    [src]: state.value[src].filter((_, i) => i !== si),
+    [dest]: [
+      ...state.value[dest],
+      { cards: state.value[src][si].cards, ...attrs },
+    ],
   };
 };
 
-const toggleTapped = (src, si) => {
-  state = {
-    ...state,
-    [src]: put(state[src], si, {
-      ...state[src][si],
-      tapped: !state[src][si].tapped,
+export const toggleTapped = (src, si) => {
+  state.value = {
+    ...state.value,
+    [src]: put(state.value[src], si, {
+      ...state.value[src][si],
+      tapped: !state.value[src][si].tapped,
     }),
   };
 };
 
-const toggleFlipped = (src, si) => {
-  state = {
-    ...state,
-    [src]: put(state[src], si, {
-      ...state[src][si],
-      flipped: !state[src][si].flipped,
+export const toggleFlipped = (src, si) => {
+  state.value = {
+    ...state.value,
+    [src]: put(state.value[src], si, {
+      ...state.value[src][si],
+      flipped: !state.value[src][si].flipped,
     }),
   };
 };
 
-const toggleReversed = (src, si) => {
-  state = {
-    ...state,
-    [src]: put(state[src], si, {
-      ...state[src][si],
-      reversed: !state[src][si].reversed,
+export const toggleReversed = (src, si) => {
+  state.value = {
+    ...state.value,
+    [src]: put(state.value[src], si, {
+      ...state.value[src][si],
+      reversed: !state.value[src][si].reversed,
     }),
   };
 };
 
-const toggleLaid = (src, si) => {
-  state = {
-    ...state,
-    [src]: put(state[src], si, {
-      ...state[src][si],
-      laid: !state[src][si].laid,
+export const toggleLaid = (src, si) => {
+  state.value = {
+    ...state.value,
+    [src]: put(state.value[src], si, {
+      ...state.value[src][si],
+      laid: !state.value[src][si].laid,
     }),
   };
 };
 
-const moveSingle = (src, si, sj, dest) => {
-  state = {
-    ...state,
-    [src]: put(state[src], si, {
-      ...state[src][si],
-      cards: state[src][si].cards.filter((_, j) => j !== sj)
+export const moveSingle = (src, si, sj, dest, attrs = {}) => {
+  state.value = {
+    ...state.value,
+    [src]: put(state.value[src], si, {
+      ...state.value[src][si],
+      cards: state.value[src][si].cards.filter((_, j) => j !== sj)
     }),
-    [dest]: [ ...state[dest], stack({ cards: [state[src][si].cards[sj]] }) ],
+    [dest]: [
+      ...state.value[dest],
+      stack({ cards: [state.value[src][si].cards[sj]], ...attrs }),
+    ],
+  };
+};
+
+export const pushSingle = (src, si, sj, dest, di) => {
+  state.value = {
+    ...state.value,
+    [src]: put(state.value[src], si, {
+      ...state.value[src][si],
+      cards: state.value[src][si].cards.filter((_, j) => j !== sj)
+    }),
+    [dest]: put(state.value[dest], di, {
+      ...state.value[dest][di],
+      cards: [state.value[src][si].cards[sj], ...state.value[dest][di].cards],
+    }),
+  };
+};
+
+export const unshiftSingle = (src, si, sj, dest, di) => {
+  state.value = {
+    ...state.value,
+    [src]: put(state.value[src], si, {
+      ...state.value[src][si],
+      cards: state.value[src][si].cards.filter((_, j) => j !== sj)
+    }),
+    [dest]: put(state.value[dest], di, {
+      ...state.value[dest][di],
+      cards: [...state.value[dest][di].cards, state.value[src][si].cards[sj]],
+    }),
   };
 };

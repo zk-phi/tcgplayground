@@ -1,209 +1,137 @@
-import { useState, useCallback, useEffect } from "preact/hooks";
-import { css } from "goober";
-import { CARD_SIZE } from "./constants.js";
-import { shuffle, put } from "./utils/array.js";
+import { useEffect } from "preact/hooks";
+import {
+  state, deckLength,
+  move, push, unshift, moveSingle, pushSingle, unshiftSingle,
+  toggleTapped, toggleReversed, toggleFlipped, toggleLaid,
+  reset, shuffle,
+} from "./state.js";
+import { showMenu, closeMenu, Menu } from "./components/Menu.jsx";
 import { CardStack } from "./components/CardStack.jsx";
 
 /* TODO: Add support for advanced decks */
 
-const areaPadding = 8;
-const areaMargin = 8;
+const handlers = {
+  field: (ix) => ({
+    onClick: () => toggleTapped("field", ix),
+    onContextMenu: (e) => showMenu(e, [
+      ["→ 盾", () => move("field", ix, "shields")],
+      ["→ デッキトップ", () => push("field", ix, "deck", 0)],
+      ["→ デッキボトム", () => unshift("field", ix, "deck", 0)],
+      ["→ 墓地", () => push("field", ix, "graveyard", 0)],
+      ["→ マナ", () => move("field", ix, "lands", { reversed: true })],
+      ["→ 手札", () => move("field", ix, "hand")],
+      ["横にする", () => toggleLaid("field", ix)],
+      ["反転する", () => toggleReversed("field", ix)],
+    ]),
+  }),
 
-const wrapper = css({
-  padding: "8px 3vw",
-  fontSize: "16px",
-});
+  shields: (ix) => ({
+    onClick: () => toggleFlipped("shields", ix),
+    onContextMenu: (e) => showMenu(e, [
+      ["→ 場", () => move("shields", ix, "field")],
+      ["→ デッキトップ", () => push("shields", ix, "deck", 0)],
+      ["→ デッキボトム", () => unshift("shields", ix, "deck", 0)],
+      ["→ 墓地", () => push("shields", ix, "graveyard", 0)],
+      ["→ マナ", () => move("shields", ix, "lands", { reversed: true })],
+      ["→ 手札", () => move("shields", ix, "hand")],
+    ]),
+  }),
 
-const row = css({
-  display: "flex",
-  gap: `${areaMargin}px`,
-  marginBottom: "8px",
-});
+  deck: {
+    onClick: () => moveSingle("deck", 0, 0, "hand"),
+    onContextMenu: (e) => showMenu(e, [
+      ["→ 場", () => moveSingle("deck", 0, 0, "lands")],
+      ["→ 盾", () => moveSingle("deck", 0, 0, "shields")],
+      ["→ 墓地", () => pushSingle("deck", 0, 0, "graveyard", 0)],
+      ["→ マナ", () => moveSingle("deck", 0, 0, "lands", { reversed: true })],
+      ["ボトムから引く", () => moveSingle("deck", 0, deckLength.value - 1, "hand")],
+      ["シャッフル", () => shuffle()],
+    ]),
+  },
 
-const area = css({
-  position: "relative",
-  display: "flex",
-  flexWrap: "wrap",
-  border: "2px dotted #888",
-  padding: `${areaPadding}px`,
-  boxSizing: "content-box",
-  flexGrow: 1,
-  minHeight: `${CARD_SIZE.h}px`,
-})
+  graveyard: {
+    onContextMenu: (e) => showMenu(e, [
+      ["→ 場", () => moveSingle("graveyard", 0, 0, "lands")],
+      ["→ 盾", () => moveSingle("graveyard", 0, 0, "shields")],
+      ["→ デッキトップ", () => pushSingle("graveyard", 0, 0, "deck", 0)],
+      ["→ デッキボトム", () => unshiftSingle("graveyard", 0, 0, "deck", 0)],
+      ["→ マナ", () => moveSingle("graveyard", 0, 0, "lands", { reversed: true })],
+      ["→ 手札", () => moveSingle("graveyard", 0, 0, "hand")],
+    ]),
+  },
 
-const label = css({
-  position: "absolute",
-  zIndex: 1,
-  background: "#fffc",
-  padding: "1px 3px",
-  left: 0,
-  bottom: 0,
-  fontSize: "14px",
-});
+  lands: (ix) => ({
+    onClick: () => toggleTapped("lands", ix),
+    onContextMenu: (e) => showMenu(e, [
+      ["→ 場", () => move("lands", ix, "field")],
+      ["→ 盾", () => move("lands", ix, "shields")],
+      ["→ デッキトップ", () => push("lands", ix, "deck", 0)],
+      ["→ デッキボトム", () => unshift("lands", ix, "deck", 0)],
+      ["→ 墓地", () => push("lands", ix, "graveyard", 0)],
+      ["→ 手札", () => move("lands", ix, "hand")],
+      ["裏返す", () => toggleFlipped("lands", ix)],
+    ])
+  }),
 
-const deckAndGraveAreaWidth = (CARD_SIZE.w + CARD_SIZE.gap * 2) * 2 + areaPadding * 2;
-
-const stack = ({
-  cards,
-  flipped = false,
-  reversed = false,
-  tapped = false,
-  laid = false,
-}) => ({ cards, flipped, reversed, tapped, laid });
-
-const useGameState = (cards) => {
-  const [state, setState] = useState({
-    field: [],
-    lands: [],
-    graveyard: [stack({ cards: [] })],
-    hand: [],
-    shields: [],
-    deck: [stack({ cards: [], flipped: true })],
-  })
-
-  const reset = useCallback(() => {
-    const pile = shuffle(cards);
-    setState({
-      field: [],
-      lands: [],
-      graveyard: [stack({ cards: [] })],
-      hand: pile.splice(0, 5).map(src => stack({ cards: [src] })),
-      shields: pile.splice(0, 5).map(src => stack({ cards: [src], flipped: true })),
-      deck: [stack({ cards: pile, flipped: true })],
-    });
-  }, [cards, setState]);
-
-  const unshift = useCallback((src, si, dest, di) => setState(state => ({
-    ...state,
-    [src]: state[src].filter((_, i) => i !== si),
-    [dest]: put(state[dest], di, {
-      ...state[dest][di],
-      cards: [...state[dest][di].cards, ...state[src][si].cards],
-    }),
-  })), [setState])
-
-  const push = useCallback((src, si, dest, di) => setState(state => ({
-    ...state,
-    [src]: state[src].filter((_, i) => i !== si),
-    [dest]: put(state[dest], di, {
-      ...state[dest][di],
-      cards: [...state[src][si].cards, ...state[dest][di].cards],
-    }),
-  })), [setState]);
-
-  const move = useCallback((src, si, dest) => setState(state => ({
-    ...state,
-    [src]: state[src].filter((_, i) => i !== si),
-    [dest]: [...state[dest], state[src][si]],
-  })), [setState]);
-
-  const toggleTapped = useCallback((src, si) => setState(state => ({
-    ...state,
-    [src]: put(state[src], si, {
-      ...state[src][si],
-      tapped: !state[src][si].tapped,
-    }),
-  })), [setState]);
-
-  const toggleFlipped = useCallback((src, si) => setState(state => ({
-    ...state,
-    [src]: put(state[src], si, {
-      ...state[src][si],
-      flipped: !state[src][si].flipped,
-    }),
-  })), [setState]);
-
-  const toggleReversed = useCallback((src, si) => setState(state => ({
-    ...state,
-    [src]: put(state[src], si, {
-      ...state[src][si],
-      reversed: !state[src][si].reversed,
-    }),
-  })), [setState]);
-
-  const toggleLaid = useCallback((src, si) => setState(state => ({
-    ...state,
-    [src]: put(state[src], si, {
-      ...state[src][si],
-      laid: !state[src][si].laid,
-    }),
-  })), [setState]);
-
-  const moveSingle = useCallback((src, si, sj, dest) => setState(state => ({
-    ...state,
-    [src]: put(state[src], si, {
-      ...state[src][si],
-      cards: state[src][si].cards.filter((_, j) => j !== sj)
-    }),
-    [dest]: [ ...state[dest], stack({ cards: [state[src][si].cards[sj]] }) ],
-  })), [setState]);
-
-  useEffect(() => {
-    reset();
-  }, [reset]);
-
-  return {
-    ...state,
-    reset,
-    unshift, push, move,
-    toggleTapped, toggleFlipped, toggleLaid, toggleReversed,
-    moveSingle,
-  };
+  hand: (ix) => ({
+    onClick: (e) => showMenu(e, [
+      ["→ 場", () => move("hand", ix, "field")],
+      ["→ マナ", () => move("hand", ix, "lands", { reversed: true })],
+    ]),
+    onContextMenu: (e) => showMenu(e, [
+      ["→ 盾", () => move("hand", ix, "shields")],
+      ["→ デッキトップ", () => push("hand", ix, "deck", 0)],
+      ["→ デッキボトム", () => unshift("hand", ix, "deck", 0)],
+      ["→ 墓地", () => push("hand", ix, "graveyard", 0)],
+    ]),
+  }),
 };
 
 export const App = () => {
-  const [allCards] = useState(
-    Array.from(
-      document.getElementsByClassName("MainCards")[0].children
-    ).map(el => (
-      el.children[0].src
-    ))
-  );
-
-  const state = useGameState(allCards);
+  useEffect(() => {
+    const containerEl = document.getElementsByClassName("MainCards")[0].children
+    const cardSrcs = Array.from(containerEl).map(el => el.children[0].src);
+    reset(cardSrcs);
+  }, []);
 
   return (
-    <div class={wrapper}>
-      <div class={row}>
-        <div class={area}>
-          {state.field.map((stack, ix) => (
-            <CardStack
-                stack={stack}
-                onClick={() => state.toggleTapped("field", ix)}
-            />
+    <div class="dmpg-wrapper" onClick={closeMenu}>
+      <Menu />
+      <div class="dmpg-row">
+        <div class="dmpg-area">
+          {state.value.field.map((stack, ix) => (
+            <CardStack stack={stack} {...handlers.field(ix)} />
           ))}
-          <span class={label}>場</span>
+          <span class="dmpg-area-label">場</span>
         </div>
       </div>
-      <div className={row}>
-        <div class={area}>
-          {state.shields.map(stack => <CardStack stack={stack} />)}
-          <span class={label}>盾</span>
-        </div>
-        <div class={area} style={{ width: `${deckAndGraveAreaWidth}px`, flexGrow: 0 }}>
-          <CardStack
-              stack={state.deck[0]}
-              onClick={() => state.moveSingle("deck", 0, 0, "hand")}
-          />
-          <CardStack stack={state.graveyard[0]} />
-          <span class={label}>山/墓</span>
-        </div>
-      </div>
-      <div class={row}>
-        <div class={area}>
-          {state.lands.map(stack => <CardStack stack={stack} />)}
-          <span class={label}>マナ</span>
-        </div>
-      </div>
-      <div class={row}>
-        <div class={area}>
-          {state.hand.map((stack, ix) => (
-            <CardStack
-                onClick={() => state.move("hand", ix, "field")}
-                stack={stack}
-            />
+      <div className="dmpg-row">
+        <div class="dmpg-area">
+          {state.value.shields.map((stack, ix) => (
+            <CardStack stack={stack} {...handlers.shields(ix)} />
           ))}
-          <span class={label}>手札</span>
+          <span class="dmpg-area-label">盾</span>
+        </div>
+        <div class="dmpg-area dmpg-area-deck">
+          <CardStack stack={state.value.deck[0]} {...handlers.deck} />
+          <CardStack stack={state.value.graveyard[0]} {...handlers.graveyard} />
+          <span class="dmpg-area-label">山/墓</span>
+        </div>
+      </div>
+      <div class="dmpg-row">
+        <div class="dmpg-area">
+          {state.value.lands.map((stack, ix) => (
+            <CardStack stack={stack} {...handlers.lands(ix)} />
+          ))}
+          <span class="dmpg-area-label">マナ</span>
+        </div>
+      </div>
+      <div class="dmpg-row">
+        <div class="dmpg-area">
+          {state.value.hand.map((stack, ix) => (
+            <CardStack stack={stack} {...handlers.hand(ix)} />
+          ))}
+          <span class="dmpg-area-label">手札</span>
         </div>
       </div>
     </div>

@@ -1,0 +1,113 @@
+#dmplayground {
+  --dmpg-global-margin: 8px;
+  --dmpg-area-padding: 8px;
+  --dmpg-card-height: 145px;
+  --dmpg-card-width: 100px;
+  --dmpg-card-padding: 2px;
+
+  position: fixed;
+  z-index: 99999;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  padding: 0;
+  background: white;
+}
+
+.dmpg-wrapper {
+  position: relative;
+  padding: var(--dmpg-global-margin) 3vw;
+  font-size: 16px;
+  margin: 0;
+}
+
+.dmpg-row {
+  display: flex;
+  gap:  var(--dmpg-global-margin);
+  margin-bottom: var(--dmpg-global-margin);
+}
+
+.dmpg-area {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  border: 2px dotted #888;
+  padding: var(--dmpg-area-padding);
+  box-sizing: content-box;
+  flex-grow: 1;
+  min-height: var(--dmpg-card-height);
+}
+
+.dmpg-area-deck {
+  width: calc(var(--dmpg-card-width) * 2);
+  flex-grow: 0;
+}
+
+.dmpg-area-label {
+  position: absolute;
+  z-index: 1;
+  background: #fffc;
+  padding: 1px 3px;
+  left: 0;
+  bottom: 0;
+  font-size: 14px;
+}
+
+.dmpg-card-container {
+  display: inline-flex;
+  width: var(--dmpg-card-width);
+  height: var(--dmpg-card-height);
+  justify-content: center;
+  align-items: center;
+  background-size: cover;
+}
+
+.dmpg-card-container:has(> .dmpg-card-inner:hover) {
+  opacity: 0.8;
+}
+
+.dmpg-card-inner {
+  position: relative;
+  display: inline-flex;
+  width: calc(var(--dmpg-card-width) - var(--dmpg-card-padding) * 2);
+  height: calc(var(--dmpg-card-height) - var(--dmpg-card-padding) * 2);
+  border-radius: 4px;
+  align-items: flex-end;
+  justify-content: flex-end;
+}
+
+.dmpg-card-inner:hover {
+  opacity: 0.8;
+}
+
+.dmpg-card-counter {
+  display: inline-block;
+  padding: 2px 6px;
+  background: #aaac;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.dmpg-menu-container {
+  display: inline-block;
+  position: fixed;
+  z-index: 100;
+  background: white;
+  border-radius: 0.5em;
+  overflow: hidden;
+  box-shadow:
+    rgba(0, 0, 0, 0.2) 0px 3px 5px -1px,
+    rgba(0, 0, 0, 0.14) 0px 6px 10px 0px,
+    rgba(0, 0, 0, 0.12) 0px 1px 18px 0px;
+}
+
+.dmpg-menu-option {
+  padding: 3px 9px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.dmpg-menu-option:hover {
+  background: #eee;
+}
