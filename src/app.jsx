@@ -56,12 +56,14 @@ const handlers = {
   }),
 
   deck: {
-    onClick: () => moveSingle("deck", 0, 0, "hand", true),
-    onContextMenu: (e) => showMenu(e, [
-      ["→ 場", () => moveSingle("deck", 0, 0, "lands", true)],
+    onClick: () => (e) => showMenu(e, [
+      ["→ 手札", () => moveSingle("deck", 0, 0, "hand", true)],
       ["→ 盾", () => moveSingle("deck", 0, 0, "shields", true)],
       ["→ 墓地", () => pushSingle("deck", 0, 0, "graveyard", 0, true)],
       ["→ マナ", () => moveSingle("deck", 0, 0, "lands", true, { reversed: true })],
+    ]),
+    onContextMenu: (e) => showMenu(e, [
+      ["→ 場", () => moveSingle("deck", 0, 0, "lands", true)],
       ["ボトムから引く", () => moveSingle("deck", 0, deckLength.value - 1, "hand", true)],
       ["シャッフル", () => shuffle()],
       ["リスト", (e) => showList(e, "deck", 0, (e, ix) => showMenu(e, [
@@ -112,10 +114,10 @@ const handlers = {
     onClick: (e) => showMenu(e, [
       ["→ 場", () => move("hand", ix, "field")],
       ["→ マナ", () => move("hand", ix, "lands", { reversed: true })],
+      ["→ 墓地", () => push("hand", ix, "graveyard", 0)],
     ]),
     onContextMenu: (e) => showMenu(e, [
       ["→ 盾", () => move("hand", ix, "shields")],
-      ["→ 墓地", () => push("hand", ix, "graveyard", 0)],
       ["上に乗せる", () => select("hand", ix, push)],
       ["下に入れる", () => select("hand", ix, unshift)],
     ]),
