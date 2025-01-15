@@ -12,7 +12,7 @@
   height: 100vh;
   top: 0;
   left: 0;
-  padding: var(--dmpg-global-margin) 3vw;
+  padding: 20px 3vw;
   background: white;
   font-size: 16px;
   margin: 0;
@@ -75,6 +75,10 @@
   opacity: 0.8;
 }
 
+.dmpg-card-container:has(> .dmpg-card-inner:active) {
+  opacity: 0.6;
+}
+
 .dmpg-card-inner {
   position: relative;
   display: inline-flex;
@@ -116,6 +120,10 @@
   background: #eee;
 }
 
+.dmpg-menu-option:active {
+  background: #ddd;
+}
+
 .dmpg-button {
   display: inline-block;
   color: white;
@@ -128,6 +136,10 @@
 
 .dmpg-button:hover {
   opacity: 0.8;
+}
+
+.dmpg-button:active {
+  opacity: 0.6;
 }
 
 .dmpg-list-overlay {
@@ -146,6 +158,8 @@
 .dmpg-list-container {
   display: flex;
   flex-wrap: wrap;
+  padding: 20px;
+  gap: 4px;
   position: fixed;
   width: 80vw;
   left: 10vw;
@@ -154,11 +168,6 @@
   background: white;
   border-radius: 0.5em;
   overflow: hidden;
-  box-shadow:
-    rgba(0, 0, 0, 0.2) 0px 3px 5px -1px,
-    rgba(0, 0, 0, 0.14) 0px 6px 10px 0px,
-    rgba(0, 0, 0, 0.12) 0px 1px 18px 0px;
-  padding: var(--dmpg-area-padding);
   min-height: var(--dmpg-card-height);
 }
 

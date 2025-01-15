@@ -26,7 +26,7 @@ const handlers = {
       ["横にする", () => toggleLaid("field", ix)],
       ["反転する", () => toggleReversed("field", ix)],
       ["リスト", (e) => showList(e, "field", ix, (e, j) => showMenu(e, [
-        ["→ 盾", () => pushSingle("field", ix, j, "shields", 0)],
+        ["→ 盾", () => moveSingle("field", ix, j, "shields")],
         ["→ デッキトップ", () => pushSingle("field", ix, j, "deck", 0)],
         ["→ デッキボトム", () => unshiftSingle("field", ix, j, "deck", 0)],
         ["→ 墓地", () => pushSingle("field", ix, j, "graveyard", 0)],
@@ -67,7 +67,7 @@ const handlers = {
       ["シャッフル", () => shuffle()],
       ["リスト", (e) => showList(e, "deck", 0, (e, ix) => showMenu(e, [
         ["→ 場", () => moveSingle("deck", 0, ix, "field", true)],
-        ["→ 盾", () => pushSingle("deck", 0, ix, "shields", 0, true)],
+        ["→ 盾", () => moveSingle("deck", 0, ix, "shields", true)],
         ["→ 墓地", () => pushSingle("deck", 0, ix, "graveyard", 0, true)],
         ["→ マナ", () => moveSingle("deck", 0, ix, "lands", true, { reversed: true })],
         ["→ 手札", () => moveSingle("deck", 0, ix, "hand", true)],
@@ -80,7 +80,7 @@ const handlers = {
       ["→ 場", () => moveSingle("graveyard", 0, ix, "field", true)],
       ["→ デッキトップ", () => pushSingle("graveyard", 0, ix, "deck", 0, true)],
       ["→ デッキボトム", () => unshiftSingle("graveyard", 0, ix, "deck", 0, true)],
-      ["→ 盾", () => pushSingle("graveyard", 0, ix, "shields", 0, true)],
+      ["→ 盾", () => moveSingle("graveyard", 0, ix, "shields", true)],
       ["→ マナ", () => moveSingle("graveyard", 0, ix, "lands", true, { reversed: true })],
       ["→ 手札", () => moveSingle("graveyard", 0, ix, "hand", true)],
     ])),
