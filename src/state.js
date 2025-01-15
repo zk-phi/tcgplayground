@@ -1,5 +1,7 @@
 import { signal, computed } from "@preact/signals";
 import { shuffle as shuffleArray, put } from "./utils/array.js";
+import { closeMenu } from "./components/Menu.jsx";
+import { closeList } from "./components/List.jsx";
 
 const stack = ({
   cards,
@@ -30,6 +32,7 @@ export const reset = (cardSrcs) => {
     shields: pile.splice(0, 5).map(src => stack({ cards: [src], flipped: true })),
     deck: [stack({ cards: pile, flipped: true })],
   };
+  closeList();
 };
 
 export const shuffle = () => {
@@ -49,6 +52,7 @@ export const unshift = (src, si, dest, di) => {
       cards: [...state.value[dest][di].cards, ...state.value[src][si].cards],
     }),
   };
+  closeList();
 };
 
 export const push = (src, si, dest, di) => {
@@ -60,6 +64,7 @@ export const push = (src, si, dest, di) => {
       cards: [...state.value[src][si].cards, ...state.value[dest][di].cards],
     }),
   };
+  closeList();
 };
 
 export const move = (src, si, dest, attrs = {}) => {
@@ -71,6 +76,7 @@ export const move = (src, si, dest, attrs = {}) => {
       { cards: state.value[src][si].cards, ...attrs },
     ],
   };
+  closeList();
 };
 
 export const toggleTapped = (src, si) => {
@@ -113,44 +119,56 @@ export const toggleLaid = (src, si) => {
   };
 };
 
-export const moveSingle = (src, si, sj, dest, attrs = {}) => {
-  state.value = {
-    ...state.value,
-    [src]: put(state.value[src], si, {
-      ...state.value[src][si],
-      cards: state.value[src][si].cards.filter((_, j) => j !== sj)
-    }),
-    [dest]: [
-      ...state.value[dest],
-      stack({ cards: [state.value[src][si].cards[sj]], ...attrs }),
-    ],
-  };
+export const moveSingle = (src, si, sj, dest, allowEmpty = false, attrs = {}) => {
+  if (state.value[src][si].cards.length <= 1 && !allowEmpty) {
+    move(src, si, dest, attrs);
+  } else {
+    state.value = {
+      ...state.value,
+      [src]: put(state.value[src], si, {
+        ...state.value[src][si],
+        cards: state.value[src][si].cards.filter((_, j) => j !== sj),
+      }),
+      [dest]: [
+        ...state.value[dest],
+        stack({ cards: [state.value[src][si].cards[sj]], ...attrs }),
+      ],
+    };
+  }
 };
 
-export const pushSingle = (src, si, sj, dest, di) => {
-  state.value = {
-    ...state.value,
-    [src]: put(state.value[src], si, {
-      ...state.value[src][si],
-      cards: state.value[src][si].cards.filter((_, j) => j !== sj)
-    }),
-    [dest]: put(state.value[dest], di, {
-      ...state.value[dest][di],
-      cards: [state.value[src][si].cards[sj], ...state.value[dest][di].cards],
-    }),
-  };
+export const pushSingle = (src, si, sj, dest, di, allowEmpty = false) => {
+  if (state.value[src][si].cards.length <= 1 && !allowEmpty) {
+    push(src, si, dest, di);
+  } else {
+    state.value = {
+      ...state.value,
+      [src]: put(state.value[src], si, {
+        ...state.value[src][si],
+        cards: state.value[src][si].cards.filter((_, j) => j !== sj),
+      }),
+      [dest]: put(state.value[dest], di, {
+        ...state.value[dest][di],
+        cards: [state.value[src][si].cards[sj], ...state.value[dest][di].cards],
+      }),
+    };
+  }
 };
 
-export const unshiftSingle = (src, si, sj, dest, di) => {
-  state.value = {
-    ...state.value,
-    [src]: put(state.value[src], si, {
-      ...state.value[src][si],
-      cards: state.value[src][si].cards.filter((_, j) => j !== sj)
-    }),
-    [dest]: put(state.value[dest], di, {
-      ...state.value[dest][di],
-      cards: [...state.value[dest][di].cards, state.value[src][si].cards[sj]],
-    }),
-  };
+export const unshiftSingle = (src, si, sj, dest, di, allowEmpty = false) => {
+  if (state.value[src][si].cards.length <= 1 && !allowEmpty) {
+    unshift(src, si, dest, di);
+  } else {
+    state.value = {
+      ...state.value,
+      [src]: put(state.value[src], si, {
+        ...state.value[src][si],
+        cards: state.value[src][si].cards.filter((_, j) => j !== sj),
+      }),
+      [dest]: put(state.value[dest], di, {
+        ...state.value[dest][di],
+        cards: [...state.value[dest][di].cards, state.value[src][si].cards[sj]],
+      }),
+    };
+  }
 };

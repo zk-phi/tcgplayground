@@ -1,4 +1,4 @@
-#dmplayground {
+.dmpg-wrapper {
   --dmpg-global-margin: 8px;
   --dmpg-area-padding: 8px;
   --dmpg-card-height: 145px;
@@ -12,15 +12,22 @@
   height: 100vh;
   top: 0;
   left: 0;
-  padding: 0;
-  background: white;
-}
-
-.dmpg-wrapper {
-  position: relative;
   padding: var(--dmpg-global-margin) 3vw;
+  background: white;
   font-size: 16px;
   margin: 0;
+  box-sizing: border-box;
+}
+
+.dmpg-floating-menu {
+  position: fixed;
+  top: 4px;
+  right: 4px;
+  z-index: 100000;
+}
+
+.dmpg-floating-menu > * {
+  margin-left: 4px;
 }
 
 .dmpg-row {
@@ -111,4 +118,37 @@
 
 .dmpg-menu-option:hover {
   background: #eee;
+}
+
+.dmpg-button {
+  display: inline-block;
+  color: white;
+  background: #ea0;
+  font-size: 16px;
+  padding: 4px 12px;
+  border-radius: 0.5em;
+  cursor: pointer;
+}
+
+.dmpg-button:hover {
+  opacity: 0.8;
+}
+
+.dmpg-list-container {
+  display: flex;
+  flex-wrap: wrap;
+  position: fixed;
+  width: 80vw;
+  left: 10vw;
+  top: 24px;
+  z-index: 50;
+  background: white;
+  border-radius: 0.5em;
+  overflow: hidden;
+  box-shadow:
+    rgba(0, 0, 0, 0.2) 0px 3px 5px -1px,
+    rgba(0, 0, 0, 0.14) 0px 6px 10px 0px,
+    rgba(0, 0, 0, 0.12) 0px 1px 18px 0px;
+  padding: var(--dmpg-area-padding);
+  min-height: var(--dmpg-card-height);
 }

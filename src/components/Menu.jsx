@@ -27,7 +27,9 @@ export const closeMenu = () => {
 export const Menu = () => menu.value && (
   <div class="dmpg-menu-container" style={menu.value.pos}>
     {menu.value.options.map(option => (
-      <div class="dmpg-menu-option" onClick={option[1]}>
+      <div
+          class="dmpg-menu-option"
+          onClick={(e) => (option[1](e), e.stopPropagation(), closeMenu())}>
         {option[0]}
       </div>
     ))}
