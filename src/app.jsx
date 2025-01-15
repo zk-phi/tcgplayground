@@ -6,7 +6,7 @@ import {
   reset, shuffle, untapAll,
 } from "./state.js";
 import { showMenu, closeMenu, Menu } from "./components/Menu.jsx";
-import { showList, closeList, List } from "./components/List.jsx";
+import { showList, List } from "./components/List.jsx";
 import { CardStack } from "./components/CardStack.jsx";
 import { Button } from "./components/Button.jsx";
 
@@ -68,8 +68,6 @@ const handlers = {
       ["リスト", (e) => showList(e, "deck", 0, (e, ix) => showMenu(e, [
         ["→ 場", () => moveSingle("deck", 0, ix, "field", true)],
         ["→ 盾", () => pushSingle("deck", 0, ix, "shields", 0, true)],
-        ["→ デッキトップ", () => pushSingle("deck", 0, ix, "deck", 0, true)],
-        ["→ デッキボトム", () => unshiftSingle("deck", 0, ix, "deck", 0, true)],
         ["→ 墓地", () => pushSingle("deck", 0, ix, "graveyard", 0, true)],
         ["→ マナ", () => moveSingle("deck", 0, ix, "lands", true, { reversed: true })],
         ["→ 手札", () => moveSingle("deck", 0, ix, "hand", true)],
@@ -153,7 +151,7 @@ export const App = () => {
         </Button>
       </div>
       {show && (
-        <div class="dmpg-wrapper" onClick={() => (closeMenu(), closeList())}>
+        <div class="dmpg-wrapper" onClick={() => closeMenu()}>
           <Menu />
           <List />
           <div class="dmpg-row">

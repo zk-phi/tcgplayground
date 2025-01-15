@@ -96,7 +96,7 @@
 .dmpg-menu-container {
   display: inline-block;
   position: fixed;
-  z-index: 100;
+  z-index: 1000;
   background: white;
   border-radius: 0.5em;
   overflow: hidden;
@@ -128,6 +128,19 @@
 
 .dmpg-button:hover {
   opacity: 0.8;
+}
+
+.dmpg-list-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  background: #000a;
+  z-index: 100;
 }
 
 .dmpg-list-container {
