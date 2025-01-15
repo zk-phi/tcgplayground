@@ -22,6 +22,7 @@ export const state = signal({
 export const deckLength = computed(() => state.value.deck[0].cards.length);
 
 export const reset = (cardSrcs) => {
+  closeList();
   const pile = shuffleArray(cardSrcs);
   state.value = {
     field: [],
@@ -31,7 +32,6 @@ export const reset = (cardSrcs) => {
     shields: pile.splice(0, 5).map(src => stack({ cards: [src], flipped: true })),
     deck: [stack({ cards: pile, flipped: true })],
   };
-  closeList();
 };
 
 export const shuffle = () => {
@@ -43,6 +43,7 @@ export const shuffle = () => {
 };
 
 export const unshift = (src, si, dest, di) => {
+  closeList();
   state.value = {
     ...state.value,
     [src]: state.value[src].filter((_, i) => i !== si),
@@ -51,10 +52,10 @@ export const unshift = (src, si, dest, di) => {
       cards: [...state.value[dest][di].cards, ...state.value[src][si].cards],
     }),
   };
-  closeList();
 };
 
 export const push = (src, si, dest, di) => {
+  closeList();
   state.value = {
     ...state.value,
     [src]: state.value[src].filter((_, i) => i !== si),
@@ -63,10 +64,10 @@ export const push = (src, si, dest, di) => {
       cards: [...state.value[src][si].cards, ...state.value[dest][di].cards],
     }),
   };
-  closeList();
 };
 
 export const move = (src, si, dest, attrs = {}) => {
+  closeList();
   state.value = {
     ...state.value,
     [src]: state.value[src].filter((_, i) => i !== si),
@@ -75,7 +76,6 @@ export const move = (src, si, dest, attrs = {}) => {
       { cards: state.value[src][si].cards, ...attrs },
     ],
   };
-  closeList();
 };
 
 export const toggleTapped = (src, si) => {
@@ -115,6 +115,14 @@ export const toggleLaid = (src, si) => {
       ...state.value[src][si],
       laid: !state.value[src][si].laid,
     }),
+  };
+};
+
+export const untapAll = () => {
+  state.value = {
+    ...state.value,
+    field: state.value.field.map(stack => ({ ...stack, tapped: false })),
+    lands: state.value.lands.map(stack => ({ ...stack, tapped: false })),
   };
 };
 

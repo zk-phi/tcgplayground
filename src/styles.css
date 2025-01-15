@@ -152,3 +152,8 @@
   padding: var(--dmpg-area-padding);
   min-height: var(--dmpg-card-height);
 }
+
+.dmpg-footer {
+  margin-top: 16px;
+  text-align: right;
+}
