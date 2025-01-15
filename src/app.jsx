@@ -5,6 +5,7 @@ import {
   toggleTapped, toggleReversed, toggleFlipped, toggleLaid,
   reset, shuffle, untapAll,
 } from "./state.js";
+import { select } from "./selection.js";
 import { showMenu, closeMenu, Menu } from "./components/Menu.jsx";
 import { showList, List } from "./components/List.jsx";
 import { CardStack } from "./components/CardStack.jsx";
@@ -18,16 +19,15 @@ const handlers = {
     onClick: () => toggleTapped("field", ix),
     onContextMenu: (e) => showMenu(e, [
       ["→ 盾", () => move("field", ix, "shields")],
-      ["→ デッキトップ", () => push("field", ix, "deck", 0)],
-      ["→ デッキボトム", () => unshift("field", ix, "deck", 0)],
       ["→ 墓地", () => push("field", ix, "graveyard", 0)],
       ["→ マナ", () => move("field", ix, "lands", { reversed: true })],
       ["→ 手札", () => move("field", ix, "hand")],
+      ["上に乗せる", () => select("field", ix, push)],
+      ["下に入れる", () => select("field", ix, unshift)],
       ["横にする", () => toggleLaid("field", ix)],
       ["反転する", () => toggleReversed("field", ix)],
       ["リスト", (e) => showList(e, "field", ix, (e, j) => showMenu(e, [
         ["→ 盾", () => moveSingle("field", ix, j, "shields")],
-        ["→ デッキトップ", () => pushSingle("field", ix, j, "deck", 0)],
         ["→ デッキボトム", () => unshiftSingle("field", ix, j, "deck", 0)],
         ["→ 墓地", () => pushSingle("field", ix, j, "graveyard", 0)],
         ["→ マナ", () => moveSingle("field", ix, j, "lands", false, { reversed: true })],
@@ -40,11 +40,11 @@ const handlers = {
     onClick: () => toggleFlipped("shields", ix),
     onContextMenu: (e) => showMenu(e, [
       ["→ 場", () => move("shields", ix, "field")],
-      ["→ デッキトップ", () => push("shields", ix, "deck", 0)],
-      ["→ デッキボトム", () => unshift("shields", ix, "deck", 0)],
       ["→ 墓地", () => push("shields", ix, "graveyard", 0)],
       ["→ マナ", () => move("shields", ix, "lands", { reversed: true })],
       ["→ 手札", () => move("shields", ix, "hand")],
+      ["上に乗せる", () => select("shields", ix, push)],
+      ["下に入れる", () => select("shields", ix, unshift)],
       ["リスト", (e) => showList(e, "shields", ix, (e, j) => showMenu(e, [
         ["→ 場", () => moveSingle("shields", ix, j, "field")],
         ["→ デッキトップ", () => pushSingle("shields", ix, j, "deck", 0,)],
@@ -68,6 +68,8 @@ const handlers = {
       ["リスト", (e) => showList(e, "deck", 0, (e, ix) => showMenu(e, [
         ["→ 場", () => moveSingle("deck", 0, ix, "field", true)],
         ["→ 盾", () => moveSingle("deck", 0, ix, "shields", true)],
+        ["→ トップ", () => pushSingle("deck", 0, ix, "deck", 0,)],
+        ["→ ボトム", () => unshiftSingle("deck", 0, ix, "deck", 0)],
         ["→ 墓地", () => pushSingle("deck", 0, ix, "graveyard", 0, true)],
         ["→ マナ", () => moveSingle("deck", 0, ix, "lands", true, { reversed: true })],
         ["→ 手札", () => moveSingle("deck", 0, ix, "hand", true)],
@@ -99,10 +101,10 @@ const handlers = {
     onContextMenu: (e) => showMenu(e, [
       ["→ 場", () => move("lands", ix, "field")],
       ["→ 盾", () => move("lands", ix, "shields")],
-      ["→ デッキトップ", () => push("lands", ix, "deck", 0)],
-      ["→ デッキボトム", () => unshift("lands", ix, "deck", 0)],
       ["→ 墓地", () => push("lands", ix, "graveyard", 0)],
       ["→ 手札", () => move("lands", ix, "hand")],
+      ["上に乗せる", () => select("lands", ix, push)],
+      ["下に入れる", () => select("lands", ix, unshift)],
       ["裏返す", () => toggleFlipped("lands", ix)],
     ])
   }),
@@ -114,9 +116,9 @@ const handlers = {
     ]),
     onContextMenu: (e) => showMenu(e, [
       ["→ 盾", () => move("hand", ix, "shields")],
-      ["→ デッキトップ", () => push("hand", ix, "deck", 0)],
-      ["→ デッキボトム", () => unshift("hand", ix, "deck", 0)],
       ["→ 墓地", () => push("hand", ix, "graveyard", 0)],
+      ["上に乗せる", () => select("hand", ix, push)],
+      ["下に入れる", () => select("hand", ix, unshift)],
     ]),
   }),
 };
@@ -157,7 +159,12 @@ export const App = () => {
           <div class="dmpg-row">
             <div class="dmpg-area">
               {state.value.field.map((stack, ix) => (
-                <CardStack stack={stack} {...handlers.field(ix)} />
+                <CardStack
+                    area="field"
+                    ix={ix}
+                    stack={stack}
+                    {...handlers.field(ix)}
+                />
               ))}
               <span class="dmpg-area-label">場</span>
             </div>
@@ -165,20 +172,40 @@ export const App = () => {
           <div className="dmpg-row">
             <div class="dmpg-area">
               {state.value.shields.map((stack, ix) => (
-                <CardStack stack={stack} {...handlers.shields(ix)} />
+                <CardStack
+                    area="shields"
+                    ix={ix}
+                    stack={stack}
+                    {...handlers.shields(ix)}
+                />
               ))}
               <span class="dmpg-area-label">盾</span>
             </div>
             <div class="dmpg-area dmpg-area-deck">
-              <CardStack stack={state.value.deck[0]} {...handlers.deck} />
-              <CardStack stack={state.value.graveyard[0]} {...handlers.graveyard} />
+              <CardStack
+                  area="deck"
+                  ix={0}
+                  stack={state.value.deck[0]}
+                  {...handlers.deck}
+              />
+              <CardStack
+                  area="graveyard"
+                  ix={0}
+                  stack={state.value.graveyard[0]}
+                  {...handlers.graveyard}
+              />
               <span class="dmpg-area-label">山/墓</span>
             </div>
           </div>
           <div class="dmpg-row">
             <div class="dmpg-area">
               {state.value.lands.map((stack, ix) => (
-                <CardStack stack={stack} {...handlers.lands(ix)} />
+                <CardStack
+                    area="lands"
+                    ix={ix}
+                    stack={stack}
+                    {...handlers.lands(ix)}
+                />
               ))}
               <span class="dmpg-area-label">マナ</span>
             </div>
@@ -186,7 +213,12 @@ export const App = () => {
           <div class="dmpg-row">
             <div class="dmpg-area">
               {state.value.hand.map((stack, ix) => (
-                <CardStack stack={stack} {...handlers.hand(ix)} />
+                <CardStack
+                    area="hand"
+                    ix={ix}
+                    stack={stack}
+                    {...handlers.hand(ix)}
+                />
               ))}
               <span class="dmpg-area-label">手札</span>
             </div>

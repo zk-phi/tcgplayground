@@ -42,38 +42,47 @@ export const shuffle = () => {
   };
 };
 
-export const unshift = (src, si, dest, di) => {
-  closeList();
+const pop = (src, si) => {
+  const stack = state.value[src][si];
   state.value = {
     ...state.value,
     [src]: state.value[src].filter((_, i) => i !== si),
+  };
+  return stack;
+};
+
+export const unshift = (src, si, dest, di) => {
+  closeList();
+  const stack = pop(src, si);
+  state.value = {
+    ...state.value,
     [dest]: put(state.value[dest], di, {
       ...state.value[dest][di],
-      cards: [...state.value[dest][di].cards, ...state.value[src][si].cards],
+      cards: [...state.value[dest][di].cards, ...stack.cards],
     }),
   };
 };
 
 export const push = (src, si, dest, di) => {
   closeList();
+  const stack = pop(src, si);
   state.value = {
     ...state.value,
-    [src]: state.value[src].filter((_, i) => i !== si),
     [dest]: put(state.value[dest], di, {
       ...state.value[dest][di],
-      cards: [...state.value[src][si].cards, ...state.value[dest][di].cards],
+      cards: [...stack.cards, ...state.value[dest][di].cards],
     }),
   };
 };
 
 export const move = (src, si, dest, attrs = {}) => {
   closeList();
+  const stack = pop(src, si);
   state.value = {
     ...state.value,
-    [src]: state.value[src].filter((_, i) => i !== si),
     [dest]: [
       ...state.value[dest],
-      { cards: state.value[src][si].cards, ...attrs },
+      ...stack.cards.map(card => ({ cards: [card], ...attrs })),
     ],
   };
 };
@@ -126,19 +135,28 @@ export const untapAll = () => {
   };
 };
 
+const popSingle = (src, si, sj) => {
+  const card = state.value[src][si].cards[sj];
+  state.value = {
+    ...state.value,
+    [src]: put(state.value[src], si, {
+      ...state.value[src][si],
+      cards: state.value[src][si].cards.filter((_, j) => j !== sj),
+    }),
+  };
+  return card;
+}
+
 export const moveSingle = (src, si, sj, dest, allowEmpty = false, attrs = {}) => {
   if (state.value[src][si].cards.length <= 1 && !allowEmpty) {
     move(src, si, dest, attrs);
   } else {
+    const card = popSingle(src, si, sj);
     state.value = {
       ...state.value,
-      [src]: put(state.value[src], si, {
-        ...state.value[src][si],
-        cards: state.value[src][si].cards.filter((_, j) => j !== sj),
-      }),
       [dest]: [
         ...state.value[dest],
-        stack({ cards: [state.value[src][si].cards[sj]], ...attrs }),
+        stack({ cards: [card], ...attrs }),
       ],
     };
   }
@@ -148,15 +166,12 @@ export const pushSingle = (src, si, sj, dest, di, allowEmpty = false) => {
   if (state.value[src][si].cards.length <= 1 && !allowEmpty) {
     push(src, si, dest, di);
   } else {
+    const card = popSingle(src, si, sj);
     state.value = {
       ...state.value,
-      [src]: put(state.value[src], si, {
-        ...state.value[src][si],
-        cards: state.value[src][si].cards.filter((_, j) => j !== sj),
-      }),
       [dest]: put(state.value[dest], di, {
         ...state.value[dest][di],
-        cards: [state.value[src][si].cards[sj], ...state.value[dest][di].cards],
+        cards: [card, ...state.value[dest][di].cards],
       }),
     };
   }
@@ -166,15 +181,12 @@ export const unshiftSingle = (src, si, sj, dest, di, allowEmpty = false) => {
   if (state.value[src][si].cards.length <= 1 && !allowEmpty) {
     unshift(src, si, dest, di);
   } else {
+    const card = popSingle(src, si, sj);
     state.value = {
       ...state.value,
-      [src]: put(state.value[src], si, {
-        ...state.value[src][si],
-        cards: state.value[src][si].cards.filter((_, j) => j !== sj),
-      }),
       [dest]: put(state.value[dest], di, {
         ...state.value[dest][di],
-        cards: [...state.value[dest][di].cards, state.value[src][si].cards[sj]],
+        cards: [...state.value[dest][di].cards, card],
       }),
     };
   }
