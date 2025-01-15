@@ -7,9 +7,11 @@ const list = signal(null);
 
 export const showList = (e, src, ix, handler) => {
   list.value = { src, ix, handler };
-  closeMenu();
-  e.preventDefault();
+
+  /* Prevent event bubbling that closes the list immediately */
   e.stopPropagation();
+  /* ... but close menu instead */
+  closeMenu();
 };
 
 export const closeList = () => {

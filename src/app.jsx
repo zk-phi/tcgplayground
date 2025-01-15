@@ -10,9 +10,7 @@ import { showList, closeList, List } from "./components/List.jsx";
 import { CardStack } from "./components/CardStack.jsx";
 import { Button } from "./components/Button.jsx";
 
-/* TODO: List stacked cards */
 /* TODO: Add card to arbitrary stack */
-
 /* TODO: Add support for advanced decks */
 
 const handlers = {

@@ -16,8 +16,10 @@ export const showMenu = (e, options) => {
     },
   }
 
-  e.stopPropagation();
+  /* Prevent browser from showing the default context menu */
   e.preventDefault();
+  /* Prevent event bubbling that closes the menu immediately */
+  e.stopPropagation();
 };
 
 export const closeMenu = () => {
@@ -29,7 +31,7 @@ export const Menu = () => menu.value && (
     {menu.value.options.map(option => (
       <div
           class="dmpg-menu-option"
-          onClick={(e) => (option[1](e), e.stopPropagation(), closeMenu())}>
+          onClick={(e) => { option[1](e); e.stopPropagation(); closeMenu(); }}>
         {option[0]}
       </div>
     ))}
