@@ -56,7 +56,7 @@ const handlers = {
   }),
 
   deck: {
-    onClick: () => (e) => showMenu(e, [
+    onClick: (e) => showMenu(e, [
       ["→ 手札", () => moveSingle("deck", 0, 0, "hand", true)],
       ["→ 盾", () => moveSingle("deck", 0, 0, "shields", true)],
       ["→ 墓地", () => pushSingle("deck", 0, 0, "graveyard", 0, true)],
