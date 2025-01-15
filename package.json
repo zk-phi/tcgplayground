@@ -4,7 +4,8 @@
   "scripts": {
     "dev": "concurrently 'csso --watch -i ./src/styles.css -o ./src/styles.min.css' 'vite'",
     "build": "csso -i ./src/styles.css -o ./src/styles.min.css && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "release": "echo javascript:$(cat ./dist/assets/*.js) > ./release/bookmarklet"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.9.4",
