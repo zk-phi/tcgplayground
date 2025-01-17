@@ -87,6 +87,7 @@
   border-radius: 4px;
   align-items: flex-end;
   justify-content: flex-end;
+  cursor: pointer;
 }
 
 .dmpg-card-inner:hover {
@@ -146,7 +147,7 @@
   opacity: 0.6;
 }
 
-.dmpg-list-overlay {
+.dmpg-overlay {
   position: fixed;
   top: 0;
   left: 0;

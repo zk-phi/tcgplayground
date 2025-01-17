@@ -1,5 +1,6 @@
-import { signal, computed } from "@preact/signals";
+import { signal } from "@preact/signals";
 import { state } from "../state.js";
+import { Overlay } from "./Overlay.jsx";
 import { CardStack } from "./CardStack.jsx";
 import { closeMenu } from "./Menu.jsx"
 
@@ -19,7 +20,7 @@ export const closeList = () => {
 };
 
 export const List = () => list.value && (
-  <div class="dmpg-list-overlay" onClick={(e) => closeList()}>
+  <Overlay onClick={(e) => closeList()}>
     <div class="dmpg-list-container" onClick={(e) => { closeMenu(); e.stopPropagation(); }}>
       {state.value[list.value.src][list.value.ix].cards.map((card, ix) => (
         <CardStack
@@ -29,5 +30,5 @@ export const List = () => list.value && (
         />
       ))}
     </div>
-  </div>
+  </Overlay>
 );

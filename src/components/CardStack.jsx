@@ -6,7 +6,7 @@ export const CardStack = ({ stack, onClick, onContextMenu, area, ix }) => {
     (stack.tapped ? -30 : 0) + (stack.reversed ? 180 : 0) + (stack.laid ? -90 : 0)
   );
 
-  const container = stack.cards.length === 0 ? null : {
+  const containerStyles = stack.cards.length === 0 ? null : {
     backgroundImage: `url(${stack.cards[0]})`,
     transform: `rotate(${angle}deg)`,
   };
@@ -15,18 +15,13 @@ export const CardStack = ({ stack, onClick, onContextMenu, area, ix }) => {
     selection?.value?.src === area && selection?.value?.si === ix
   );
 
-  const color = stack.cards.length > 0 && stack.flipped ? (
+  const innerColor = stack.cards.length > 0 && stack.flipped ? (
     "#006"
   ) : selected ? (
     "#ff08"
   ) : (
     "transparent"
   );
-
-  const inner = {
-    background: color,
-    cursor: "pointer",
-  };
 
   const modalOnClick = useCallback(() => {
     const { src, si, handler } = selection?.value;
@@ -38,11 +33,11 @@ export const CardStack = ({ stack, onClick, onContextMenu, area, ix }) => {
   }, [area, ix]);
 
   return (
-    <div class="dmpg-card-container" style={container}>
+    <div class="dmpg-card-container" style={containerStyles}>
       {stack.cards.length > 0 && (
         <div
-            class={`dmpg-card-inner ${selected ? 'dmpg-card-selected' : ''}`}
-            style={inner}
+            class="dmpg-card-inner"
+            style={{ background: innerColor }}
             onClick={selection.value ? modalOnClick : onClick}
             onContextMenu={selection.value ? null : onContextMenu}>
           {stack.cards.length > 1 && (
