@@ -37,26 +37,34 @@ const pop = (src, si) => {
 
 export const unshift = (src, si, dest, di) => {
   closeList();
-  const stack = pop(src, si);
-  state.value = {
-    ...state.value,
-    [dest]: put(state.value[dest], di, {
-      ...state.value[dest][di],
-      cards: [...state.value[dest][di].cards, ...stack.cards],
-    }),
-  };
+  if (!state.value[dest][di]) {
+    move(src, si, dest);
+  } else {
+    const stack = pop(src, si);
+    state.value = {
+      ...state.value,
+      [dest]: put(state.value[dest], di, {
+        ...state.value[dest][di],
+        cards: [...state.value[dest][di].cards, ...stack.cards],
+      }),
+    };
+  }
 };
 
 export const push = (src, si, dest, di) => {
   closeList();
-  const stack = pop(src, si);
-  state.value = {
-    ...state.value,
-    [dest]: put(state.value[dest], di, {
-      ...state.value[dest][di],
-      cards: [...stack.cards, ...state.value[dest][di].cards],
-    }),
-  };
+  if (!state.value[dest][di]) {
+    move(src, si, dest);
+  } else {
+    const stack = pop(src, si);
+    state.value = {
+      ...state.value,
+      [dest]: put(state.value[dest], di, {
+        ...state.value[dest][di],
+        cards: [...stack.cards, ...state.value[dest][di].cards],
+      }),
+    };
+  }
 };
 
 export const move = (src, si, dest, attrs = {}) => {
@@ -111,6 +119,16 @@ export const toggleLaid = (src, si) => {
   };
 };
 
+export const setAttribute = (src, si, key, value) => {
+  state.value = {
+    ...state.value,
+    [src]: put(state.value[src], si, {
+      ...state.value[src][si],
+      [key]: value,
+    }),
+  };
+};
+
 export const untapAll = (srcs) => {
   const untapped = Object.fromEntries(srcs.map(src => [
     src,
@@ -152,6 +170,8 @@ export const moveSingle = (src, si, sj, dest, allowEmpty = false, attrs = {}) =>
 export const pushSingle = (src, si, sj, dest, di, allowEmpty = false) => {
   if (state.value[src][si].cards.length <= 1 && !allowEmpty) {
     push(src, si, dest, di);
+  } else if (!state.value[dest][di]) {
+    moveSingle(src, si, sj, dest);
   } else {
     const card = popSingle(src, si, sj);
     state.value = {
@@ -167,6 +187,8 @@ export const pushSingle = (src, si, sj, dest, di, allowEmpty = false) => {
 export const unshiftSingle = (src, si, sj, dest, di, allowEmpty = false) => {
   if (state.value[src][si].cards.length <= 1 && !allowEmpty) {
     unshift(src, si, dest, di);
+  } else if (!state.value[dest][di]) {
+    moveSingle(src, si, sj, dest);
   } else {
     const card = popSingle(src, si, sj);
     state.value = {

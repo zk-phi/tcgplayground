@@ -17,11 +17,11 @@ const Rows = ({ rows, initialize, handlers }) => (
   </div>
 );
 
-const Areas = ({ areas, initialize, handlers }) => console.log(areas) || (
+const Areas = ({ areas, initialize, handlers }) => (
   areas.map(area => (
     Array.isArray(area) ? (
       <Rows rows={area} initialize={initialize} handlers={handlers} />
-    ) : (
+    ) : state.value[area.area]?.length || !area.optional ? (
       <Area label={area.label} width={area.width}>
         {state.value[area.area]?.map((stack, ix) => (
           <CardStack
@@ -32,7 +32,7 @@ const Areas = ({ areas, initialize, handlers }) => console.log(areas) || (
           />
         ))}
       </Area>
-    )
+    ) : null
   ))
 );
 

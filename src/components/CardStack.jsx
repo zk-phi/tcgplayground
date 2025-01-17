@@ -15,10 +15,10 @@ export const CardStack = ({ stack, onClick, onContextMenu, area, ix }) => {
     selection?.value?.src === area && selection?.value?.si === ix
   );
 
-  const innerColor = stack.cards.length > 0 && stack.flipped ? (
-    "#006"
-  ) : selected ? (
+  const innerColor = selected ? (
     "#ff08"
+  ) : stack.cards.length > 0 && stack.flipped ? (
+    "#006"
   ) : (
     "transparent"
   );
