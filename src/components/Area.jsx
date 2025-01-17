@@ -10,20 +10,21 @@ export const Area = ({ name, label, children, width, nogrow, onDrop }) => {
     background: dropReady ? "#0ff8" : undefined,
   };
 
+  const droppable = name != null;
   const handlers = {
-    onDragEnter: dragging.value && (e => {
+    onDragEnter: !droppable || !dragging.value ? null : (e => {
       setDropReady(true);
       e.stopPropagation();
     }),
-    onDragLeave: dragging.value && (e => {
+    onDragLeave: !droppable || !dragging.value ? null : (e => {
       setDropReady(false);
       e.stopPropagation();
     }),
-    onDragOver: dragging.value && (e => {
+    onDragOver: !droppable || !dragging.value ? null : (e => {
       e.preventDefault();
       e.stopPropagation();
     }),
-    onDrop: dragging.value && (e => {
+    onDrop: !droppable || !dragging.value ? null : (e => {
       dragging.value.handler(e, name);
       setDropReady(false);
       e.stopPropagation();

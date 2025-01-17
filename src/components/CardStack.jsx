@@ -1,6 +1,7 @@
 import { useCallback, useState, useRef } from "preact/hooks";
 import { drag, dragStop, dragging } from "../drag.js";
 import { closeMenu } from "./Menu.jsx";
+import { closeList } from "./List.jsx";
 
 export const CardStack = ({ stack, onClick, onContextMenu, onDrag, area, ix }) => {
   const [isDragDest, setIsDragDest] = useState(false);
@@ -15,7 +16,7 @@ export const CardStack = ({ stack, onClick, onContextMenu, onDrag, area, ix }) =
   };
 
   const { area: dragArea, ix: dragIx } = dragging?.value ?? {};
-  const isDragSrc = (dragArea && dragIx) != null && (dragArea === area && dragIx === ix);
+  const isDragSrc = dragging.value && (dragArea === area && dragIx === ix);
 
   const innerColor = isDragSrc ? (
     "#ff08"
@@ -27,25 +28,28 @@ export const CardStack = ({ stack, onClick, onContextMenu, onDrag, area, ix }) =
     "transparent"
   );
 
+  const droppable = area != null && ix != null;
   const handlers = {
     onDragStart: e => {
       closeMenu();
+      closeList();
       drag(area, ix, onDrag);
     },
-    onDragEnter: dragging.value && (e => {
+    onDragEnter: !droppable || !dragging.value ? null : (e => {
       if (dragging.value.area !== area || dragging.value.ix !== ix) {
         setIsDragDest(true);
       }
       e.stopPropagation();
     }),
-    onDragLeave: dragging.value && (e => {
+    onDragLeave: !droppable || !dragging.value ? null : (e => {
       setIsDragDest(false);
       e.stopPropagation();
     }),
-    onDragOver: dragging.value && (e => {
+    onDragOver: !droppable || !dragging.value ? null : (e => {
       e.preventDefault();
     }),
-    onDrop: dragging.value && (e => {
+    onDrop: !droppable || !dragging.value ? null : (e => {
+      /* cancel if src and dest is the same */
       if (dragging.value.area !== area || dragging.value.ix !== ix) {
         dragging.value.handler(e, area, ix);
       }

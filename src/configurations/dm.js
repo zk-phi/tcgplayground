@@ -73,7 +73,7 @@ const standardOnDragHandler = (src, si) => (e, dest, di) => {
       ["🫴 下に入れる", () => unshift(src, si, dest, di ?? 0)],
     ]);
   } else {
-    move(src, si, dest, { reversed: true });
+    move(src, si, dest, { reversed: dest === "lands" });
   }
 };
 

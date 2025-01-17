@@ -6,8 +6,8 @@ import { closeMenu } from "./Menu.jsx"
 
 const list = signal(null);
 
-export const showList = (e, src, ix, handler) => {
-  list.value = { src, ix, handler };
+export const showList = (e, area, ix, handler) => {
+  list.value = { area, ix, handler };
 
   /* Prevent event bubbling that closes the list immediately */
   e.stopPropagation();
@@ -20,7 +20,7 @@ export const closeList = () => {
 };
 
 export const List = () => {
-  const cards = list.value && state.value[list.value.src][list.value.ix].cards;
+  const cards = list.value && state.value[list.value.area][list.value.ix].cards;
 
   if (!cards || cards.length === 0) {
     return null;
@@ -29,7 +29,7 @@ export const List = () => {
   return (
     <Overlay onClick={() => closeList()}>
       <div class="dmpg-list-container" onClick={e => { closeMenu(); e.stopPropagation(); }}>
-        {state.value[list.value.src][list.value.ix].cards.map((card, ix) => (
+        {state.value[list.value.area][list.value.ix].cards.map((card, ix) => (
           <CardStack
               stack={{ cards: [card] }}
               onClick={e => list.value.handler(e, ix)}
