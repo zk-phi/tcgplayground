@@ -1,4 +1,5 @@
 import { render, h } from "preact";
+import * as configurations from "./configurations/dm.js";
 import { App } from "./components/App.jsx";
 import styles from "./styles.min.css?raw";
 
@@ -12,4 +13,4 @@ const style = document.createElement("style");
 style.innerHTML = styles;
 document.head.append(style);
 
-render(<App />, div)
+render(<App {...configurations} />, div)
