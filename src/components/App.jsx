@@ -1,18 +1,18 @@
 import { useEffect, useCallback, useState } from "preact/hooks";
-import { shuffle as shuffleArray } from "./utils/array.js";
+import { shuffle as shuffleArray } from "../utils/array.js";
 import {
   stack, state, setState,
   move, push, unshift, moveSingle, pushSingle, unshiftSingle,
   toggleTapped, toggleReversed, toggleFlipped, toggleLaid,
   shuffle, untapAll,
-} from "./state.js";
-import { select } from "./selection.js";
-import { Area } from "./components/Area.jsx";
-import { showMenu, closeMenu, Menu } from "./components/Menu.jsx";
-import { showList, List } from "./components/List.jsx";
-import { showLightbox, Lightbox } from "./components/Lightbox.jsx";
-import { CardStack } from "./components/CardStack.jsx";
-import { Button } from "./components/Button.jsx";
+} from "../state.js";
+import { select } from "../selection.js";
+import { Area } from "./Area.jsx";
+import { showMenu, closeMenu, Menu } from "./Menu.jsx";
+import { showList, List } from "./List.jsx";
+import { showLightbox, Lightbox } from "./Lightbox.jsx";
+import { CardStack } from "./CardStack.jsx";
+import { Button } from "./Button.jsx";
 
 /* TODO: Add support for advanced decks */
 

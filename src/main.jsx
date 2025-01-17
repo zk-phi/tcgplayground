@@ -1,5 +1,5 @@
 import { render, h } from "preact";
-import { App } from "./app.jsx";
+import { App } from "./components/App.jsx";
 import styles from "./styles.min.css?raw";
 
 /* TODO: Add stand-alone deck-builder */
