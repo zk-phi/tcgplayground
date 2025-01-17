@@ -4,7 +4,7 @@ import { closeMenu } from "./Menu.jsx"
 
 const lightbox = signal(null);
 
-export const showLightbox = (src) => {
+export const showLightbox = (e, src) => {
   lightbox.value = src;
 
   /* Prevent event bubbling that closes the lightbox immediately */
@@ -18,7 +18,7 @@ export const closeLightbox = () => {
 };
 
 export const Lightbox = () => lightbox.value && (
-  <Overlay onClick={(e) => closeLightbox()}>
+  <Overlay onClick={() => closeLightbox()}>
     <img class="dmpg-lightbox-img" src={lightbox.value} />
   </Overlay>
 );

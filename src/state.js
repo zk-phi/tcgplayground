@@ -10,16 +10,8 @@ const stack = ({
   laid = false,
 }) => ({ cards, flipped, reversed, tapped, laid });
 
-export const state = signal({
-  field: [],
-  lands: [],
-  graveyard: [stack({ cards: [] })],
-  hand: [],
-  shields: [],
-  deck: [stack({ cards: [], flipped: true })],
-});
-
-export const deckLength = computed(() => state.value.deck[0].cards.length);
+/* Map<AreaName, Stack[]> */
+export const state = signal({});
 
 export const reset = (cardSrcs) => {
   closeList();
@@ -34,11 +26,11 @@ export const reset = (cardSrcs) => {
   };
 };
 
-export const shuffle = () => {
-  const shuffled = shuffleArray(state.value.deck[0].cards);
+export const shuffle = (src, ix) => {
+  const shuffled = shuffleArray(state.value[src][ix].cards);
   state.value = {
     ...state.value,
-    deck: [{ ...state.value.deck[0], cards: shuffled }],
+    [src]: [{ ...state.value[src][ix], cards: shuffled }],
   };
 };
 
@@ -127,12 +119,12 @@ export const toggleLaid = (src, si) => {
   };
 };
 
-export const untapAll = () => {
-  state.value = {
-    ...state.value,
-    field: state.value.field.map(stack => ({ ...stack, tapped: false })),
-    lands: state.value.lands.map(stack => ({ ...stack, tapped: false })),
-  };
+export const untapAll = (srcs) => {
+  const untapped = Object.fromEntries(srcs.map(src => [
+    src,
+    state.value[src].map(stack => ({ ...stack, tapped: false })),
+  ]));
+  state.value = { ...state.value, ...untapped };
 };
 
 const popSingle = (src, si, sj) => {
