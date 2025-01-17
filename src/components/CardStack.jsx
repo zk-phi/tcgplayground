@@ -1,10 +1,9 @@
 import { useCallback, useState, useRef } from "preact/hooks";
-import { selection, unselect } from "../selection.js";
 import { drag, dragStop, dragging } from "../drag.js";
 import { closeMenu } from "./Menu.jsx";
 
 export const CardStack = ({ stack, onClick, onContextMenu, onDrag, area, ix }) => {
-  const [dropReady, setDropReady] = useState(false);
+  const [isDragDest, setIsDragDest] = useState(false);
 
   const angle = (
     (stack.tapped ? -30 : 0) + (stack.reversed ? 180 : 0) + (stack.laid ? -90 : 0)
@@ -15,14 +14,12 @@ export const CardStack = ({ stack, onClick, onContextMenu, onDrag, area, ix }) =
     transform: `rotate(${angle}deg)`,
   };
 
-  const { area: selectedArea, ix: selectedIx } = selection?.value ?? dragging?.value ?? {};
-  const selected = (selectedArea && selectedIx) != null && (
-    selectedArea === area && selectedIx === ix
-  );
+  const { area: dragArea, ix: dragIx } = dragging?.value ?? {};
+  const isDragSrc = (dragArea && dragIx) != null && (dragArea === area && dragIx === ix);
 
-  const innerColor = selected ? (
+  const innerColor = isDragSrc ? (
     "#ff08"
-  ) : dropReady ? (
+  ) : isDragDest ? (
     "#0ff8"
   ) : stack.cards.length > 0 && stack.flipped ? (
     "#006"
@@ -37,12 +34,12 @@ export const CardStack = ({ stack, onClick, onContextMenu, onDrag, area, ix }) =
     },
     onDragEnter: dragging.value && (e => {
       if (dragging.value.area !== area || dragging.value.ix !== ix) {
-        setDropReady(true);
+        setIsDragDest(true);
       }
       e.stopPropagation();
     }),
     onDragLeave: dragging.value && (e => {
-      setDropReady(false);
+      setIsDragDest(false);
       e.stopPropagation();
     }),
     onDragOver: dragging.value && (e => {
@@ -52,18 +49,11 @@ export const CardStack = ({ stack, onClick, onContextMenu, onDrag, area, ix }) =
       if (dragging.value.area !== area || dragging.value.ix !== ix) {
         dragging.value.handler(e, area, ix);
       }
-      setDropReady(false);
+      setIsDragDest(false);
       e.stopPropagation();
     }),
-    onClick: !selection.value ? onClick : () => {
-      const { area: src, ix: si, handler } = selection?.value;
-      if (src === area && si === ix) {
-        unselect();
-      } else {
-        handler?.(area, ix);
-      }
-    },
-    onContextMenu: !selection.value && onContextMenu,
+    onClick,
+    onContextMenu,
   };
 
   return (

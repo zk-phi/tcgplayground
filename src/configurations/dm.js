@@ -5,7 +5,6 @@ import {
   toggleTapped, toggleReversed, toggleFlipped, toggleLaid,
   shuffle, untapAll,
 } from "../state.js";
-import { select, selectSingle } from "../selection.js";
 import { showMenu } from "../components/Menu.jsx";
 import { showList } from "../components/List.jsx";
 import { showLightbox } from "../components/Lightbox.jsx";
