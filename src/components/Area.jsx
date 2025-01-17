@@ -5,7 +5,9 @@ export const Area = ({ name, label, children, width, nogrow, onDrop }) => {
   const [dropReady, setDropReady] = useState(false);
 
   const style = {
-    width: width == null ? undefined : `calc(var(--dmpg-card-width) * ${width})`,
+    width: width == null ? undefined : (
+      `calc(var(--dmpg-card-width) * ${width} + var(--dmpg-card-gap) * ${width - 1})`
+    ),
     flexGrow: (width || nogrow) ? 0 : 1,
     background: dropReady ? "#0ff8" : undefined,
   };
