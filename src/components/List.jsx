@@ -19,16 +19,24 @@ export const closeList = () => {
   list.value = null;
 };
 
-export const List = () => list.value && (
-  <Overlay onClick={(e) => closeList()}>
-    <div class="dmpg-list-container" onClick={(e) => { closeMenu(); e.stopPropagation(); }}>
-      {state.value[list.value.src][list.value.ix].cards.map((card, ix) => (
-        <CardStack
-            stack={{ cards: [card] }}
-            onClick={list.value.handler && ((e) => list.value.handler(e, ix))}
-            onContextMenu={list.value.handler && ((e) => list.value.handler(e, ix))}
-        />
-      ))}
-    </div>
-  </Overlay>
-);
+export const List = () => {
+  const cards = list.value && state.value[list.value.src][list.value.ix].cards;
+
+  if (!cards || cards.length === 0) {
+    return null;
+  }
+
+  return (
+    <Overlay onClick={() => closeList()}>
+      <div class="dmpg-list-container" onClick={e => { closeMenu(); e.stopPropagation(); }}>
+        {state.value[list.value.src][list.value.ix].cards.map((card, ix) => (
+          <CardStack
+              stack={{ cards: [card] }}
+              onClick={e => list.value.handler(e, ix)}
+              onContextMenu={e => list.value.handler(e, ix)}
+          />
+        ))}
+      </div>
+    </Overlay>
+  );
+};

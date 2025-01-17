@@ -31,7 +31,7 @@ export const Menu = () => menu.value && (
     {menu.value.options.map(option => (
       <div
           class="dmpg-menu-option"
-          onClick={(e) => { option[1](e); e.stopPropagation(); closeMenu(); }}>
+          onClick={e => { option[1](e); e.stopPropagation(); closeMenu(); }}>
         {option[0]}
       </div>
     ))}
