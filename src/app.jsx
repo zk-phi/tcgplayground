@@ -8,6 +8,7 @@ import {
 import { select } from "./selection.js";
 import { showMenu, closeMenu, Menu } from "./components/Menu.jsx";
 import { showList, List } from "./components/List.jsx";
+import { showLightbox, Lightbox } from "./components/Lightbox.jsx";
 import { CardStack } from "./components/CardStack.jsx";
 import { Button } from "./components/Button.jsx";
 
@@ -17,6 +18,7 @@ const handlers = {
   field: (ix) => ({
     onClick: () => toggleTapped("field", ix),
     onContextMenu: (e) => showMenu(e, [
+      ["拡大", () => showLightbox(state.value.field[ix].cards[0])],
       ["→ 盾", () => move("field", ix, "shields")],
       ["→ 墓地", () => push("field", ix, "graveyard", 0)],
       ["→ マナ", () => move("field", ix, "lands", { reversed: true })],
@@ -26,6 +28,7 @@ const handlers = {
       ["横にする", () => toggleLaid("field", ix)],
       ["反転する", () => toggleReversed("field", ix)],
       ["リスト", (e) => showList(e, "field", ix, (e, j) => showMenu(e, [
+        ["拡大", () => showLightbox(state.value.field[ix].cards[j])],
         ["→ 盾", () => moveSingle("field", ix, j, "shields")],
         ["→ デッキボトム", () => unshiftSingle("field", ix, j, "deck", 0)],
         ["→ 墓地", () => pushSingle("field", ix, j, "graveyard", 0)],
@@ -38,6 +41,7 @@ const handlers = {
   shields: (ix) => ({
     onClick: () => toggleFlipped("shields", ix),
     onContextMenu: (e) => showMenu(e, [
+      ["拡大", () => showLightbox(state.value.shields[ix].cards[0])],
       ["→ 場", () => move("shields", ix, "field")],
       ["→ 墓地", () => push("shields", ix, "graveyard", 0)],
       ["→ マナ", () => move("shields", ix, "lands", { reversed: true })],
@@ -45,6 +49,7 @@ const handlers = {
       ["上に乗せる", () => select("shields", ix, push)],
       ["下に入れる", () => select("shields", ix, unshift)],
       ["リスト", (e) => showList(e, "shields", ix, (e, j) => showMenu(e, [
+        ["拡大", () => showLightbox(state.value.shields[ix].cards[j])],
         ["→ 場", () => moveSingle("shields", ix, j, "field")],
         ["→ デッキトップ", () => pushSingle("shields", ix, j, "deck", 0,)],
         ["→ デッキボトム", () => unshiftSingle("shields", ix, j, "deck", 0)],
@@ -67,6 +72,7 @@ const handlers = {
       ["ボトムから引く", () => moveSingle("deck", 0, deckLength.value - 1, "hand", true)],
       ["シャッフル", () => shuffle()],
       ["リスト", (e) => showList(e, "deck", 0, (e, ix) => showMenu(e, [
+        ["拡大", () => showLightbox(state.value.deck[0].cards[ix])],
         ["→ 場", () => moveSingle("deck", 0, ix, "field", true)],
         ["→ 盾", () => moveSingle("deck", 0, ix, "shields", true)],
         ["→ トップ", () => pushSingle("deck", 0, ix, "deck", 0,)],
@@ -88,6 +94,7 @@ const handlers = {
       ["→ 手札", () => moveSingle("graveyard", 0, ix, "hand", true)],
     ])),
     onContextMenu: (e) => showMenu(e, [
+      ["拡大", () => showLightbox(state.value.graveyard[ix].cards[0])],
       ["→ 場", () => moveSingle("graveyard", 0, 0, "lands", true)],
       ["→ 盾", () => moveSingle("graveyard", 0, 0, "shields", true)],
       ["→ デッキトップ", () => pushSingle("graveyard", 0, 0, "deck", 0, true)],
@@ -117,6 +124,7 @@ const handlers = {
       ["→ 墓地", () => push("hand", ix, "graveyard", 0)],
     ]),
     onContextMenu: (e) => showMenu(e, [
+      ["拡大", () => showLightbox(state.value.hand[ix].cards[0])],
       ["→ 盾", () => move("hand", ix, "shields")],
       ["上に乗せる", () => select("hand", ix, push)],
       ["下に入れる", () => select("hand", ix, unshift)],
@@ -157,6 +165,7 @@ export const App = () => {
         <div class="dmpg-wrapper" onClick={() => closeMenu()}>
           <Menu />
           <List />
+          <Lightbox />
           <div class="dmpg-row">
             <div class="dmpg-area">
               {state.value.field.map((stack, ix) => (

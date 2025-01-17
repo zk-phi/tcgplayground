@@ -176,6 +176,12 @@
   min-height: var(--dmpg-card-height);
 }
 
+.dmpg-lightbox-img {
+  object-fit: contain;
+  width: 75vw;
+  height: 75vh;
+}
+
 .dmpg-footer {
   margin-top: 16px;
   text-align: right;
