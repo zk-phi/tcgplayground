@@ -1,12 +1,13 @@
-import { computed } from "@preact/signals";
 import { useEffect, useCallback, useState } from "preact/hooks";
+import { shuffle as shuffleArray } from "./utils/array.js";
 import {
-  state,
+  stack, state, setState,
   move, push, unshift, moveSingle, pushSingle, unshiftSingle,
   toggleTapped, toggleReversed, toggleFlipped, toggleLaid,
-  reset, shuffle, untapAll,
+  shuffle, untapAll,
 } from "./state.js";
 import { select } from "./selection.js";
+import { Area } from "./components/Area.jsx";
 import { showMenu, closeMenu, Menu } from "./components/Menu.jsx";
 import { showList, List } from "./components/List.jsx";
 import { showLightbox, Lightbox } from "./components/Lightbox.jsx";
@@ -15,7 +16,30 @@ import { Button } from "./components/Button.jsx";
 
 /* TODO: Add support for advanced decks */
 
-const deckLength = computed(() => state.value.deck?.[0].cards.length);
+const rows = [
+  [{ area: "field", label: "場" }],
+  [
+    { area: "shields", label: "盾" },
+    { area: "deck", label: "山", width: 1 },
+    { area: "graveyard", label: "墓", width: 1 },
+  ],
+  [{ area: "lands", label: "マナ" }],
+  [{ area: "hand", label: "手札" }],
+];
+
+const initialize = () => {
+  const containerEl = document.getElementsByClassName("MainCards")?.[0]?.children;
+  const cardSrcs = Array.from(containerEl ?? []).map(el => el?.children?.[0]?.src ?? "");
+  const pile = shuffleArray(cardSrcs);
+  setState({
+    field: [],
+    lands: [],
+    graveyard: [stack({ cards: [] })],
+    hand: pile.splice(0, 5).map(src => stack({ cards: [src] })),
+    shields: pile.splice(0, 5).map(src => stack({ cards: [src], flipped: true })),
+    deck: [stack({ cards: pile, flipped: true })],
+  });
+};
 
 const handlers = {
   field: (ix) => ({
@@ -72,7 +96,7 @@ const handlers = {
     ]),
     onContextMenu: (e) => showMenu(e, [
       ["→ 場", () => moveSingle("deck", ix, 0, "lands", true)],
-      ["ボトムから引く", () => moveSingle("deck", ix, deckLength.value - 1, "hand", true)],
+      ["ボトムから引く", () => moveSingle("deck", ix, -1, "hand", true)],
       ["シャッフル", () => shuffle("deck", ix)],
       ["リスト", (e) => showList(e, "deck", ix, (e, j) => showMenu(e, [
         ["拡大", () => showLightbox(e, state.value.deck[0].cards[ix])],
@@ -99,7 +123,7 @@ const handlers = {
     ])),
     onContextMenu: (e) => showMenu(e, [
       ["拡大", () => showLightbox(e, state.value.graveyard[ix].cards[0])],
-      ["→ 場", () => moveSingle("graveyard", ix, 0, "lands", true)],
+      ["→ 場", () => moveSingle("graveyard", ix, 0, "field", true)],
       ["→ 盾", () => moveSingle("graveyard", ix, 0, "shields", true)],
       ["→ デッキトップ", () => pushSingle("graveyard", ix, 0, "deck", 0, true)],
       ["→ デッキボトム", () => unshiftSingle("graveyard", ix, 0, "deck", 0, true)],
@@ -137,16 +161,11 @@ const handlers = {
 };
 
 export const App = () => {
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState(true);
 
-  const initialize = useCallback(() => {
-    const containerEl = document.getElementsByClassName("MainCards")?.[0]?.children;
-    const cardSrcs = Array.from(containerEl ?? []).map(el => el?.children?.[0]?.src ?? "");
-    reset(cardSrcs);
-    setShow(true);
+  useEffect(() => {
+    initialize();
   }, []);
-
-  useEffect(initialize, [initialize]);
 
   return (
     <>
@@ -170,80 +189,22 @@ export const App = () => {
           <Menu />
           <List />
           <Lightbox />
-          <div class="dmpg-row">
-            <div class="dmpg-area">
-              {state.value.field?.map((stack, ix) => (
-                <CardStack
-                    area="field"
-                    ix={ix}
-                    stack={stack}
-                    {...handlers.field(ix)}
-                />
+          {rows.map(row => (
+            <div class="dmpg-row">
+              {row.map(area => (
+                <Area label={area.label} width={area.width}>
+                  {state.value[area.area]?.map((stack, ix) => (
+                    <CardStack
+                        area={area.area}
+                        ix={ix}
+                        stack={stack}
+                        {...handlers[area.area](ix)}
+                    />
+                  ))}
+                </Area>
               ))}
-              <span class="dmpg-area-label">場</span>
             </div>
-          </div>
-          <div className="dmpg-row">
-            <div class="dmpg-area">
-              {state.value.shields?.map((stack, ix) => (
-                <CardStack
-                    area="shields"
-                    ix={ix}
-                    stack={stack}
-                    {...handlers.shields(ix)}
-                />
-              ))}
-              <span class="dmpg-area-label">盾</span>
-            </div>
-            <div class="dmpg-area dmpg-area-deck">
-              {state.value.deck?.map((stack, ix) => (
-                <CardStack
-                    area="deck"
-                    ix={ix}
-                    stack={stack}
-                    {...handlers.deck(ix)}
-                />
-              ))}
-              <span class="dmpg-area-label">山</span>
-            </div>
-            <div class="dmpg-area dmpg-area-deck">
-              {state.value.graveyard?.map((stack, ix) => (
-                <CardStack
-                    area="graveyard"
-                    ix={ix}
-                    stack={stack}
-                    {...handlers.graveyard(ix)}
-                />
-              ))}
-              <span class="dmpg-area-label">墓</span>
-            </div>
-          </div>
-          <div class="dmpg-row">
-            <div class="dmpg-area">
-              {state.value?.lands.map((stack, ix) => (
-                <CardStack
-                    area="lands"
-                    ix={ix}
-                    stack={stack}
-                    {...handlers.lands(ix)}
-                />
-              ))}
-              <span class="dmpg-area-label">マナ</span>
-            </div>
-          </div>
-          <div class="dmpg-row">
-            <div class="dmpg-area">
-              {state.value?.hand.map((stack, ix) => (
-                <CardStack
-                    area="hand"
-                    ix={ix}
-                    stack={stack}
-                    {...handlers.hand(ix)}
-                />
-              ))}
-              <span class="dmpg-area-label">手札</span>
-            </div>
-          </div>
+          ))}
           <div class="dmpg-footer">
             <a href="https://zk-phi.github.io/handanalyze" target="_blank">→ 確率計算機</a>
             {" / "}

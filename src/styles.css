@@ -47,11 +47,6 @@
   min-height: var(--dmpg-card-height);
 }
 
-.dmpg-area-deck {
-  width: calc(var(--dmpg-card-width) * 1);
-  flex-grow: 0;
-}
-
 .dmpg-area-label {
   position: absolute;
   z-index: 1;

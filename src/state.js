@@ -2,7 +2,7 @@ import { signal, computed } from "@preact/signals";
 import { shuffle as shuffleArray, put } from "./utils/array.js";
 import { closeList } from "./components/List.jsx";
 
-const stack = ({
+export const stack = ({
   cards,
   flipped = false,
   reversed = false,
@@ -13,18 +13,10 @@ const stack = ({
 /* Map<AreaName, Stack[]> */
 export const state = signal({});
 
-export const reset = (cardSrcs) => {
+export const setState = (value) => {
   closeList();
-  const pile = shuffleArray(cardSrcs);
-  state.value = {
-    field: [],
-    lands: [],
-    graveyard: [stack({ cards: [] })],
-    hand: pile.splice(0, 5).map(src => stack({ cards: [src] })),
-    shields: pile.splice(0, 5).map(src => stack({ cards: [src], flipped: true })),
-    deck: [stack({ cards: pile, flipped: true })],
-  };
-};
+  state.value = value;
+}
 
 export const shuffle = (src, ix) => {
   const shuffled = shuffleArray(state.value[src][ix].cards);
@@ -128,6 +120,9 @@ export const untapAll = (srcs) => {
 };
 
 const popSingle = (src, si, sj) => {
+  if (sj < 0) {
+    sj += state.value[src][si].cards.length;
+  }
   const card = state.value[src][si].cards[sj];
   state.value = {
     ...state.value,
