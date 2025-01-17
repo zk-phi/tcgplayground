@@ -63,49 +63,50 @@ const handlers = {
     ]),
   }),
 
-  deck: {
+  deck: (ix) => ({
     onClick: (e) => showMenu(e, [
-      ["→ 手札", () => moveSingle("deck", 0, 0, "hand", true)],
-      ["→ 盾", () => moveSingle("deck", 0, 0, "shields", true)],
-      ["→ 墓地", () => pushSingle("deck", 0, 0, "graveyard", 0, true)],
-      ["→ マナ", () => moveSingle("deck", 0, 0, "lands", true, { reversed: true })],
+      ["→ 手札", () => moveSingle("deck", ix, 0, "hand", true)],
+      ["→ 盾", () => moveSingle("deck", ix, 0, "shields", true)],
+      ["→ 墓地", () => pushSingle("deck", ix, 0, "graveyard", 0, true)],
+      ["→ マナ", () => moveSingle("deck", ix, 0, "lands", true, { reversed: true })],
     ]),
     onContextMenu: (e) => showMenu(e, [
-      ["→ 場", () => moveSingle("deck", 0, 0, "lands", true)],
-      ["ボトムから引く", () => moveSingle("deck", 0, deckLength.value - 1, "hand", true)],
-      ["シャッフル", () => shuffle("deck", 0)],
-      ["リスト", (e) => showList(e, "deck", 0, (e, ix) => showMenu(e, [
+      ["→ 場", () => moveSingle("deck", ix, 0, "lands", true)],
+      ["ボトムから引く", () => moveSingle("deck", ix, deckLength.value - 1, "hand", true)],
+      ["シャッフル", () => shuffle("deck", ix)],
+      ["リスト", (e) => showList(e, "deck", ix, (e, j) => showMenu(e, [
         ["拡大", () => showLightbox(e, state.value.deck[0].cards[ix])],
-        ["→ 場", () => moveSingle("deck", 0, ix, "field", true)],
-        ["→ 盾", () => moveSingle("deck", 0, ix, "shields", true)],
-        ["→ トップ", () => pushSingle("deck", 0, ix, "deck", 0,)],
-        ["→ ボトム", () => unshiftSingle("deck", 0, ix, "deck", 0)],
-        ["→ 墓地", () => pushSingle("deck", 0, ix, "graveyard", 0, true)],
-        ["→ マナ", () => moveSingle("deck", 0, ix, "lands", true, { reversed: true })],
-        ["→ 手札", () => moveSingle("deck", 0, ix, "hand", true)],
+        ["→ 場", () => moveSingle("deck", ix, j, "field", true)],
+        ["→ 盾", () => moveSingle("deck", ix, j, "shields", true)],
+        ["→ トップ", () => pushSingle("deck", ix, j, "deck", ix,)],
+        ["→ ボトム", () => unshiftSingle("deck", ix, j, "deck", ix)],
+        ["→ 墓地", () => pushSingle("deck", ix, j, "graveyard", 0, true)],
+        ["→ マナ", () => moveSingle("deck", ix, j, "lands", true, { reversed: true })],
+        ["→ 手札", () => moveSingle("deck", ix, j, "hand", true)],
       ]))],
     ]),
-  },
+  }),
 
-  graveyard: {
-    onClick: (e) => showList(e, "graveyard", 0, (e, ix) => showMenu(e, [
-      ["→ 場", () => moveSingle("graveyard", 0, ix, "field", true)],
-      ["→ デッキトップ", () => pushSingle("graveyard", 0, ix, "deck", 0, true)],
-      ["→ デッキボトム", () => unshiftSingle("graveyard", 0, ix, "deck", 0, true)],
-      ["→ 盾", () => moveSingle("graveyard", 0, ix, "shields", true)],
-      ["→ マナ", () => moveSingle("graveyard", 0, ix, "lands", true, { reversed: true })],
-      ["→ 手札", () => moveSingle("graveyard", 0, ix, "hand", true)],
+  graveyard: (ix) => ({
+    onClick: (e) => showList(e, "graveyard", ix, (e, j) => showMenu(e, [
+      ["拡大", () => showLightbox(e, state.value.graveyard[ix].cards[j])],
+      ["→ 場", () => moveSingle("graveyard", ix, j, "field", true)],
+      ["→ デッキトップ", () => pushSingle("graveyard", ix, j, "deck", 0, true)],
+      ["→ デッキボトム", () => unshiftSingle("graveyard", ix, j, "deck", 0, true)],
+      ["→ 盾", () => moveSingle("graveyard", ix, j, "shields", true)],
+      ["→ マナ", () => moveSingle("graveyard", ix, j, "lands", true, { reversed: true })],
+      ["→ 手札", () => moveSingle("graveyard", ix, j, "hand", true)],
     ])),
     onContextMenu: (e) => showMenu(e, [
       ["拡大", () => showLightbox(e, state.value.graveyard[ix].cards[0])],
-      ["→ 場", () => moveSingle("graveyard", 0, 0, "lands", true)],
-      ["→ 盾", () => moveSingle("graveyard", 0, 0, "shields", true)],
-      ["→ デッキトップ", () => pushSingle("graveyard", 0, 0, "deck", 0, true)],
-      ["→ デッキボトム", () => unshiftSingle("graveyard", 0, 0, "deck", 0, true)],
-      ["→ マナ", () => moveSingle("graveyard", 0, 0, "lands", true, { reversed: true })],
-      ["→ 手札", () => moveSingle("graveyard", 0, 0, "hand", true)],
+      ["→ 場", () => moveSingle("graveyard", ix, 0, "lands", true)],
+      ["→ 盾", () => moveSingle("graveyard", ix, 0, "shields", true)],
+      ["→ デッキトップ", () => pushSingle("graveyard", ix, 0, "deck", 0, true)],
+      ["→ デッキボトム", () => unshiftSingle("graveyard", ix, 0, "deck", 0, true)],
+      ["→ マナ", () => moveSingle("graveyard", ix, 0, "lands", true, { reversed: true })],
+      ["→ 手札", () => moveSingle("graveyard", ix, 0, "hand", true)],
     ]),
-  },
+  }),
 
   lands: (ix) => ({
     onClick: () => toggleTapped("lands", ix),
@@ -195,23 +196,26 @@ export const App = () => {
               <span class="dmpg-area-label">盾</span>
             </div>
             <div class="dmpg-area dmpg-area-deck">
-              {state.value.deck && (
+              {state.value.deck?.map((stack, ix) => (
                 <CardStack
                     area="deck"
-                    ix={0}
-                    stack={state.value.deck[0]}
-                    {...handlers.deck}
+                    ix={ix}
+                    stack={stack}
+                    {...handlers.deck(ix)}
                 />
-              )}
-              {state.value.graveyard && (
+              ))}
+              <span class="dmpg-area-label">山</span>
+            </div>
+            <div class="dmpg-area dmpg-area-deck">
+              {state.value.graveyard?.map((stack, ix) => (
                 <CardStack
                     area="graveyard"
-                    ix={0}
-                    stack={state.value.graveyard[0]}
-                    {...handlers.graveyard}
+                    ix={ix}
+                    stack={stack}
+                    {...handlers.graveyard(ix)}
                 />
-              )}
-              <span class="dmpg-area-label">山/墓</span>
+              ))}
+              <span class="dmpg-area-label">墓</span>
             </div>
           </div>
           <div class="dmpg-row">

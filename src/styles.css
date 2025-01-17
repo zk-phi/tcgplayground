@@ -48,7 +48,7 @@
 }
 
 .dmpg-area-deck {
-  width: calc(var(--dmpg-card-width) * 2);
+  width: calc(var(--dmpg-card-width) * 1);
   flex-grow: 0;
 }
 
