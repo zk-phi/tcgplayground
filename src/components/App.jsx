@@ -7,6 +7,35 @@ import { Lightbox } from "./Lightbox.jsx";
 import { CardStack } from "./CardStack.jsx";
 import { Button } from "./Button.jsx";
 
+const Rows = ({ rows, initialize, handlers }) => (
+  <div class="dmpg-rows">
+    {rows.map(row => (
+    <div class="dmpg-row">
+      <Areas areas={row} initialize={initialize} handlers={handlers} />
+    </div>
+    ))}
+  </div>
+);
+
+const Areas = ({ areas, initialize, handlers }) => console.log(areas) || (
+  areas.map(area => (
+    Array.isArray(area) ? (
+      <Rows rows={area} initialize={initialize} handlers={handlers} />
+    ) : (
+      <Area label={area.label} width={area.width}>
+        {state.value[area.area]?.map((stack, ix) => (
+          <CardStack
+              area={area.area}
+              ix={ix}
+              stack={stack}
+              {...handlers[area.area](ix)}
+          />
+        ))}
+      </Area>
+    )
+  ))
+);
+
 export const App = ({ rows, initialize, handlers }) => {
   const [show, setShow] = useState(true);
 
@@ -36,22 +65,7 @@ export const App = ({ rows, initialize, handlers }) => {
           <Menu />
           <List />
           <Lightbox />
-          {rows.map(row => (
-            <div class="dmpg-row">
-              {row.map(area => (
-                <Area label={area.label} width={area.width}>
-                  {state.value[area.area]?.map((stack, ix) => (
-                    <CardStack
-                        area={area.area}
-                        ix={ix}
-                        stack={stack}
-                        {...handlers[area.area](ix)}
-                    />
-                  ))}
-                </Area>
-              ))}
-            </div>
-          ))}
+          <Rows rows={rows} initialize={initialize} handlers={handlers} />
           <div class="dmpg-footer">
             <a href="https://zk-phi.github.io/handanalyze" target="_blank">→ 確率計算機</a>
             {" / "}

@@ -30,6 +30,10 @@
   margin-left: 4px;
 }
 
+.dmpg-rows {
+  flex-grow: 1;
+}
+
 .dmpg-row {
   display: flex;
   gap:  var(--dmpg-global-margin);
