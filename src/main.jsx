@@ -4,6 +4,8 @@ import { App } from "./components/App.jsx";
 import styles from "./styles.min.css?raw";
 
 /* TODO: Add stand-alone deck-builder */
+/* TODO: Better layouting for large screens */
+/* TODO: Support touch devices */
 
 const div = document.createElement("div");
 div.id = "dmplayground";
