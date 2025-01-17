@@ -41,6 +41,7 @@ export const unshift = (src, si, dest, di) => {
     move(src, si, dest, {}, true);
   } else {
     const stack = pop(src, si);
+    if (src === dest && di > si) di--;
     state.value = {
       ...state.value,
       [dest]: put(state.value[dest], di, {
@@ -57,6 +58,7 @@ export const push = (src, si, dest, di) => {
     move(src, si, dest, {}, true);
   } else {
     const stack = pop(src, si);
+    if (src === dest && di > si) di--;
     state.value = {
       ...state.value,
       [dest]: put(state.value[dest], di, {
