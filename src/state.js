@@ -38,7 +38,7 @@ const pop = (src, si) => {
 export const unshift = (src, si, dest, di) => {
   closeList();
   if (!state.value[dest][di]) {
-    move(src, si, dest);
+    move(src, si, dest, {}, true);
   } else {
     const stack = pop(src, si);
     state.value = {
@@ -54,7 +54,7 @@ export const unshift = (src, si, dest, di) => {
 export const push = (src, si, dest, di) => {
   closeList();
   if (!state.value[dest][di]) {
-    move(src, si, dest);
+    move(src, si, dest, {}, true);
   } else {
     const stack = pop(src, si);
     state.value = {
@@ -67,14 +67,18 @@ export const push = (src, si, dest, di) => {
   }
 };
 
-export const move = (src, si, dest, attrs = {}) => {
+export const move = (src, si, dest, attrs = {}, keepStacked = false) => {
   closeList();
-  const stack = pop(src, si);
+  const cards = pop(src, si).cards;
   state.value = {
     ...state.value,
     [dest]: [
       ...state.value[dest],
-      ...stack.cards.map(card => ({ cards: [card], ...attrs })),
+      ...(keepStacked ? (
+        [stack({ cards, ...attrs })]
+      ) : (
+        cards.map(card => stack({ cards: [card], ...attrs }))
+      )),
     ],
   };
 };

@@ -22,7 +22,7 @@ const Areas = ({ areas, initialize, handlers }) => (
     Array.isArray(area) ? (
       <Rows rows={area} initialize={initialize} handlers={handlers} />
     ) : state.value[area.area]?.length || !area.optional ? (
-      <Area label={area.label} width={area.width}>
+      <Area label={area.label} width={area.width} nogrow={area.optional}>
         {state.value[area.area]?.map((stack, ix) => (
           <CardStack
               area={area.area}

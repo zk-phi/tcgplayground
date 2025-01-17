@@ -13,6 +13,17 @@ export const select = (src, si, handler) => {
   };
 };
 
+export const selectSingle = (src, si, j, handler) => {
+  selection.value = {
+    src,
+    si,
+    handler: (dest, di) => {
+      unselect();
+      handler(src, si, j, dest, di);
+    },
+  };
+};
+
 export const unselect = () => {
   selection.value = null;
 };

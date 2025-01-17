@@ -5,7 +5,7 @@ import {
   toggleTapped, toggleReversed, toggleFlipped, toggleLaid, setAttribute,
   shuffle, untapAll,
 } from "../state.js";
-import { select } from "../selection.js";
+import { select, selectSingle } from "../selection.js";
 import { showMenu } from "../components/Menu.jsx";
 import { showList } from "../components/List.jsx";
 import { showLightbox } from "../components/Lightbox.jsx";
@@ -27,16 +27,20 @@ export const rows = [
    *     [{ area: "hand", label: "手札" }],
    *   ],
    * ], */
-  [{ area: "field", label: "場" }],
   [
-    { area: "shields", label: "シールド" },
-    { area: "deck", label: "デッキ", width: 1 },
-    { area: "graveyard", label: "墓地", width: 1 },
-    { area: "grdeck", label: "GR", width: 1, optional: true },
-    { area: "exdeck", label: "超次元", width: 1, optional: true },
+    { area: "field", label: "⚔️️ 場" }
+  ], [
+    { area: "shields", label: "🛡️ シールド" },
+    { area: "exploring", label: "🫣見てる", optional: true },
+    { area: "deck", label: "🫳 デッキ", width: 1 },
+    { area: "graveyard", label: "🪦 墓地", width: 1 },
+    { area: "grdeck", label: "🎰 GR", width: 1, optional: true },
+    { area: "exdeck", label: "⚡ 超次元", width: 1, optional: true },
+  ], [
+    { area: "lands", label: "⛰️ マナ" },
+  ], [
+    { area: "hand", label: "🃏 手札" },
   ],
-  [{ area: "lands", label: "マナ" }],
-  [{ area: "hand", label: "手札" }],
 ];
 
 const extractSrcs = (classname) => {
@@ -57,6 +61,7 @@ export const initialize = () => {
     deck: [stack({ cards: deck, flipped: true })],
     grdeck: grdeck.length ? [stack({ cards: grdeck, flipped: true })] : [],
     exdeck: exdeck.length ? [stack({ cards: exdeck })] : [],
+    exploring: [],
   });
 };
 
@@ -76,7 +81,7 @@ export const handlers = {
       ["🫳 上に乗せる", () => select("field", ix, push)],
       ["🫴 下に入れる", () => select("field", ix, unshift)],
       ["⬅️ 横向きにする", () => toggleLaid("field", ix)],
-      ["⤵️ 上下反転する", () => toggleReversed("field", ix)],
+      ["↕️ 上下反転する", () => toggleReversed("field", ix)],
       ["🔄 裏返す", () => toggleFlipped("field", ix)],
       ["👀 リスト", e => showList(e, "field", ix, (e, j) => showMenu(e, [
         ["🔍 拡大", () => showLightbox(e, state.value.field[ix].cards[j])],
@@ -84,6 +89,8 @@ export const handlers = {
         ["→🫳 デッキトップ", () => pushSingle("field", ix, j, "deck", 0)],
         ["→🫴 デッキボトム", () => unshiftSingle("field", ix, j, "deck", 0)],
         ["→🪦 墓地", () => pushSingle("field", ix, j, "graveyard", 0)],
+        ["→🎰 GR", () => unshiftSingle("field", ix, j, "grdeck", 0)],
+        ["→⚡ 超次元", () => pushSingle("field", ix, j, "exdeck", 0)],
         ["→⛰️ マナ", () => moveSingle("field", ix, j, "lands", false, { reversed: true })],
         ["→🃏 手札", () => moveSingle("field", ix, j, "hand")],
       ]))],
@@ -112,6 +119,7 @@ export const handlers = {
         ["→🫳 デッキトップ", () => pushSingle("shields", ix, j, "deck", 0,)],
         ["→🫴 デッキボトム", () => unshiftSingle("shields", ix, j, "deck", 0)],
         ["→🪦 墓地", () => pushSingle("shields", ix, j, "graveyard", 0)],
+        ["→⚡ 超次元", () => push("shields", ix, "exdeck", 0)],
         ["→⛰️ マナ", () => moveSingle("shields", ix, j, "lands", false, { reversed: true })],
         ["→🃏 手札", () => moveSingle("shields", ix, j, "hand")],
       ]))],
@@ -123,12 +131,14 @@ export const handlers = {
       ["→🪦 墓地", () => pushSingle("deck", ix, 0, "graveyard", 0, true)],
       ["→⛰️ マナ", () => moveSingle("deck", ix, 0, "lands", true, { reversed: true })],
       ["→🃏 手札", () => moveSingle("deck", ix, 0, "hand", true)],
+      ["→🫣 見る", () => moveSingle("deck", ix, 0, "exploring", true)],
     ]),
     onContextMenu: e => showMenu(e, [
       ["→⚔️ 場", () => moveSingle("deck", ix, 0, "field", true)],
       ["→🛡️ シールド", () => moveSingle("deck", ix, 0, "shields", true)],
       ["→⚡ 超次元", () => pushSingle("deck", ix, 0, "exdeck", 0)],
       ["🤏 ボトムから引く", () => moveSingle("deck", ix, -1, "hand", true)],
+      ["🫴 下に入れる", () => selectSingle("deck", ix, 0, unshiftSingle)],
       ["♻️ シャッフル", () => shuffle("deck", ix)],
       ["👀 リスト", e => showList(e, "deck", ix, (e, j) => showMenu(e, [
         ["🔍 拡大", () => showLightbox(e, state.value.deck[0].cards[ix])],
@@ -223,12 +233,29 @@ export const handlers = {
       ["→⚔️ 場", () => move("hand", ix, "field")],
       ["→⛰️ マナ", () => move("hand", ix, "lands", { reversed: true })],
       ["→🪦 墓地", () => push("hand", ix, "graveyard", 0)],
+      ["🫳 上に乗せる", () => select("hand", ix, push)],
     ]),
     onContextMenu: e => showMenu(e, [
       ["→🛡️ シールド", () => move("hand", ix, "shields")],
       ["→⚡ 超次元", () => push("hand", ix, "exdeck", 0)],
-      ["🫳 上に乗せる", () => select("hand", ix, push)],
       ["🫴 下に入れる", () => select("hand", ix, unshift)],
+    ]),
+  }),
+
+  exploring: (ix) => ({
+    onClick: e => showMenu(e, [
+      ["🔍 拡大", () => showLightbox(e, state.value.exploring[ix].cards[0])],
+      ["→⚔️ 場", () => move("exploring", ix, "field", true)],
+      ["→🫴 デッキボトム", () => unshift("exploring", ix, "deck", 0)],
+      ["→🪦 墓地", () => push("exploring", ix, "graveyard", 0)],
+      ["→⛰️ マナ", () => move("exploring", ix, "lands", { reversed: true })],
+      ["→🃏 手札", () => move("exploring", ix, "hand")],
+    ]),
+    onContextMenu: e => showMenu(e, [
+      ["→🛡️ シールド", () => move("exploring", ix, "shields", true)],
+      ["→⚡ 超次元", () => push("exploring", ix, "exdeck", 0)],
+      ["🫳 上に乗せる", () => select("exploring", ix, push)],
+      ["🫴 下に入れる", () => select("exploring", ix, unshift)],
     ]),
   }),
 };

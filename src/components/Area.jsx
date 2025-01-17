@@ -1,7 +1,7 @@
-export const Area = ({ label, children, width }) => {
-  const style = width == null ? null : {
-    width: `calc(var(--dmpg-card-width) * ${width})`,
-    flexGrow: 0,
+export const Area = ({ label, children, width, nogrow }) => {
+  const style = {
+    width: width == null ? undefined : `calc(var(--dmpg-card-width) * ${width})`,
+    flexGrow: (width || nogrow) ? 0 : 1,
   };
 
   return (
