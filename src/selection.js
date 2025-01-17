@@ -2,24 +2,24 @@ import { signal } from "@preact/signals";
 
 export const selection = signal(null);
 
-export const select = (src, si, handler) => {
+export const select = (area, ix, handler) => {
   selection.value = {
-    src,
-    si,
+    area,
+    ix,
     handler: (dest, di) => {
       unselect();
-      handler(src, si, dest, di);
+      handler(area, ix, dest, di);
     },
   };
 };
 
-export const selectSingle = (src, si, j, handler) => {
+export const selectSingle = (area, ix, j, handler) => {
   selection.value = {
-    src,
-    si,
+    area,
+    ix,
     handler: (dest, di) => {
       unselect();
-      handler(src, si, j, dest, di);
+      handler(area, ix, j, dest, di);
     },
   };
 };

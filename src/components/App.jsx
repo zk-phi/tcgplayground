@@ -1,4 +1,5 @@
 import { useEffect, useState } from "preact/hooks";
+import { dragStop } from "../drag.js";
 import { state } from "../state.js";
 import { Area } from "./Area.jsx";
 import { closeMenu, Menu } from "./Menu.jsx";
@@ -22,7 +23,11 @@ const Areas = ({ areas, initialize, handlers }) => (
     Array.isArray(area) ? (
       <Rows rows={area} initialize={initialize} handlers={handlers} />
     ) : state.value[area.area]?.length || !area.optional ? (
-      <Area label={area.label} width={area.width} nogrow={area.optional}>
+      <Area
+          name={area.area}
+          label={area.label}
+          width={area.width}
+          nogrow={area.optional}>
         {state.value[area.area]?.map((stack, ix) => (
           <CardStack
               area={area.area}
@@ -61,7 +66,7 @@ export const App = ({ rows, initialize, handlers }) => {
         </Button>
       </div>
       {show && (
-        <div class="dmpg-wrapper" onClick={() => closeMenu()}>
+        <div class="dmpg-wrapper" onClick={() => closeMenu()} onDragEnd={() => dragStop()}>
           <Menu />
           <List />
           <Lightbox />

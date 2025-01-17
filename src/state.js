@@ -123,16 +123,6 @@ export const toggleLaid = (src, si) => {
   };
 };
 
-export const setAttribute = (src, si, key, value) => {
-  state.value = {
-    ...state.value,
-    [src]: put(state.value[src], si, {
-      ...state.value[src][si],
-      [key]: value,
-    }),
-  };
-};
-
 export const untapAll = (srcs) => {
   const untapped = Object.fromEntries(srcs.map(src => [
     src,

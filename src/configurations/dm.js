@@ -2,7 +2,7 @@ import { shuffle as shuffleArray } from "../utils/array.js";
 import {
   stack, state, setState,
   move, push, unshift, moveSingle, pushSingle, unshiftSingle,
-  toggleTapped, toggleReversed, toggleFlipped, toggleLaid, setAttribute,
+  toggleTapped, toggleReversed, toggleFlipped, toggleLaid,
   shuffle, untapAll,
 } from "../state.js";
 import { select, selectSingle } from "../selection.js";
@@ -31,7 +31,7 @@ export const rows = [
     { area: "field", label: "⚔️️ 場" }
   ], [
     { area: "shields", label: "🛡️ シールド" },
-    { area: "exploring", label: "🫣見てる", optional: true },
+    { area: "exploring", label: "🫣めくられた", optional: true },
     { area: "deck", label: "🫳 デッキ", width: 1 },
     { area: "graveyard", label: "🪦 墓地", width: 1 },
     { area: "grdeck", label: "🎰 GR", width: 1, optional: true },
@@ -65,197 +65,134 @@ export const initialize = () => {
   });
 };
 
+const standardOnDragHandler = (src, si) => (e, dest, di) => {
+  if (dest === "graveyard" || dest === "exdeck") {
+    push(src, si, dest, di ?? 0);
+  } else if (dest === "deck" || dest === "grdeck" || di != null) {
+    showMenu(e, [
+      ["🫳 上に置く", () => push(src, si, dest, di ?? 0)],
+      ["🫴 下に入れる", () => unshift(src, si, dest, di ?? 0)],
+    ]);
+  } else {
+    move(src, si, dest, { reversed: true });
+  }
+};
+
+const deckOnDragHandler = (src, si, allowEmpty) => (e, dest, di) => {
+  if (dest === "graveyard" || dest === "exdeck") {
+    pushSingle(src, si, 0, dest, di ?? 0, allowEmpty);
+  } else if (dest === "deck" || dest === "grdeck" || di != null) {
+    showMenu(e, [
+      ["🫳 上に置く", () => pushSingle(src, si, 0, dest, di ?? 0, allowEmpty)],
+      ["🫴 下に入れる", () => unshiftSingle(src, si, 0, dest, di ?? 0, allowEmpty)],
+    ]);
+  } else {
+    moveSingle(src, si, 0, dest, allowEmpty, { reversed: dest === "lands" });
+  }
+};
+
+const showListWithContextMenu = (e, area, ix, allowEmpty = false) => {
+  showList(e, area, ix, (e, j) => showMenu(e, [
+    ["🔍 拡大", () => showLightbox(e, state.value[area][ix].cards[j])],
+    ["→⚔️ 場に出す", () => moveSingle(area, ix, j, "field", allowEmpty)],
+    ["→🛡️ シールドに追加", () => moveSingle(area, ix, j, "shields", allowEmpty)],
+    ["→🫳 デッキの上に置く", () => pushSingle(area, ix, j, "deck", 0, allowEmpty)],
+    ["→🫴 デッキの下に入れる", () => unshiftSingle(area, ix, j, "deck", 0, allowEmpty)],
+    ["→🪦 墓地に送る", () => pushSingle(area, ix, j, "graveyard", 0, allowEmpty)],
+    ["→🎰 GRゾーンに置く", () => unshiftSingle(area, ix, j, "grdeck", 0, allowEmpty)],
+    ["→⚡ 超次元ゾーンに置く", () => pushSingle(area, ix, j, "exdeck", 0, allowEmpty)],
+    ["→⛰️ マナに追加", () => moveSingle(area, ix, j, "lands", allowEmpty, { reversed: true })],
+    ["→🃏 手札に加える", () => moveSingle(area, ix, j, "hand", allowEmpty)],
+  ]));
+};
+
 export const handlers = {
-  field: (ix) => ({
-    onClick: e => showMenu(e, [
-      ["🔍 拡大", () => showLightbox(e, state.value.field[ix].cards[0])],
-      ["✅ タップ", () => toggleTapped("field", ix)],
-      ["→🪦 墓地", () => push("field", ix, "graveyard", 0)],
-      ["→🎰 GR", () => unshift("field", ix, "grdeck", 0)],
-    ]),
+  field: ix => ({
+    onClick: e => showLightbox(e, state.value.field[ix].cards[0]),
     onContextMenu: e => showMenu(e, [
-      ["→🛡️ シールド", () => move("field", ix, "shields")],
-      ["→⚡ 超次元", () => push("field", ix, "exdeck", 0)],
-      ["→⛰️ マナ", () => move("field", ix, "lands", { reversed: true })],
-      ["→🃏 手札", () => move("field", ix, "hand")],
-      ["🫳 上に乗せる", () => select("field", ix, push)],
-      ["🫴 下に入れる", () => select("field", ix, unshift)],
+      ["✅ タップ", () => toggleTapped("field", ix)],
+      ["⚡ 超次元ゾーン送り", () => push("field", ix, "exdeck", 0)],
       ["⬅️ 横向きにする", () => toggleLaid("field", ix)],
       ["↕️ 上下反転する", () => toggleReversed("field", ix)],
       ["🔄 裏返す", () => toggleFlipped("field", ix)],
-      ["👀 リスト", e => showList(e, "field", ix, (e, j) => showMenu(e, [
-        ["🔍 拡大", () => showLightbox(e, state.value.field[ix].cards[j])],
-        ["→🛡️ シールド", () => moveSingle("field", ix, j, "shields")],
-        ["→🫳 デッキトップ", () => pushSingle("field", ix, j, "deck", 0)],
-        ["→🫴 デッキボトム", () => unshiftSingle("field", ix, j, "deck", 0)],
-        ["→🪦 墓地", () => pushSingle("field", ix, j, "graveyard", 0)],
-        ["→🎰 GR", () => unshiftSingle("field", ix, j, "grdeck", 0)],
-        ["→⚡ 超次元", () => pushSingle("field", ix, j, "exdeck", 0)],
-        ["→⛰️ マナ", () => moveSingle("field", ix, j, "lands", false, { reversed: true })],
-        ["→🃏 手札", () => moveSingle("field", ix, j, "hand")],
-      ]))],
+      ["👀 重なっているカード", e => showListWithContextMenu(e, "field", ix)],
     ]),
+    onDrag: standardOnDragHandler("field", ix),
   }),
 
-  shields: (ix) => ({
+  shields: ix => ({
     onClick: e => {
-      setAttribute("shields", ix, "flipped", false);
-      showMenu(e, [
-        ["🔍 拡大", () => showLightbox(e, state.value.shields[ix].cards[0])],
-        ["→⚔️ 場", () => move("shields", ix, "field")],
-        ["→🪦 墓地", () => push("shields", ix, "graveyard", 0)],
-        ["→🃏 手札", () => move("shields", ix, "hand")],
-      ]);
+      if (state.value.shields[ix].flipped) {
+        toggleFlipped("shields", ix);
+      } else {
+        showLightbox(e, state.value.shields[ix].cards[0]);
+      }
     },
     onContextMenu: e => showMenu(e, [
-      ["→⚡ 超次元", () => push("shields", ix, "exdeck", 0)],
-      ["→⛰️ マナ", () => move("shields", ix, "lands", { reversed: true })],
-      ["🫳 上に乗せる", () => select("shields", ix, push)],
-      ["🫴 下に入れる", () => select("shields", ix, unshift)],
+      ["⚡ 超次元ゾーン送り", () => push("shields", ix, "exdeck", 0)],
       ["🔄 裏返す", () => toggleFlipped("shields", ix)],
-      ["👀 リスト", e => showList(e, "shields", ix, (e, j) => showMenu(e, [
-        ["🔍 拡大", () => showLightbox(e, state.value.shields[ix].cards[j])],
-        ["→⚔️ 場", () => moveSingle("shields", ix, j, "field")],
-        ["→🫳 デッキトップ", () => pushSingle("shields", ix, j, "deck", 0,)],
-        ["→🫴 デッキボトム", () => unshiftSingle("shields", ix, j, "deck", 0)],
-        ["→🪦 墓地", () => pushSingle("shields", ix, j, "graveyard", 0)],
-        ["→⚡ 超次元", () => push("shields", ix, "exdeck", 0)],
-        ["→⛰️ マナ", () => moveSingle("shields", ix, j, "lands", false, { reversed: true })],
-        ["→🃏 手札", () => moveSingle("shields", ix, j, "hand")],
-      ]))],
+      ["👀 重なっているカード", e => showListWithContextMenu(e, "shields", ix)],
     ]),
+    onDrag: standardOnDragHandler("shields", ix)
   }),
 
-  deck: (ix) => ({
-    onClick: e => showMenu(e, [
-      ["→🪦 墓地", () => pushSingle("deck", ix, 0, "graveyard", 0, true)],
-      ["→⛰️ マナ", () => moveSingle("deck", ix, 0, "lands", true, { reversed: true })],
-      ["→🃏 手札", () => moveSingle("deck", ix, 0, "hand", true)],
-      ["→🫣 見る", () => moveSingle("deck", ix, 0, "exploring", true)],
-    ]),
+  deck: ix => ({
+    onClick: e => moveSingle("deck", ix, 0, "exploring", true),
     onContextMenu: e => showMenu(e, [
-      ["→⚔️ 場", () => moveSingle("deck", ix, 0, "field", true)],
-      ["→🛡️ シールド", () => moveSingle("deck", ix, 0, "shields", true)],
-      ["→⚡ 超次元", () => pushSingle("deck", ix, 0, "exdeck", 0)],
+      ["⚡ 超次元送り", () => pushSingle("deck", ix, 0, "exdeck", 0)],
       ["🤏 ボトムから引く", () => moveSingle("deck", ix, -1, "hand", true)],
-      ["🫴 下に入れる", () => selectSingle("deck", ix, 0, unshiftSingle)],
       ["♻️ シャッフル", () => shuffle("deck", ix)],
-      ["👀 リスト", e => showList(e, "deck", ix, (e, j) => showMenu(e, [
-        ["🔍 拡大", () => showLightbox(e, state.value.deck[0].cards[ix])],
-        ["→⚔️ 場", () => moveSingle("deck", ix, j, "field", true)],
-        ["→🛡️ シールド", () => moveSingle("deck", ix, j, "shields", true)],
-        ["→🫳 デッキトップ", () => pushSingle("deck", ix, j, "deck", ix,)],
-        ["→🫴 デッキボトム", () => unshiftSingle("deck", ix, j, "deck", ix)],
-        ["→🪦 墓地", () => pushSingle("deck", ix, j, "graveyard", 0, true)],
-        ["→⛰️ マナ", () => moveSingle("deck", ix, j, "lands", true, { reversed: true })],
-        ["→🃏 手札", () => moveSingle("deck", ix, j, "hand", true)],
-      ]))],
+      ["👀 リスト", e => showListWithContextMenu(e, "deck", ix, true)],
     ]),
+    onDrag: deckOnDragHandler("deck", ix, true),
   }),
 
-  graveyard: (ix) => ({
-    onClick: e => showList(e, "graveyard", ix, (e, j) => showMenu(e, [
-      ["🔍 拡大", () => showLightbox(e, state.value.graveyard[ix].cards[j])],
-      ["→⚔️ 場", () => moveSingle("graveyard", ix, j, "field", true)],
-      ["→🛡️ シールド", () => moveSingle("graveyard", ix, j, "shields", true)],
-      ["→🫳 デッキトップ", () => pushSingle("graveyard", ix, j, "deck", 0, true)],
-      ["→🫴 デッキボトム", () => unshiftSingle("graveyard", ix, j, "deck", 0, true)],
-      ["→⚡ 超次元", () => pushSingle("graveyard", ix, 0, "exdeck", 0)],
-      ["→⛰️ マナ", () => moveSingle("graveyard", ix, j, "lands", true, { reversed: true })],
-      ["→🃏 手札", () => moveSingle("graveyard", ix, j, "hand", true)],
-    ])),
-    onContextMenu: e => showList(e, "graveyard", ix, (e, j) => showMenu(e, [
-      ["🔍 拡大", () => showLightbox(e, state.value.graveyard[ix].cards[j])],
-      ["→⚔️ 場", () => moveSingle("graveyard", ix, j, "field", true)],
-      ["→🛡️ シールド", () => moveSingle("graveyard", ix, j, "shields", true)],
-      ["→🫳 デッキトップ", () => pushSingle("graveyard", ix, j, "deck", 0, true)],
-      ["→🫴 デッキボトム", () => unshiftSingle("graveyard", ix, j, "deck", 0, true)],
-      ["→⚡ 超次元", () => pushSingle("graveyard", ix, 0, "exdeck", 0)],
-      ["→⛰️ マナ", () => moveSingle("graveyard", ix, j, "lands", true, { reversed: true })],
-      ["→🃏 手札", () => moveSingle("graveyard", ix, j, "hand", true)],
-    ])),
+  graveyard: ix => ({
+    onClick: e => showListWithContextMenu(e, "graveyard", ix, true),
+    onContextMenu: e => showListWithContextMenu(e, "graveyard", ix, true),
+    onDrag: deckOnDragHandler("graveyard", ix, true),
   }),
 
-  grdeck: (ix) => ({
-    onClick: e => showMenu(e, [
-      ["→⚔️️ 場", () => moveSingle("grdeck", ix, 0, "field")],
-    ]),
+  grdeck: ix => ({
+    onClick: e => moveSingle("grdeck", ix, 0, "exploring", true),
     onContextMenu: e => showMenu(e, [
       ["♻️ シャッフル", () => shuffle("grdeck", ix)],
-      ["👀 リスト", e => showList(e, "grdeck", ix, (e, j) => showMenu(e, [
-        ["🔍 拡大", () => showLightbox(e, state.value.grdeck[0].cards[ix])],
-        ["→⚔️ 場", () => moveSingle("grdeck", ix, j, "field")],
-      ]))],
+      ["👀 リスト", e => showListWithContextMenu(e, "grdeck", ix, true)],
     ]),
+    onDrag: deckOnDragHandler("grdeck", ix, true),
   }),
 
-  exdeck: (ix) => ({
-    onClick: e => showList(e, "exdeck", ix, (e, j) => showMenu(e, [
-      ["🔍 拡大", () => showLightbox(e, state.value.exdeck[ix].cards[j])],
-      ["→⚔️ 場", () => moveSingle("exdeck", ix, j, "field")],
-      ["→🛡️ シールド", () => moveSingle("exdeck", ix, j, "shields")],
-      ["→🫳 デッキトップ", () => pushSingle("exdeck", ix, j, "deck", 0)],
-      ["→🫴 デッキボトム", () => unshiftSingle("exdeck", ix, j, "deck", 0)],
-      ["→🪦 墓地", () => pushSingle("exdeck", ix, j, "graveyard", 0)],
-      ["→⛰️ マナ", () => moveSingle("exdeck", ix, j, "lands", false, { reversed: true })],
-      ["→🃏 手札", () => moveSingle("exdeck", ix, j, "hand")],
-    ])),
-    onContextMenu: e => showList(e, "exdeck", ix, (e, j) => showMenu(e, [
-      ["🔍 拡大", () => showLightbox(e, state.value.exdeck[ix].cards[j])],
-      ["→⚔️ 場", () => moveSingle("exdeck", ix, j, "field")],
-      ["→🛡️ シールド", () => moveSingle("exdeck", ix, j, "shields")],
-      ["→🫳 デッキトップ", () => pushSingle("exdeck", ix, j, "deck", 0)],
-      ["→🫴 デッキボトム", () => unshiftSingle("exdeck", ix, j, "deck", 0)],
-      ["→🪦 墓地", () => pushSingle("exdeck", ix, j, "graveyard", 0)],
-      ["→⛰️ マナ", () => moveSingle("exdeck", ix, j, "lands", false, { reversed: true })],
-      ["→🃏 手札", () => moveSingle("exdeck", ix, j, "hand")],
-    ])),
+  exdeck: ix => ({
+    onClick: e => showListWithContextMenu(e, "exdeck", ix),
+    onContextMenu: e => showListWithContextMenu(e, "exdeck", ix),
+    onDrag: deckOnDragHandler("exdeck", ix, true),
   }),
 
-  lands: (ix) => ({
+  lands: ix => ({
     onClick: () => toggleTapped("lands", ix),
     onContextMenu: e => showMenu(e, [
       ["🔍 拡大", () => showLightbox(e, state.value.lands[ix].cards[0])],
-      ["→⚔️ 場", () => move("lands", ix, "field")],
-      ["→🛡️ シールド", () => move("lands", ix, "shields")],
-      ["→🪦 墓地", () => push("lands", ix, "graveyard", 0)],
-      ["→🃏 手札", () => move("lands", ix, "hand")],
-      ["→⚡ 超次元", () => push("lands", ix, "exdeck", 0)],
-      ["🫳 上に乗せる", () => select("lands", ix, push)],
-      ["🫴 下に入れる", () => select("lands", ix, unshift)],
-      ["裏返す", () => toggleFlipped("lands", ix)],
-    ])
+      ["⚡ 超次元送り", () => push("lands", ix, "exdeck", 0)],
+      ["👀 重なっているカード", e => showListWithContextMenu(e, "lands", ix)],
+    ]),
+    onDrag: standardOnDragHandler("lands", ix),
   }),
 
-  hand: (ix) => ({
-    onClick: e => showMenu(e, [
-      ["🔍 拡大", () => showLightbox(e, state.value.hand[ix].cards[0])],
-      ["→⚔️ 場", () => move("hand", ix, "field")],
-      ["→⛰️ マナ", () => move("hand", ix, "lands", { reversed: true })],
-      ["→🪦 墓地", () => push("hand", ix, "graveyard", 0)],
-      ["🫳 上に乗せる", () => select("hand", ix, push)],
-    ]),
+  hand: ix => ({
+    onClick: e => showLightbox(e, state.value.hand[ix].cards[0]),
     onContextMenu: e => showMenu(e, [
-      ["→🛡️ シールド", () => move("hand", ix, "shields")],
-      ["→⚡ 超次元", () => push("hand", ix, "exdeck", 0)],
-      ["🫴 下に入れる", () => select("hand", ix, unshift)],
+      ["⚡ 超次元送り", () => push("hand", ix, "exdeck", 0)],
+      ["👀 重なっているカード", e => showListWithContextMenu(e, "hand", ix)],
     ]),
+    onDrag: standardOnDragHandler("hand", ix),
   }),
 
-  exploring: (ix) => ({
-    onClick: e => showMenu(e, [
-      ["🔍 拡大", () => showLightbox(e, state.value.exploring[ix].cards[0])],
-      ["→⚔️ 場", () => move("exploring", ix, "field", true)],
-      ["→🫴 デッキボトム", () => unshift("exploring", ix, "deck", 0)],
-      ["→🪦 墓地", () => push("exploring", ix, "graveyard", 0)],
-      ["→⛰️ マナ", () => move("exploring", ix, "lands", { reversed: true })],
-      ["→🃏 手札", () => move("exploring", ix, "hand")],
-    ]),
+  exploring: ix => ({
+    onClick: e => showLightbox(e, state.value.exploring[ix].cards[0]),
     onContextMenu: e => showMenu(e, [
-      ["→🛡️ シールド", () => move("exploring", ix, "shields", true)],
-      ["→⚡ 超次元", () => push("exploring", ix, "exdeck", 0)],
-      ["🫳 上に乗せる", () => select("exploring", ix, push)],
-      ["🫴 下に入れる", () => select("exploring", ix, unshift)],
+      ["⚡ 超次元送り", () => push("exploring", ix, "exdeck", 0)],
+      ["👀 重なっているカード", e => showListWithContextMenu(e, "hand", ix)],
     ]),
+    onDrag: standardOnDragHandler("exploring", ix),
   }),
 };
