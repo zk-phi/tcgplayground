@@ -8,23 +8,21 @@ export const CardStack = ({ stack, isSelected, isTargetted, ...props }) => {
     transform: `rotate(${angle}deg)`,
   };
 
-  const innerColor = isSelected ? (
-    "#ff08"
+  const extraClass = isSelected ? (
+    "dmpg-selected"
   ) : isTargetted ? (
-    "#0ff8"
+    "dmpg-targetted"
   ) : stack.cards.length > 0 && stack.flipped ? (
-    "#006"
+    "dmpg-flipped"
   ) : (
-    "transparent"
+    ""
   );
-
-  const counterColor = stack.flipped ? "white" : "black";
 
   return (
     <div class="dmpg-card-container" style={containerStyles} {...props}>
-      <div class="dmpg-card-inner" style={{ background: innerColor }}>
+      <div class={`dmpg-card-inner ${extraClass}`}>
         {stack.cards.length > 1 && (
-          <div class="dmpg-card-counter" style={{ color: counterColor }}>
+          <div class={`dmpg-card-counter ${stack.flipped ? 'dmpg-flipped' : ''}`}>
             {stack.flipped ? stack.cards.length : `+${stack.cards.length - 1}`}
           </div>
         )}

@@ -9,6 +9,18 @@ import styles from "./styles.min.css?raw";
 
 const div = document.createElement("div");
 div.id = "dmplayground";
+Object.assign(div.style, {
+  position: "fixed",
+  zIndex: 99999,
+  top: 0,
+  left: 0,
+  width: "100vw",
+  height: "100vh",
+  padding: "20px 3vw",
+  margin: 0,
+  boxSizing: "border-box",
+  background: "#222",
+});
 document.body.append(div);
 
 const style = document.createElement("style");
