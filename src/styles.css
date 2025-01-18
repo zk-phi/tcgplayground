@@ -47,7 +47,6 @@
   flex-grow: 1;
   min-height: var(--dmpg-card-height);
   background: #444;
-  overflow: hidden;
   border-radius: 8px;
 }
 
@@ -58,13 +57,13 @@
 .dmpg-area-label {
   position: absolute;
   z-index: 1;
-  padding: 3px 5px 1px 3px;
-  left: 0;
-  bottom: 0;
+  padding: 4px 6px;
+  left: -2px;
+  bottom: -2px;
   font-size: 12px;
   font-weight: bold;
   user-select: none;
-  border-radius: 0 8px 0 0;
+  border-radius: 0 8px 0 8px;
   color: #fffc;
   background: #666;
 }
@@ -125,7 +124,7 @@
 }
 
 .dmpg-card-counter:not(.dmpg-flipped) {
-  background: radial-gradient(#fff9, #fff0);
+  background: radial-gradient(#fffa, #fff0);
   color: black;
 }
 
