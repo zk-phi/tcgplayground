@@ -8,6 +8,8 @@ const list = signal(null);
 export const showList = (e, area, ix, handlers) => {
   list.value = { area, ix, handlers };
 
+  /* Prevent browser from showing the default context menu */
+  e.preventDefault();
   /* Prevent event bubbling that closes the list immediately */
   e.stopPropagation();
   /* ... but the menu should be closed */
