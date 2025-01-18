@@ -1,4 +1,4 @@
-import { Overlay } from "./Overlay.jsx";
+import { Overlay } from "../Overlay";
 
 export const Lightbox = ({ onClose, src }) => src && (
   <Overlay onClick={onClose}>

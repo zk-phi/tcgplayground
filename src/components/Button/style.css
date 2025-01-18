@@ -1,0 +1,19 @@
+.dmpg-button {
+  display: inline-block;
+  color: white;
+  background: #ea0;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 4px 12px;
+  border-radius: 0.5em;
+  cursor: pointer;
+  user-select: none;
+}
+
+.dmpg-button:hover {
+  opacity: 0.8;
+}
+
+.dmpg-button:active {
+  opacity: 0.6;
+}

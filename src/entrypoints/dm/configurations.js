@@ -1,4 +1,4 @@
-import { shuffle as shuffleArray } from "../../utils/array.js";
+import { shuffle as shuffleArray } from "../../utils/array";
 import {
   stack, gameState, setGameState,
   move, push, unshift, moveSingle, pushSingle, unshiftSingle,

@@ -5,8 +5,8 @@ import * as configurations from "../configurations.js";
 import { stack, setGameState, untapAll } from "../../../states/game.js";
 import { shuffle as shuffleArray } from "../../../utils/array.js";
 
-import { Playground } from "../../../Playground.jsx";
-import { Button } from "../../../components/Button.jsx";
+import { Playground } from "../../../Playground";
+import { Button } from "../../../components/Button";
 import styles from "../../../styles.min.css?raw";
 
 const extractSrcs = (classname) => {

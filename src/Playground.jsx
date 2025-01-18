@@ -6,12 +6,12 @@ import { getListProps } from "./states/list.js";
 import { getMenuProps, closeMenu } from "./states/menu.js";
 import { getLightboxProps } from "./states/lightbox.js";
 
-import { Area } from "./components/Area.jsx";
-import { Menu } from "./components/Menu.jsx";
-import { List } from "./components/List.jsx";
-import { Lightbox } from "./components/Lightbox.jsx";
-import { CardStack } from "./components/CardStack.jsx";
-import { Button } from "./components/Button.jsx";
+import { Area } from "./components/Area";
+import { Menu } from "./components/Menu";
+import { List } from "./components/List";
+import { Lightbox } from "./components/Lightbox";
+import { CardStack } from "./components/CardStack";
+import { Button } from "./components/Button";
 
 const Rows = ({ rows, handlers }) => (
   <div class="dmpg-rows">

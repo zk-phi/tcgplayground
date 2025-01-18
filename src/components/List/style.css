@@ -1,0 +1,15 @@
+.dmpg-list-container {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 20px;
+  gap: 4px;
+  position: fixed;
+  width: 80vw;
+  left: 10vw;
+  top: 24px;
+  z-index: 50;
+  border-radius: 0.5em;
+  overflow: hidden;
+  min-height: var(--dmpg-card-height);
+  background: #444;
+}

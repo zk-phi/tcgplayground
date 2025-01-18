@@ -1,6 +1,6 @@
-import { Overlay } from "./Overlay.jsx";
-import { CardStack } from "./CardStack.jsx";
-import { globalHandlers } from "../hooks.js";
+import { Overlay } from "../Overlay";
+import { CardStack } from "../CardStack";
+import { globalHandlers } from "../../hooks";
 
 export const List = ({ cards, onClose, handlers }) => cards.length > 0 && (
   <Overlay onClick={onClose}>
