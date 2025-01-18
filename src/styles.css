@@ -4,6 +4,13 @@
   --dmpg-card-height: 140px;
   --dmpg-card-width: 100px;
   --dmpg-card-gap: 4px;
+  font-family:
+    "Helvetica Neue",
+    Arial,
+    "Hiragino Kaku Gothic ProN",
+    "Hiragino Sans",
+    Meiryo,
+    sans-serif;
   background: #222;
   font-size: 16px;
 }
@@ -72,7 +79,7 @@
 }
 
 .dmpg-card-container:has(> .dmpg-card-inner:active) {
-  opacity: 0.6;
+  opacity: 0.8;
 }
 
 .dmpg-card-inner {
@@ -83,7 +90,7 @@
   align-items: flex-end;
   justify-content: flex-end;
   cursor: pointer;
-  background: #0003;
+  background: #0002;
 }
 
 .dmpg-card-inner:hover {
