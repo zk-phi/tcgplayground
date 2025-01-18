@@ -6,6 +6,7 @@ import { stack, setGameState, untapAll } from "../../../states/game.js";
 import { shuffle as shuffleArray } from "../../../utils/array.js";
 
 import { Playground } from "../../../Playground";
+import { FloatingButtons } from "../../../components/FloatingButtons";
 import { Button } from "../../../components/Button";
 import styles from "../../../styles.min.css?raw";
 
@@ -31,17 +32,8 @@ const initialize = () => {
   });
 };
 
-const floatingMenuStyles = {
-  display: "flex",
-  gap: "8px",
-  position: "fixed",
-  top: "8px",
-  right: "8px",
-  zIndex: 100000,
-};
-
 const FloatingMenu = ({ show, setShow }) => (
-  <div style={floatingMenuStyles}>
+  <FloatingButtons>
     {show && (
       <>
         <Button onClick={() => untapAll(["field", "lands"])}>
@@ -55,7 +47,7 @@ const FloatingMenu = ({ show, setShow }) => (
     <Button onClick={() => setShow(show => !show)}>
       {show ? "閉じる" : "開く"}
     </Button>
-  </div>
+  </FloatingButtons>
 );
 
 const containerStyles = {
