@@ -1,5 +1,6 @@
 import { signal } from "@preact/signals";
 import { globalDragEndHooks } from "../hooks.js";
+import { closeMenu } from "./menu.js";
 
 export const dragging = signal(null);
 
@@ -48,6 +49,7 @@ export const dropHandlers = (area, ix) => ({
 export const dragHandlers = (area, ix, handler) => ({
   draggable: true,
   onDragStart: e => {
+    closeMenu();
     drag(area, ix, handler);
   },
 });
