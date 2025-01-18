@@ -18,7 +18,7 @@ export const closeLightbox = () => {
 };
 
 export const Lightbox = () => lightbox.value && (
-  <Overlay onClick={() => closeLightbox()}>
+  <Overlay onClick={closeLightbox}>
     <img class="dmpg-lightbox-img" src={lightbox.value} />
   </Overlay>
 );

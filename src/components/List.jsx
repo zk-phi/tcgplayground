@@ -1,4 +1,4 @@
-import { signal } from "@preact/signals";
+import { signal, computed } from "@preact/signals";
 import { state } from "../state.js";
 import { Overlay } from "./Overlay.jsx";
 import { CardStack } from "./CardStack.jsx";
@@ -19,20 +19,27 @@ export const closeList = () => {
   list.value = null;
 };
 
-export const List = () => {
-  const cards = list.value && state.value[list.value.area][list.value.ix].cards;
+/* ---- */
 
-  if (!cards || cards.length === 0) {
-    return null;
-  }
-
-  return (
-    <Overlay onClick={() => closeList()}>
-      <div class="dmpg-list-container" onClick={e => { closeMenu(); e.stopPropagation(); }}>
-        {state.value[list.value.area][list.value.ix].cards.map((card, j) => (
-          <CardStack stack={{ cards: [card] }} {...list.value.handlers(j)} />
-        ))}
-      </div>
-    </Overlay>
-  );
+const onClickOverlay = () => {
+  closeList();
 };
+
+const onClickContainer = e => {
+  closeMenu();
+  e.stopPropagation();
+};
+
+const cards = computed(() => (
+  list.value ? state.value[list.value.area][list.value.ix].cards : []
+));
+
+export const List = () => cards.value.length > 0 && (
+  <Overlay onClick={onClickOverlay}>
+    <div class="dmpg-list-container" onClick={onClickContainer}>
+      {cards.value.map((card, j) => (
+        <CardStack stack={{ cards: [card] }} {...list.value.handlers(j)} />
+      ))}
+    </div>
+  </Overlay>
+);

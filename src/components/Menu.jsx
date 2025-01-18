@@ -27,6 +27,8 @@ export const closeMenu = () => {
   menu.value = null;
 };
 
+/* ---- */
+
 const menuClickHandler = callback => e => {
   callback(e);
   e.stopPropagation();
