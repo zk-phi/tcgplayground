@@ -1,5 +1,4 @@
 import { signal, computed } from "@preact/signals";
-import { globalDragEndHooks } from "../hooks.js";
 import { gameState } from "./game.js";
 import { closeMenu } from "./menu.js";
 
@@ -25,5 +24,3 @@ export const getListProps = () => ({
   cards: list.value ? gameState.value[list.value.area][list.value.ix].cards : [],
   handlers: list.value?.handlers,
 });
-
-globalDragEndHooks.push(closeList);
