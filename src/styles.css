@@ -71,10 +71,6 @@
   border-radius: 5px;
 }
 
-.dmpg-card-container:has(> .dmpg-card-inner:hover) {
-  opacity: 0.8;
-}
-
 .dmpg-card-container:has(> .dmpg-card-inner:active) {
   opacity: 0.6;
 }
@@ -87,6 +83,11 @@
   align-items: flex-end;
   justify-content: flex-end;
   cursor: pointer;
+  background: #0003;
+}
+
+.dmpg-card-inner:hover {
+  background: transparent;
 }
 
 .dmpg-card-inner.dmpg-selected {
@@ -102,8 +103,8 @@
   background: #028;
 }
 
-.dmpg-card-inner:hover {
-  opacity: 0.9;
+.dmpg-card-inner.dmpg-flipped:hover {
+  background: #028d;
 }
 
 .dmpg-card-counter {
