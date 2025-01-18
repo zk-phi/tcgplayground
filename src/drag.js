@@ -40,6 +40,7 @@ export const dropHandlers = (area, ix) => ({
     if (src.area !== dest.area || src.ix !== dest.ix) {
       dragging.value.handler(e, dest.area, dest.ix);
     }
+    dragStop();
     e.stopPropagation();
   },
 });

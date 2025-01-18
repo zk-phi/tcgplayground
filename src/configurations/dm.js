@@ -107,101 +107,146 @@ const showListWithContextMenu = (e, area, ix, allowEmpty = false) => {
 };
 
 export const handlers = {
-  field: ix => ({
-    onClick: e => showLightbox(e, state.value.field[ix].cards[0]),
-    onContextMenu: e => showMenu(e, [
-      ["✅ タップ", () => toggleTapped("field", ix)],
-      ["⚡ 超次元ゾーン送り", () => push("field", ix, "exdeck", 0)],
-      ["⬅️ 横向きにする", () => toggleLaid("field", ix)],
-      ["↕️ 上下反転する", () => toggleReversed("field", ix)],
-      ["🔄 裏返す", () => toggleFlipped("field", ix)],
-      ["👀 重なっているカード", e => showListWithContextMenu(e, "field", ix)],
-    ]),
-    ...dropHandlers("field", ix),
-    ...dragStackHandlers("field", ix),
-  }),
-
-  shields: ix => ({
-    onClick: e => {
-      if (state.value.shields[ix].flipped) {
-        toggleFlipped("shields", ix);
-      } else {
-        showLightbox(e, state.value.shields[ix].cards[0]);
-      }
+  field: {
+    stack: ix => ({
+      onClick: e => showLightbox(e, state.value.field[ix].cards[0]),
+      onContextMenu: e => showMenu(e, [
+        ["✅ タップ", () => toggleTapped("field", ix)],
+        ["⚡ 超次元ゾーン送り", () => push("field", ix, "exdeck", 0)],
+        ["⬅️ 横向きにする", () => toggleLaid("field", ix)],
+        ["↕️ 上下反転する", () => toggleReversed("field", ix)],
+        ["🔄 裏返す", () => toggleFlipped("field", ix)],
+        ["👀 重なっているカード", e => showListWithContextMenu(e, "field", ix)],
+      ]),
+      ...dropHandlers("field", ix),
+      ...dragStackHandlers("field", ix),
+    }),
+    area: {
+      ...dropHandlers("field", null),
     },
-    onContextMenu: e => showMenu(e, [
-      ["⚡ 超次元ゾーン送り", () => push("shields", ix, "exdeck", 0)],
-      ["🔄 裏返す", () => toggleFlipped("shields", ix)],
-      ["👀 重なっているカード", e => showListWithContextMenu(e, "shields", ix)],
-    ]),
-    ...dropHandlers("shields", ix),
-    ...dragStackHandlers("shields", ix)
-  }),
+  },
 
-  deck: ix => ({
-    onClick: e => moveSingle("deck", ix, 0, "exploring", true),
-    onContextMenu: e => showMenu(e, [
-      ["⚡ 超次元送り", () => pushSingle("deck", ix, 0, "exdeck", 0)],
-      ["🤏 ボトムから引く", () => moveSingle("deck", ix, -1, "hand", true)],
-      ["♻️ シャッフル", () => shuffle("deck", ix)],
-      ["👀 リスト", e => showListWithContextMenu(e, "deck", ix, true)],
-    ]),
-    ...dropHandlers("deck", ix),
-    ...dragSingleHandlers("deck", ix, true),
-  }),
+  shields: {
+    stack: ix => ({
+      onClick: e => {
+        if (state.value.shields[ix].flipped) {
+          toggleFlipped("shields", ix);
+        } else {
+          showLightbox(e, state.value.shields[ix].cards[0]);
+        }
+      },
+      onContextMenu: e => showMenu(e, [
+        ["⚡ 超次元ゾーン送り", () => push("shields", ix, "exdeck", 0)],
+        ["🔄 裏返す", () => toggleFlipped("shields", ix)],
+        ["👀 重なっているカード", e => showListWithContextMenu(e, "shields", ix)],
+      ]),
+      ...dropHandlers("shields", ix),
+      ...dragStackHandlers("shields", ix)
+    }),
+    area: {
+      ...dropHandlers("shields", null),
+    },
+  },
 
-  graveyard: ix => ({
-    onClick: e => showListWithContextMenu(e, "graveyard", ix, true),
-    onContextMenu: e => showListWithContextMenu(e, "graveyard", ix, true),
-    ...dropHandlers("graveyard", ix),
-    ...dragSingleHandlers("graveyard", ix, true),
-  }),
+  deck: {
+    stack: ix => ({
+      onClick: e => moveSingle("deck", ix, 0, "exploring", true),
+      onContextMenu: e => showMenu(e, [
+        ["⚡ 超次元送り", () => pushSingle("deck", ix, 0, "exdeck", 0)],
+        ["🤏 ボトムから引く", () => moveSingle("deck", ix, -1, "hand", true)],
+        ["♻️ シャッフル", () => shuffle("deck", ix)],
+        ["👀 リスト", e => showListWithContextMenu(e, "deck", ix, true)],
+      ]),
+      ...dropHandlers("deck", ix),
+      ...dragSingleHandlers("deck", ix, true),
+    }),
+    area: {
+      ...dropHandlers("deck", null),
+    },
+  },
 
-  grdeck: ix => ({
-    onClick: e => moveSingle("grdeck", ix, 0, "exploring", true),
-    onContextMenu: e => showMenu(e, [
-      ["♻️ シャッフル", () => shuffle("grdeck", ix)],
-      ["👀 リスト", e => showListWithContextMenu(e, "grdeck", ix, true)],
-    ]),
-    ...dropHandlers("grdeck", ix),
-    ...dragSingleHandlers("grdeck", ix, true),
-  }),
+  graveyard: {
+    stack: ix => ({
+      onClick: e => showListWithContextMenu(e, "graveyard", ix, true),
+      onContextMenu: e => showListWithContextMenu(e, "graveyard", ix, true),
+      ...dropHandlers("graveyard", ix),
+      ...dragSingleHandlers("graveyard", ix, true),
+    }),
+    area: {
+      ...dropHandlers("graveyard", null),
+    },
+  },
 
-  exdeck: ix => ({
-    onClick: e => showListWithContextMenu(e, "exdeck", ix),
-    onContextMenu: e => showListWithContextMenu(e, "exdeck", ix),
-    ...dropHandlers("exdeck", ix),
-    ...dragSingleHandlers("exdeck", ix, true),
-  }),
+  grdeck: {
+    stack: ix => ({
+      onClick: e => moveSingle("grdeck", ix, 0, "exploring", true),
+      onContextMenu: e => showMenu(e, [
+        ["♻️ シャッフル", () => shuffle("grdeck", ix)],
+        ["👀 リスト", e => showListWithContextMenu(e, "grdeck", ix, true)],
+      ]),
+      ...dropHandlers("grdeck", ix),
+      ...dragSingleHandlers("grdeck", ix, true),
+    }),
+    area: {
+      ...dropHandlers("grdeck", null),
+    },
+  },
 
-  lands: ix => ({
-    onClick: () => toggleTapped("lands", ix),
-    onContextMenu: e => showMenu(e, [
-      ["🔍 拡大", () => showLightbox(e, state.value.lands[ix].cards[0])],
-      ["⚡ 超次元送り", () => push("lands", ix, "exdeck", 0)],
-      ["👀 重なっているカード", e => showListWithContextMenu(e, "lands", ix)],
-    ]),
-    ...dropHandlers("lands", ix),
-    ...dragStackHandlers("lands", ix),
-  }),
+  exdeck: {
+    stack: ix => ({
+      onClick: e => showListWithContextMenu(e, "exdeck", ix),
+      onContextMenu: e => showListWithContextMenu(e, "exdeck", ix),
+      ...dropHandlers("exdeck", ix),
+      ...dragSingleHandlers("exdeck", ix, true),
+    }),
+    area: {
+      ...dropHandlers("exdeck", null),
+    },
+  },
 
-  hand: ix => ({
-    onClick: e => showLightbox(e, state.value.hand[ix].cards[0]),
-    onContextMenu: e => showMenu(e, [
-      ["⚡ 超次元送り", () => push("hand", ix, "exdeck", 0)],
-      ["👀 重なっているカード", e => showListWithContextMenu(e, "hand", ix)],
-    ]),
-    ...dropHandlers("hand", ix),
-    ...dragStackHandlers("hand", ix),
-  }),
+  lands: {
+    stack: ix => ({
+      onClick: () => toggleTapped("lands", ix),
+      onContextMenu: e => showMenu(e, [
+        ["🔍 拡大", () => showLightbox(e, state.value.lands[ix].cards[0])],
+        ["⚡ 超次元送り", () => push("lands", ix, "exdeck", 0)],
+        ["👀 重なっているカード", e => showListWithContextMenu(e, "lands", ix)],
+      ]),
+      ...dropHandlers("lands", ix),
+      ...dragStackHandlers("lands", ix),
+    }),
+    area: {
+      ...dropHandlers("lands", null),
+    },
+  },
 
-  exploring: ix => ({
-    onClick: e => showLightbox(e, state.value.exploring[ix].cards[0]),
-    onContextMenu: e => showMenu(e, [
-      ["⚡ 超次元送り", () => push("exploring", ix, "exdeck", 0)],
-      ["👀 重なっているカード", e => showListWithContextMenu(e, "hand", ix)],
-    ]),
-    ...dropHandlers("exploring", ix),
-    ...dragStackHandlers("exploring", ix),
-  }),
+  hand: {
+    stack: ix => ({
+      onClick: e => showLightbox(e, state.value.hand[ix].cards[0]),
+      onContextMenu: e => showMenu(e, [
+        ["⚡ 超次元送り", () => push("hand", ix, "exdeck", 0)],
+        ["👀 重なっているカード", e => showListWithContextMenu(e, "hand", ix)],
+      ]),
+      ...dropHandlers("hand", ix),
+      ...dragStackHandlers("hand", ix),
+    }),
+    area: {
+      ...dropHandlers("hand", null),
+    },
+  },
+
+  exploring: {
+    stack: ix => ({
+      onClick: e => showLightbox(e, state.value.exploring[ix].cards[0]),
+      onContextMenu: e => showMenu(e, [
+        ["⚡ 超次元送り", () => push("exploring", ix, "exdeck", 0)],
+        ["👀 重なっているカード", e => showListWithContextMenu(e, "hand", ix)],
+      ]),
+      ...dropHandlers("exploring", ix),
+      ...dragStackHandlers("exploring", ix),
+    }),
+    area: {
+      ...dropHandlers("exploring", null),
+    },
+  },
 };

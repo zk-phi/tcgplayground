@@ -1,7 +1,7 @@
 import { useEffect, useState } from "preact/hooks";
 import { state } from "../state.js";
 import { globalHandlers } from "../hooks.js";
-import { dropHandlers, getIsSelected, getIsTargetted } from "../drag.js";
+import { getIsSelected, getIsTargetted } from "../drag.js";
 import { Area } from "./Area.jsx";
 import { Menu } from "./Menu.jsx";
 import { List } from "./List.jsx";
@@ -29,13 +29,13 @@ const Areas = ({ areas, handlers }) => (
           width={area.width}
           nogrow={area.optional}
           isTargetted={getIsTargetted(area.area, null)}
-          {...dropHandlers(area.area, null)}>
+          {...handlers[area.area].area}>
         {state.value[area.area]?.map((stack, ix) => (
           <CardStack
               stack={stack}
               isSelected={getIsSelected(area.area, ix)}
               isTargetted={getIsTargetted(area.area, ix)}
-              {...handlers[area.area](ix)}
+              {...handlers[area.area].stack(ix)}
           />
         ))}
       </Area>
