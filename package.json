@@ -3,9 +3,10 @@
   "private": true,
   "scripts": {
     "dev": "concurrently 'postcss ./src/styles.css -o ./src/styles.min.css -w' 'vite'",
-    "build": "postcss ./src/styles.css -o ./src/styles.min.css && vite build",
+    "build": "postcss ./src/styles.css -o ./src/styles.min.css && vite build --config ./dmdeckmaker.vite.config.js",
+    "build-demo": "postcss ./src/styles.css -o ./src/styles.min.css && vite build",
     "preview": "vite preview",
-    "release": "echo javascript:$(cat ./dist/assets/deckmakerdm/bundle.js) > ./release/bookmarklet"
+    "release": "echo javascript:$(cat ./dist/bundle.js) > ./release/bookmarklet"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.9.4",

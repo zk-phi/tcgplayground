@@ -12,7 +12,10 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       input: {
-        dm: "src/entrypoints/dm/demo/index.html",
+        "main": "src/entrypoints/dm/deckmaker/index.html",
+      },
+      output: {
+        entryFileNames: "bundle.js",
       },
     },
   },
