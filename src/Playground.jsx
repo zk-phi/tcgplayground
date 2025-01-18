@@ -12,6 +12,7 @@ import { List } from "./components/List";
 import { Lightbox } from "./components/Lightbox";
 import { CardStack } from "./components/CardStack";
 import { Button } from "./components/Button";
+import { Link } from "./components/Link";
 
 const Rows = ({ rows, handlers }) => (
   <div class="dmpg-rows">
@@ -54,9 +55,9 @@ export const Playground = ({ rows, handlers }) => (
     <Lightbox {...getLightboxProps()} />
     <Rows rows={rows} handlers={handlers} />
     <div class="dmpg-footer">
-      <a href="https://zk-phi.github.io/handanalyze" target="_blank">→ 確率計算機</a>
+      <Link href="https://zk-phi.github.io/handanalyze" target="_blank">→ 確率計算機</Link>
       {" / "}
-      <a href="https://x.com/zk_phi" target="_blank">@zk_phi</a>
+      <Link href="https://x.com/zk_phi" target="_blank">@zk_phi</Link>
     </div>
   </div>
 );

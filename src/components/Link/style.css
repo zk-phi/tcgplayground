@@ -1,0 +1,13 @@
+.dmpg-link {
+  color: #fffb;
+  text-decoration: none;
+  border-bottom: 1px dotted currentColor;
+}
+
+.dmpg-link:hover {
+  color: #fff;
+}
+
+.dmpg-link:active {
+  opacity: 0.8;
+}
