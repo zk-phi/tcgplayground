@@ -1,14 +1,14 @@
-import { shuffle as shuffleArray } from "../utils/array.js";
+import { shuffle as shuffleArray } from "../../utils/array.js";
 import {
   stack, gameState, setGameState,
   move, push, unshift, moveSingle, pushSingle, unshiftSingle,
   toggleTapped, toggleReversed, toggleFlipped, toggleLaid,
   shuffle, untapAll,
-} from "../states/game.js";
-import { dropHandlers, dragHandlers } from "../states/drag.js";
-import { showList } from "../states/list.js";
-import { showMenu } from "../states/menu.js";
-import { showLightbox } from "../states/lightbox.js";
+} from "../../states/game.js";
+import { dropHandlers, dragHandlers } from "../../states/drag.js";
+import { showList } from "../../states/list.js";
+import { showMenu } from "../../states/menu.js";
+import { showLightbox } from "../../states/lightbox.js";
 
 export const rows = [
   /* [

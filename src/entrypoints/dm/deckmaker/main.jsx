@@ -1,13 +1,13 @@
 import { render } from "preact";
 import { useState, useEffect } from "preact/hooks";
+import * as configurations from "../configurations.js";
 
-import { stack, setGameState, untapAll } from "../states/game.js";
-import { shuffle as shuffleArray } from "../utils/array.js";
-import * as configurations from "../configurations/dm.js";
+import { stack, setGameState, untapAll } from "../../../states/game.js";
+import { shuffle as shuffleArray } from "../../../utils/array.js";
 
-import { Playground } from "../components/Playground.jsx";
-import { Button } from "../components/elements/Button.jsx";
-import styles from "../styles.min.css?raw";
+import { Playground } from "../../../components/Playground.jsx";
+import { Button } from "../../../components/elements/Button.jsx";
+import styles from "../../../styles.min.css?raw";
 
 const extractSrcs = (classname) => {
   const elements = document.getElementsByClassName(classname)?.[0]?.children;

@@ -11,7 +11,7 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       input: {
-        deckmakerdm: "src/entrypoints/index.html",
+        deckmakerdm: "src/entrypoints/dm/deckmaker/index.html",
       },
       output: {
         entryFileNames: "assets/[name]/bundle.js",
