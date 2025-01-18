@@ -3,7 +3,7 @@ name: Build
 on:
   push:
     branches:
-      - master
+      - main
   workflow_dispatch:
 
 jobs:
@@ -16,4 +16,5 @@ jobs:
       - run: yarn run build
       - uses: peaceiris/actions-gh-pages@v3.9.2
         with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
