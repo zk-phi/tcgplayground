@@ -2,6 +2,8 @@
 
 DECK MAKER さまのページ上で、カードを自由に移動して初動の確認などができる便利スクリプトです。
 
+DEMO: https://zk-phi.github.io/dmplayground/dm/demo
+
 ## 使い方
 ### インストール
 

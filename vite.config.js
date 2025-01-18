@@ -5,6 +5,7 @@ const { resolve } = require("path");
 
 export default defineConfig({
   root: "src/entrypoints",
+  base: "/dmplayground/",
   plugins: [preact()],
   publicDir: resolve(__dirname, "public"),
   build: {
