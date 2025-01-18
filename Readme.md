@@ -70,7 +70,6 @@ $ yarn run release
 Released script includes:
 
 - Preact (c) Jason Miller / licensed under the MIT License
+- DragDropTouch (c) Bernardo Castilho / licensed under the MIT License
 
-### License
-
-MIT License
+This is a fanmade content of DuelMasters ((C) Wizards of the Coast), and card images are included under the [WotC Fan Content Policy](https://company.wizards.com/en/legal/fancontentpolicy).

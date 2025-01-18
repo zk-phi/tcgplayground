@@ -6,6 +6,7 @@ const { resolve } = require("path");
 export default defineConfig({
   root: "src/entrypoints",
   plugins: [preact()],
+  publicDir: resolve(__dirname, "public"),
   build: {
     outDir: resolve(__dirname, "dist"),
     emptyOutDir: true,
