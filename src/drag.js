@@ -1,6 +1,5 @@
 import { signal } from "@preact/signals";
 import { globalDragEndHooks } from "./hooks.js";
-import { move, moveSingle, unshift, push, unshiftSingle, pushSingle } from "./state.js";
 
 export const dragging = signal(null);
 

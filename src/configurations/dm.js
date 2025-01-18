@@ -1,10 +1,10 @@
 import { shuffle as shuffleArray } from "../utils/array.js";
 import {
-  stack, state, setState,
+  stack, gameState, setGameState,
   move, push, unshift, moveSingle, pushSingle, unshiftSingle,
   toggleTapped, toggleReversed, toggleFlipped, toggleLaid,
   shuffle, untapAll,
-} from "../state.js";
+} from "../states/game.js";
 import { dropHandlers, dragHandlers } from "../drag.js";
 import { showMenu } from "../components/Menu.jsx";
 import { showList } from "../components/List.jsx";
@@ -50,7 +50,7 @@ export const initialize = () => {
   const deck = shuffleArray(extractSrcs("MainCards"));
   const grdeck = extractSrcs("GRCardsList");
   const exdeck = extractSrcs("HyperspatialCardsList");
-  setState({
+  setGameState({
     field: [],
     lands: [],
     graveyard: [stack({ cards: [] })],
@@ -91,7 +91,7 @@ const dragSingleHandlers = (src, si, allowEmpty) => dragHandlers(src, si, (e, de
 
 const showListWithContextMenu = (e, area, ix, allowEmpty = false) => {
   showList(e, area, ix, (j) => ({
-    onClick: () => showLightbox(e, state.value[area][ix].cards[j]),
+    onClick: () => showLightbox(e, gameState.value[area][ix].cards[j]),
     onContextMenu: e => showMenu(e, [
       ["⚔️ 場に出す", () => moveSingle(area, ix, j, "field", allowEmpty)],
       ["🛡️ シールドに追加", () => moveSingle(area, ix, j, "shields", allowEmpty)],
@@ -109,7 +109,7 @@ const showListWithContextMenu = (e, area, ix, allowEmpty = false) => {
 export const handlers = {
   field: {
     stack: ix => ({
-      onClick: e => showLightbox(e, state.value.field[ix].cards[0]),
+      onClick: e => showLightbox(e, gameState.value.field[ix].cards[0]),
       onContextMenu: e => showMenu(e, [
         ["✅ タップ", () => toggleTapped("field", ix)],
         ["⚡ 超次元ゾーン送り", () => push("field", ix, "exdeck", 0)],
@@ -129,10 +129,10 @@ export const handlers = {
   shields: {
     stack: ix => ({
       onClick: e => {
-        if (state.value.shields[ix].flipped) {
+        if (gameState.value.shields[ix].flipped) {
           toggleFlipped("shields", ix);
         } else {
-          showLightbox(e, state.value.shields[ix].cards[0]);
+          showLightbox(e, gameState.value.shields[ix].cards[0]);
         }
       },
       onContextMenu: e => showMenu(e, [
@@ -208,7 +208,7 @@ export const handlers = {
     stack: ix => ({
       onClick: () => toggleTapped("lands", ix),
       onContextMenu: e => showMenu(e, [
-        ["🔍 拡大", () => showLightbox(e, state.value.lands[ix].cards[0])],
+        ["🔍 拡大", () => showLightbox(e, gameState.value.lands[ix].cards[0])],
         ["⚡ 超次元送り", () => push("lands", ix, "exdeck", 0)],
         ["👀 重なっているカード", e => showListWithContextMenu(e, "lands", ix)],
       ]),
@@ -222,7 +222,7 @@ export const handlers = {
 
   hand: {
     stack: ix => ({
-      onClick: e => showLightbox(e, state.value.hand[ix].cards[0]),
+      onClick: e => showLightbox(e, gameState.value.hand[ix].cards[0]),
       onContextMenu: e => showMenu(e, [
         ["⚡ 超次元送り", () => push("hand", ix, "exdeck", 0)],
         ["👀 重なっているカード", e => showListWithContextMenu(e, "hand", ix)],
@@ -237,7 +237,7 @@ export const handlers = {
 
   exploring: {
     stack: ix => ({
-      onClick: e => showLightbox(e, state.value.exploring[ix].cards[0]),
+      onClick: e => showLightbox(e, gameState.value.exploring[ix].cards[0]),
       onContextMenu: e => showMenu(e, [
         ["⚡ 超次元送り", () => push("exploring", ix, "exdeck", 0)],
         ["👀 重なっているカード", e => showListWithContextMenu(e, "hand", ix)],

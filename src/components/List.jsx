@@ -1,5 +1,5 @@
 import { signal, computed } from "@preact/signals";
-import { state } from "../state.js";
+import { gameState } from "../states/game.js";
 import { Overlay } from "./Overlay.jsx";
 import { CardStack } from "./CardStack.jsx";
 import { closeMenu } from "./Menu.jsx"
@@ -31,7 +31,7 @@ const onClickContainer = e => {
 };
 
 const cards = computed(() => (
-  list.value ? state.value[list.value.area][list.value.ix].cards : []
+  list.value ? gameState.value[list.value.area][list.value.ix].cards : []
 ));
 
 export const List = () => cards.value.length > 0 && (

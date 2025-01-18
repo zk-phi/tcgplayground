@@ -1,5 +1,5 @@
 import { useEffect, useState } from "preact/hooks";
-import { state } from "../state.js";
+import { gameState } from "../states/game.js";
 import { globalHandlers } from "../hooks.js";
 import { getIsSelected, getIsTargetted } from "../drag.js";
 import { Area } from "./Area.jsx";
@@ -23,14 +23,14 @@ const Areas = ({ areas, handlers }) => (
   areas.map(area => (
     Array.isArray(area) ? (
       <Rows rows={area} handlers={handlers} />
-    ) : state.value[area.area]?.length || !area.optional ? (
+    ) : gameState.value[area.area]?.length || !area.optional ? (
       <Area
           label={area.label}
           width={area.width}
           nogrow={area.optional}
           isTargetted={getIsTargetted(area.area, null)}
           {...handlers[area.area].area}>
-        {state.value[area.area]?.map((stack, ix) => (
+        {gameState.value[area.area]?.map((stack, ix) => (
           <CardStack
               stack={stack}
               isSelected={getIsSelected(area.area, ix)}
