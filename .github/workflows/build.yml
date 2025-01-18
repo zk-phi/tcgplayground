@@ -1,0 +1,19 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3.6.0
+      - run: yarn install
+      - run: yarn run build
+      - uses: peaceiris/actions-gh-pages@v3.9.2
+        with:
+          publish_dir: ./dist
