@@ -9,7 +9,7 @@ export const showLightbox = (e, src) => {
 
   /* Prevent event bubbling that closes the lightbox immediately */
   e.stopPropagation();
-  /* ... but close menu instead */
+  /* ... but the menu should be closed */
   closeMenu();
 };
 

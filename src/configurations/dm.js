@@ -5,11 +5,10 @@ import {
   toggleTapped, toggleReversed, toggleFlipped, toggleLaid,
   shuffle, untapAll,
 } from "../state.js";
+import { dropHandlers, dragHandlers } from "../drag.js";
 import { showMenu } from "../components/Menu.jsx";
 import { showList } from "../components/List.jsx";
 import { showLightbox } from "../components/Lightbox.jsx";
-
-/* TODO: Add support for advanced decks */
 
 export const rows = [
   /* [
@@ -64,7 +63,7 @@ export const initialize = () => {
   });
 };
 
-const standardOnDragHandler = (src, si) => (e, dest, di) => {
+const dragStackHandlers = (src, si) => dragHandlers(src, si, (e, dest, di) => {
   if (dest === "graveyard" || dest === "exdeck") {
     push(src, si, dest, di ?? 0);
   } else if (dest === "deck" || dest === "grdeck" || di != null) {
@@ -75,9 +74,9 @@ const standardOnDragHandler = (src, si) => (e, dest, di) => {
   } else {
     move(src, si, dest, { reversed: dest === "lands" });
   }
-};
+});
 
-const deckOnDragHandler = (src, si, allowEmpty) => (e, dest, di) => {
+const dragSingleHandlers = (src, si, allowEmpty) => dragHandlers(src, si, (e, dest, di) => {
   if (dest === "graveyard" || dest === "exdeck") {
     pushSingle(src, si, 0, dest, di ?? 0, allowEmpty);
   } else if (dest === "deck" || dest === "grdeck" || di != null) {
@@ -88,21 +87,23 @@ const deckOnDragHandler = (src, si, allowEmpty) => (e, dest, di) => {
   } else {
     moveSingle(src, si, 0, dest, allowEmpty, { reversed: dest === "lands" });
   }
-};
+});
 
 const showListWithContextMenu = (e, area, ix, allowEmpty = false) => {
-  showList(e, area, ix, (e, j) => showMenu(e, [
-    ["🔍 拡大", () => showLightbox(e, state.value[area][ix].cards[j])],
-    ["⚔️ 場に出す", () => moveSingle(area, ix, j, "field", allowEmpty)],
-    ["🛡️ シールドに追加", () => moveSingle(area, ix, j, "shields", allowEmpty)],
-    ["🫳 デッキの上に置く", () => pushSingle(area, ix, j, "deck", 0, allowEmpty)],
-    ["🫴 デッキの下に入れる", () => unshiftSingle(area, ix, j, "deck", 0, allowEmpty)],
-    ["🪦 墓地に送る", () => pushSingle(area, ix, j, "graveyard", 0, allowEmpty)],
-    ["🎰 GRゾーンに置く", () => unshiftSingle(area, ix, j, "grdeck", 0, allowEmpty)],
-    ["⚡ 超次元ゾーンに置く", () => pushSingle(area, ix, j, "exdeck", 0, allowEmpty)],
-    ["⛰️ マナに追加", () => moveSingle(area, ix, j, "lands", allowEmpty, { reversed: true })],
-    ["🃏 手札に加える", () => moveSingle(area, ix, j, "hand", allowEmpty)],
-  ]));
+  showList(e, area, ix, (j) => ({
+    onClick: () => showLightbox(e, state.value[area][ix].cards[j]),
+    onContextMenu: e => showMenu(e, [
+      ["⚔️ 場に出す", () => moveSingle(area, ix, j, "field", allowEmpty)],
+      ["🛡️ シールドに追加", () => moveSingle(area, ix, j, "shields", allowEmpty)],
+      ["🫳 デッキの上に置く", () => pushSingle(area, ix, j, "deck", 0, allowEmpty)],
+      ["🫴 デッキの下に入れる", () => unshiftSingle(area, ix, j, "deck", 0, allowEmpty)],
+      ["🪦 墓地に送る", () => pushSingle(area, ix, j, "graveyard", 0, allowEmpty)],
+      ["🎰 GRゾーンに置く", () => unshiftSingle(area, ix, j, "grdeck", 0, allowEmpty)],
+      ["⚡ 超次元ゾーンに置く", () => pushSingle(area, ix, j, "exdeck", 0, allowEmpty)],
+      ["⛰️ マナに追加", () => moveSingle(area, ix, j, "lands", allowEmpty, { reversed: true })],
+      ["🃏 手札に加える", () => moveSingle(area, ix, j, "hand", allowEmpty)],
+    ]),
+  }));
 };
 
 export const handlers = {
@@ -116,7 +117,8 @@ export const handlers = {
       ["🔄 裏返す", () => toggleFlipped("field", ix)],
       ["👀 重なっているカード", e => showListWithContextMenu(e, "field", ix)],
     ]),
-    onDrag: standardOnDragHandler("field", ix),
+    ...dropHandlers("field", ix),
+    ...dragStackHandlers("field", ix),
   }),
 
   shields: ix => ({
@@ -132,7 +134,8 @@ export const handlers = {
       ["🔄 裏返す", () => toggleFlipped("shields", ix)],
       ["👀 重なっているカード", e => showListWithContextMenu(e, "shields", ix)],
     ]),
-    onDrag: standardOnDragHandler("shields", ix)
+    ...dropHandlers("shields", ix),
+    ...dragStackHandlers("shields", ix)
   }),
 
   deck: ix => ({
@@ -143,13 +146,15 @@ export const handlers = {
       ["♻️ シャッフル", () => shuffle("deck", ix)],
       ["👀 リスト", e => showListWithContextMenu(e, "deck", ix, true)],
     ]),
-    onDrag: deckOnDragHandler("deck", ix, true),
+    ...dropHandlers("deck", ix),
+    ...dragSingleHandlers("deck", ix, true),
   }),
 
   graveyard: ix => ({
     onClick: e => showListWithContextMenu(e, "graveyard", ix, true),
     onContextMenu: e => showListWithContextMenu(e, "graveyard", ix, true),
-    onDrag: deckOnDragHandler("graveyard", ix, true),
+    ...dropHandlers("graveyard", ix),
+    ...dragSingleHandlers("graveyard", ix, true),
   }),
 
   grdeck: ix => ({
@@ -158,13 +163,15 @@ export const handlers = {
       ["♻️ シャッフル", () => shuffle("grdeck", ix)],
       ["👀 リスト", e => showListWithContextMenu(e, "grdeck", ix, true)],
     ]),
-    onDrag: deckOnDragHandler("grdeck", ix, true),
+    ...dropHandlers("grdeck", ix),
+    ...dragSingleHandlers("grdeck", ix, true),
   }),
 
   exdeck: ix => ({
     onClick: e => showListWithContextMenu(e, "exdeck", ix),
     onContextMenu: e => showListWithContextMenu(e, "exdeck", ix),
-    onDrag: deckOnDragHandler("exdeck", ix, true),
+    ...dropHandlers("exdeck", ix),
+    ...dragSingleHandlers("exdeck", ix, true),
   }),
 
   lands: ix => ({
@@ -174,7 +181,8 @@ export const handlers = {
       ["⚡ 超次元送り", () => push("lands", ix, "exdeck", 0)],
       ["👀 重なっているカード", e => showListWithContextMenu(e, "lands", ix)],
     ]),
-    onDrag: standardOnDragHandler("lands", ix),
+    ...dropHandlers("lands", ix),
+    ...dragStackHandlers("lands", ix),
   }),
 
   hand: ix => ({
@@ -183,7 +191,8 @@ export const handlers = {
       ["⚡ 超次元送り", () => push("hand", ix, "exdeck", 0)],
       ["👀 重なっているカード", e => showListWithContextMenu(e, "hand", ix)],
     ]),
-    onDrag: standardOnDragHandler("hand", ix),
+    ...dropHandlers("hand", ix),
+    ...dragStackHandlers("hand", ix),
   }),
 
   exploring: ix => ({
@@ -192,6 +201,7 @@ export const handlers = {
       ["⚡ 超次元送り", () => push("exploring", ix, "exdeck", 0)],
       ["👀 重なっているカード", e => showListWithContextMenu(e, "hand", ix)],
     ]),
-    onDrag: standardOnDragHandler("exploring", ix),
+    ...dropHandlers("exploring", ix),
+    ...dragStackHandlers("exploring", ix),
   }),
 };
