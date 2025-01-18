@@ -1,27 +1,27 @@
 import { useEffect, useState } from "preact/hooks";
-import { dragStop } from "../drag.js";
 import { state } from "../state.js";
+import { globalHandlers } from "../hooks.js";
 import { Area } from "./Area.jsx";
-import { closeMenu, Menu } from "./Menu.jsx";
+import { Menu } from "./Menu.jsx";
 import { List } from "./List.jsx";
 import { Lightbox } from "./Lightbox.jsx";
 import { CardStack } from "./CardStack.jsx";
 import { Button } from "./Button.jsx";
 
-const Rows = ({ rows, initialize, handlers }) => (
+const Rows = ({ rows, handlers }) => (
   <div class="dmpg-rows">
     {rows.map(row => (
-    <div class="dmpg-row">
-      <Areas areas={row} initialize={initialize} handlers={handlers} />
-    </div>
+      <div class="dmpg-row">
+        <Areas areas={row} handlers={handlers} />
+      </div>
     ))}
   </div>
 );
 
-const Areas = ({ areas, initialize, handlers }) => (
+const Areas = ({ areas, handlers }) => (
   areas.map(area => (
     Array.isArray(area) ? (
-      <Rows rows={area} initialize={initialize} handlers={handlers} />
+      <Rows rows={area} handlers={handlers} />
     ) : state.value[area.area]?.length || !area.optional ? (
       <Area
           name={area.area}
@@ -66,11 +66,11 @@ export const App = ({ rows, initialize, handlers }) => {
         </Button>
       </div>
       {show && (
-        <div class="dmpg-wrapper" onClick={() => closeMenu()} onDragEnd={() => dragStop()}>
+        <div class="dmpg-wrapper" {...globalHandlers}>
           <Menu />
           <List />
           <Lightbox />
-          <Rows rows={rows} initialize={initialize} handlers={handlers} />
+          <Rows rows={rows} handlers={handlers} />
           <div class="dmpg-footer">
             <a href="https://zk-phi.github.io/handanalyze" target="_blank">→ 確率計算機</a>
             {" / "}

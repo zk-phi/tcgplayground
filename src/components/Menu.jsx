@@ -1,4 +1,5 @@
 import { signal } from "@preact/signals";
+import { globalClickHooks } from "../hooks.js";
 
 const menu = signal(null);
 
@@ -37,3 +38,5 @@ export const Menu = () => menu.value && (
     ))}
   </div>
 );
+
+globalClickHooks.push(closeMenu);
