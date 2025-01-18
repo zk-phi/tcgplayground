@@ -1,6 +1,5 @@
 import { signal } from "@preact/signals";
-import { Overlay } from "./Overlay.jsx";
-import { closeMenu } from "./Menu.jsx"
+import { closeMenu } from "./menu.js"
 
 const lightbox = signal(null);
 
@@ -17,8 +16,7 @@ export const closeLightbox = () => {
   lightbox.value = null;
 };
 
-export const Lightbox = () => lightbox.value && (
-  <Overlay onClick={closeLightbox}>
-    <img class="dmpg-lightbox-img" src={lightbox.value} />
-  </Overlay>
-);
+export const getLightboxProps = () => ({
+  onClose: closeLightbox,
+  src: lightbox.value,
+});

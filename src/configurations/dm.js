@@ -6,9 +6,9 @@ import {
   shuffle, untapAll,
 } from "../states/game.js";
 import { dropHandlers, dragHandlers } from "../states/drag.js";
-import { showMenu } from "../components/Menu.jsx";
-import { showList } from "../components/List.jsx";
-import { showLightbox } from "../components/Lightbox.jsx";
+import { showList } from "../states/list.js";
+import { showMenu } from "../states/menu.js";
+import { showLightbox } from "../states/lightbox.js";
 
 export const rows = [
   /* [

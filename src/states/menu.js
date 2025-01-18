@@ -1,5 +1,5 @@
 import { signal } from "@preact/signals";
-import { globalClickHooks } from "../hooks.js";
+import { globalClickHooks } from "../components/hooks.js";
 
 const menu = signal(null);
 
@@ -27,22 +27,9 @@ export const closeMenu = () => {
   menu.value = null;
 };
 
-/* ---- */
-
-const menuClickHandler = callback => e => {
-  callback(e);
-  e.stopPropagation();
-  closeMenu();
-}
-
-export const Menu = () => menu.value && (
-  <div class="dmpg-menu-container" style={menu.value.pos}>
-    {menu.value.options.map(option => (
-      <div class="dmpg-menu-option" onClick={menuClickHandler(option[1])}>
-        {option[0]}
-      </div>
-    ))}
-  </div>
-);
+export const getMenuProps = () => ({
+  onClose: closeMenu,
+  ...menu.value,
+});
 
 globalClickHooks.push(closeMenu);

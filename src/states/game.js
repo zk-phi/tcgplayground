@@ -1,6 +1,6 @@
 import { signal, computed } from "@preact/signals";
 import { shuffle as shuffleArray, put } from "../utils/array.js";
-import { closeList } from "../components/List.jsx";
+import { closeList } from "./list.js";
 
 export const stack = ({
   cards,

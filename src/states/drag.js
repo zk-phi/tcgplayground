@@ -1,5 +1,4 @@
 import { signal } from "@preact/signals";
-import { globalDragEndHooks } from "../hooks.js";
 
 export const dragging = signal(null);
 
@@ -61,5 +60,3 @@ export const getIsSelected = (area, ix) => dragging.value?.src && (
 export const getIsTargetted = (area, ix) => dragging.value?.dest && (
   dragging.value.dest.area === area && dragging.value.dest.ix === ix
 );
-
-globalDragEndHooks.push(dragStop);

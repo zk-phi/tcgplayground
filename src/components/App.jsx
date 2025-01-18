@@ -1,13 +1,18 @@
 import { useEffect, useState } from "preact/hooks";
+import { globalHandlers } from "./hooks.js";
+
 import { gameState } from "../states/game.js";
-import { globalHandlers } from "../hooks.js";
-import { getIsSelected, getIsTargetted } from "../states/drag.js";
-import { Area } from "./Area.jsx";
-import { Menu } from "./Menu.jsx";
-import { List } from "./List.jsx";
-import { Lightbox } from "./Lightbox.jsx";
-import { CardStack } from "./CardStack.jsx";
-import { Button } from "./Button.jsx";
+import { getIsSelected, getIsTargetted, dragStop } from "../states/drag.js";
+import { getListProps } from "../states/list.js";
+import { getMenuProps, closeMenu } from "../states/menu.js";
+import { getLightboxProps } from "../states/lightbox.js";
+
+import { Area } from "./elements/Area.jsx";
+import { Menu } from "./elements/Menu.jsx";
+import { List } from "./elements/List.jsx";
+import { Lightbox } from "./elements/Lightbox.jsx";
+import { CardStack } from "./elements/CardStack.jsx";
+import { Button } from "./elements/Button.jsx";
 
 const Rows = ({ rows, handlers }) => (
   <div class="dmpg-rows">
@@ -69,9 +74,9 @@ export const App = ({ rows, initialize, handlers }) => {
       </div>
       {show && (
         <div class="dmpg-wrapper" {...globalHandlers}>
-          <Menu />
-          <List />
-          <Lightbox />
+          <Menu {...getMenuProps()} />
+          <List {...getListProps()} />
+          <Lightbox {...getLightboxProps()} />
           <Rows rows={rows} handlers={handlers} />
           <div class="dmpg-footer">
             <a href="https://zk-phi.github.io/handanalyze" target="_blank">→ 確率計算機</a>
