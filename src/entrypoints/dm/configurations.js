@@ -210,7 +210,7 @@ export const handlers = {
       onContextMenu: e => showMenu(e, [
         ["🔍 拡大", () => showLightbox(e, gameState.value.lands[ix].cards[0])],
         ["⚡ 超次元送り", () => push("lands", ix, "exdeck", 0)],
-        ["🔄 裏返す", () => toggleFlipped("field", ix)],
+        ["🔄 裏返す", () => toggleFlipped("lands", ix)],
         ["👀 重なっているカード", e => showListWithContextMenu(e, "lands", ix)],
       ]),
       ...dropHandlers("lands", ix),
