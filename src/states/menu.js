@@ -1,5 +1,5 @@
 import { signal } from "@preact/signals";
-import { globalClickHooks } from "../components/hooks.js";
+import { globalClickHooks } from "../hooks.js";
 
 const menu = signal(null);
 

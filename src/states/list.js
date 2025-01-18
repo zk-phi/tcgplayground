@@ -1,5 +1,5 @@
 import { signal, computed } from "@preact/signals";
-import { globalDragEndHooks } from "../components/hooks.js";
+import { globalDragEndHooks } from "../hooks.js";
 import { gameState } from "./game.js";
 import { closeMenu } from "./menu.js";
 

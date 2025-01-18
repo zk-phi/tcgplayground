@@ -1,17 +1,17 @@
 import { globalHandlers } from "./hooks.js";
 
-import { gameState } from "../states/game.js";
-import { getIsSelected, getIsTargetted, dragStop } from "../states/drag.js";
-import { getListProps } from "../states/list.js";
-import { getMenuProps, closeMenu } from "../states/menu.js";
-import { getLightboxProps } from "../states/lightbox.js";
+import { gameState } from "./states/game.js";
+import { getIsSelected, getIsTargetted, dragStop } from "./states/drag.js";
+import { getListProps } from "./states/list.js";
+import { getMenuProps, closeMenu } from "./states/menu.js";
+import { getLightboxProps } from "./states/lightbox.js";
 
-import { Area } from "./elements/Area.jsx";
-import { Menu } from "./elements/Menu.jsx";
-import { List } from "./elements/List.jsx";
-import { Lightbox } from "./elements/Lightbox.jsx";
-import { CardStack } from "./elements/CardStack.jsx";
-import { Button } from "./elements/Button.jsx";
+import { Area } from "./components/Area.jsx";
+import { Menu } from "./components/Menu.jsx";
+import { List } from "./components/List.jsx";
+import { Lightbox } from "./components/Lightbox.jsx";
+import { CardStack } from "./components/CardStack.jsx";
+import { Button } from "./components/Button.jsx";
 
 const Rows = ({ rows, handlers }) => (
   <div class="dmpg-rows">
