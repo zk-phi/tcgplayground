@@ -5,7 +5,7 @@ import {
   toggleTapped, toggleReversed, toggleFlipped, toggleLaid,
   shuffle, untapAll,
 } from "../states/game.js";
-import { dropHandlers, dragHandlers } from "../drag.js";
+import { dropHandlers, dragHandlers } from "../states/drag.js";
 import { showMenu } from "../components/Menu.jsx";
 import { showList } from "../components/List.jsx";
 import { showLightbox } from "../components/Lightbox.jsx";

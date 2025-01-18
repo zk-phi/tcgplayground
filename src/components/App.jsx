@@ -1,7 +1,7 @@
 import { useEffect, useState } from "preact/hooks";
 import { gameState } from "../states/game.js";
 import { globalHandlers } from "../hooks.js";
-import { getIsSelected, getIsTargetted } from "../drag.js";
+import { getIsSelected, getIsTargetted } from "../states/drag.js";
 import { Area } from "./Area.jsx";
 import { Menu } from "./Menu.jsx";
 import { List } from "./List.jsx";
