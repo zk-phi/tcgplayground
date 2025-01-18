@@ -1,4 +1,3 @@
-import { useEffect, useState } from "preact/hooks";
 import { globalHandlers } from "./hooks.js";
 
 import { gameState } from "../states/game.js";
@@ -48,43 +47,16 @@ const Areas = ({ areas, handlers }) => (
   ))
 );
 
-export const App = ({ rows, initialize, handlers }) => {
-  const [show, setShow] = useState(true);
-
-  useEffect(() => {
-    initialize();
-  }, []);
-
-  return (
-    <>
-      <div class="dmpg-floating-menu">
-        {show && (
-          <>
-            <Button onClick={() => untapAll(["field", "lands"])}>
-              アンタップ
-            </Button>
-            <Button onClick={initialize}>
-              リセット
-            </Button>
-          </>
-        )}
-        <Button onClick={() => setShow(show => !show)}>
-          {show ? "閉じる" : "開く"}
-        </Button>
-      </div>
-      {show && (
-        <div class="dmpg-wrapper" {...globalHandlers}>
-          <Menu {...getMenuProps()} />
-          <List {...getListProps()} />
-          <Lightbox {...getLightboxProps()} />
-          <Rows rows={rows} handlers={handlers} />
-          <div class="dmpg-footer">
-            <a href="https://zk-phi.github.io/handanalyze" target="_blank">→ 確率計算機</a>
-            {" / "}
-            <a href="https://x.com/zk_phi" target="_blank">@zk_phi</a>
-          </div>
-        </div>
-      )}
-    </>
-  );
-};
+export const Playground = ({ rows, handlers }) => (
+  <div class="dmpg-wrapper" {...globalHandlers}>
+    <Menu {...getMenuProps()} />
+    <List {...getListProps()} />
+    <Lightbox {...getLightboxProps()} />
+    <Rows rows={rows} handlers={handlers} />
+    <div class="dmpg-footer">
+      <a href="https://zk-phi.github.io/handanalyze" target="_blank">→ 確率計算機</a>
+      {" / "}
+      <a href="https://x.com/zk_phi" target="_blank">@zk_phi</a>
+    </div>
+  </div>
+);
