@@ -95,16 +95,6 @@ export const toggleTapped = (src, si) => {
   };
 };
 
-export const setAttribute = (src, si, key, value) => {
-  gameState.value = {
-    ...gameState.value,
-    [src]: put(gameState.value[src], si, {
-      ...gameState.value[src][si],
-      [key]: value,
-    }),
-  };
-};
-
 export const toggleFlipped = (src, si) => {
   gameState.value = {
     ...gameState.value,
