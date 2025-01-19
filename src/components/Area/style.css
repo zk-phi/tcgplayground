@@ -6,7 +6,6 @@
   border: 2px solid #666;
   padding: var(--dmpg-area-padding);
   box-sizing: content-box;
-  flex-grow: 1;
   min-height: var(--dmpg-card-height);
   background: #444;
   border-radius: 8px;

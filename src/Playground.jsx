@@ -14,6 +14,37 @@ import { CardStack } from "./components/CardStack";
 import { Button } from "./components/Button";
 import { Link } from "./components/Link";
 
+const NEGATIVE_MARGIN_THRESHOLD = 5;
+const NEGATIVE_MARGIN_PER_CARD = -8;
+const MIN_NEGATIVE_MARGIN = -72;
+
+const AreaWithCards = ({ area, handlers }) => {
+  const stacks = gameState.value[area.area] ?? [];
+  const margin = Math.max(
+    Math.max(stacks.length - NEGATIVE_MARGIN_THRESHOLD, 0) * NEGATIVE_MARGIN_PER_CARD,
+    MIN_NEGATIVE_MARGIN,
+  );
+
+  return (
+    <Area
+        label={area.label}
+        width={area.width}
+        nogrow={area.optional}
+        isTargetted={getIsTargetted(area.area, null)}
+        {...handlers[area.area].area}>
+      {stacks.map((stack, ix) => (
+        <CardStack
+            stack={stack}
+            isSelected={getIsSelected(area.area, ix)}
+            isTargetted={getIsTargetted(area.area, ix)}
+            style={{ marginLeft: ix > 0 ? `${margin}px` : 0 }}
+            {...handlers[area.area].stack(ix)}
+        />
+      ))}
+    </Area>
+  );
+};
+
 const Rows = ({ rows, handlers }) => (
   <div class="dmpg-rows">
     {rows.map(row => (
@@ -29,21 +60,7 @@ const Areas = ({ areas, handlers }) => (
     Array.isArray(area) ? (
       <Rows rows={area} handlers={handlers} />
     ) : gameState.value[area.area]?.length || !area.optional ? (
-      <Area
-          label={area.label}
-          width={area.width}
-          nogrow={area.optional}
-          isTargetted={getIsTargetted(area.area, null)}
-          {...handlers[area.area].area}>
-        {gameState.value[area.area]?.map((stack, ix) => (
-          <CardStack
-              stack={stack}
-              isSelected={getIsSelected(area.area, ix)}
-              isTargetted={getIsTargetted(area.area, ix)}
-              {...handlers[area.area].stack(ix)}
-          />
-        ))}
-      </Area>
+      <AreaWithCards area={area} handlers={handlers} />
     ) : null
   ))
 );
