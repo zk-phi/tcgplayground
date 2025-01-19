@@ -94,7 +94,7 @@ const showListWithContextMenu = (e, area, ix, allowEmpty = false) => {
   showList(e, area, ix, (j) => ({
     onClick: e => showMenu(e, [
       ["🔍 拡大", () => showLightbox(e, gameState.value[area][ix].cards[j])],
-      ["⚔️ バトル場に出す", () => pushSingle(area, ix, j, "field", 0, allowEmpty)],
+      ["⚔️ バトル場に出す", () => moveSingle(area, ix, j, "field", allowEmpty)],
       ["🫳 デッキの上に置く", () => pushSingle(area, ix, j, "deck", 0, allowEmpty)],
       ["🫴 デッキの下に入れる", () => unshiftSingle(area, ix, j, "deck", 0, allowEmpty)],
       ["🪦 トラッシュに送る", () => pushSingle(area, ix, j, "graveyard", 0, allowEmpty)],
@@ -104,7 +104,7 @@ const showListWithContextMenu = (e, area, ix, allowEmpty = false) => {
     ]),
     onContextMenu: e => showMenu(e, [
       ["🔍 拡大", () => showLightbox(e, gameState.value[area][ix].cards[j])],
-      ["⚔️ バトル場に出す", () => pushSingle(area, ix, j, "field", 0, allowEmpty)],
+      ["⚔️ バトル場に出す", () => moveSingle(area, ix, j, "field", allowEmpty)],
       ["🫳 デッキの上に置く", () => pushSingle(area, ix, j, "deck", 0, allowEmpty)],
       ["🫴 デッキの下に入れる", () => unshiftSingle(area, ix, j, "deck", 0, allowEmpty)],
       ["🪦 トラッシュに送る", () => pushSingle(area, ix, j, "graveyard", 0, allowEmpty)],
