@@ -15,6 +15,7 @@ export default defineConfig({
       input: {
         main: "src/entrypoints/index.html",
         dm: "src/entrypoints/dm/demo/index.html",
+        poke: "src/entrypoints/poke/demo/index.html",
       },
     },
   },
