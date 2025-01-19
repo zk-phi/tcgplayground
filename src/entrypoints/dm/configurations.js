@@ -10,58 +10,20 @@ import { showList } from "../../states/list.js";
 import { showMenu } from "../../states/menu.js";
 import { showLightbox } from "../../states/lightbox.js";
 
-export const rows = [
-  /* [
-   *   { area: "shields", label: "サイド", width: 2 },
-   *   [
-   *     [
-   *       { area: "field", label: "場" },
-   *       { area: "deck", label: "山", width: 1 },
-   *     ],
-   *     [
-   *       { area: "lands", label: "ベンチ" },
-   *       { area: "graveyard", label: "墓", width: 1 },
-   *     ],
-   *     [{ area: "hand", label: "手札" }],
-   *   ],
-   * ], */
-  [
-    { area: "field", label: "場", expandThreshold: 8 }
-  ], [
-    { area: "shields", label: "シールド", expandThreshold: 5 },
-    { area: "deck", label: "デッキ", width: 1 },
-    { area: "graveyard", label: "墓地", width: 1 },
-    { area: "grdeck", label: "GR", width: 1, optional: true },
-    { area: "exdeck", label: "超次元", width: 1, optional: true },
-  ], [
-    { area: "lands", label: "マナ" },
-    { area: "exploring", label: "めくられた", optional: true },
-  ], [
-    { area: "hand", label: "手札", expandThreshold: 5 },
-  ],
-];
-
-const extractSrcs = (classname) => {
-  const elements = document.getElementsByClassName(classname)?.[0]?.children;
-  return Array.from(elements ?? []).map(el => el?.children?.[0]?.src ?? "");
-}
-
-export const initialize = () => {
-  const deck = shuffleArray(extractSrcs("MainCards"));
-  const grdeck = extractSrcs("GRCardsList");
-  const exdeck = extractSrcs("HyperspatialCardsList");
-  setGameState({
-    field: [],
-    lands: [],
-    graveyard: [stack({ cards: [] })],
-    hand: deck.splice(0, 5).map(src => stack({ cards: [src] })),
-    shields: deck.splice(0, 5).map(src => stack({ cards: [src], flipped: true })),
-    deck: [stack({ cards: deck, flipped: true })],
-    grdeck: grdeck.length ? [stack({ cards: grdeck, flipped: true })] : [],
-    exdeck: exdeck.length ? [stack({ cards: exdeck })] : [],
-    exploring: [],
-  });
-};
+export const rows = [[
+  { area: "field", label: "場", expandThreshold: 8 }
+], [
+  { area: "shields", label: "シールド", expandThreshold: 5 },
+  { area: "deck", label: "デッキ", width: 1 },
+  { area: "graveyard", label: "墓地", width: 1 },
+  { area: "grdeck", label: "GR", width: 1, optional: true },
+  { area: "exdeck", label: "超次元", width: 1, optional: true },
+], [
+  { area: "lands", label: "マナ" },
+  { area: "exploring", label: "めくられた", optional: true },
+], [
+  { area: "hand", label: "手札", expandThreshold: 5 },
+]];
 
 const dragStackHandlers = (src, si) => dragHandlers(src, si, (e, dest, di) => {
   if (dest === "graveyard" || dest === "exdeck") {

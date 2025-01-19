@@ -146,7 +146,7 @@ const popSingle = (src, si, sj) => {
     }),
   };
   return card;
-}
+};
 
 export const moveSingle = (src, si, sj, dest, allowEmpty = false, attrs = {}) => {
   if (gameState.value[src][si].cards.length <= 1 && !allowEmpty) {
