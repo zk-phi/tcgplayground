@@ -25,7 +25,7 @@ export const rows = [[
 const dragStackHandlers = (src, si, allowEmpty) => dragHandlers(src, si, (e, dest, di) => {
   if (dest === "graveyard" || dest === "sides") {
     push(src, si, dest, di ?? 0, true);
-  } else if (dest === "stadium" || di === "deck" || di != null) {
+  } else if (dest === "stadium" || dest === "deck" || di != null) {
     showMenu(e, [
       ["🫳 上に置く", () => push(src, si, dest, di ?? 0, true)],
       ["🫴 下に入れる", () => unshift(src, si, dest, di ?? 0, true)],
@@ -38,7 +38,7 @@ const dragStackHandlers = (src, si, allowEmpty) => dragHandlers(src, si, (e, des
 const dragSingleHandlers = (src, si, allowEmpty) => dragHandlers(src, si, (e, dest, di) => {
   if (dest === "graveyard" || dest === "sides") {
     pushSingle(src, si, 0, dest, di ?? 0);
-  } else if (dest === "stadium" || di === "deck" || di != null) {
+  } else if (dest === "stadium" || dest === "deck" || di != null) {
     showMenu(e, [
       ["🫳 上に置く", () => pushSingle(src, si, 0, dest, di ?? 0)],
       ["🫴 下に入れる", () => unshiftSingle(src, si, 0, dest, di ?? 0)],
