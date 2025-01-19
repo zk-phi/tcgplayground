@@ -15,7 +15,9 @@
     sans-serif;
   background: #222;
   font-size: 16px;
+  /* disable selection and popup */
   user-select: none;
+  touch-callout: none;
 }
 
 .dmpg-rows {
