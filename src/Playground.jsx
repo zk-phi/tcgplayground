@@ -14,14 +14,13 @@ import { CardStack } from "./components/CardStack";
 import { Button } from "./components/Button";
 import { Link } from "./components/Link";
 
-const NEGATIVE_MARGIN_THRESHOLD = 5;
 const NEGATIVE_MARGIN_PER_CARD = -8;
 const MIN_NEGATIVE_MARGIN = -72;
 
 const AreaWithCards = ({ area, handlers }) => {
   const stacks = gameState.value[area.area] ?? [];
   const margin = Math.max(
-    Math.max(stacks.length - NEGATIVE_MARGIN_THRESHOLD, 0) * NEGATIVE_MARGIN_PER_CARD,
+    Math.max(stacks.length - (area.initialCards ?? 0), 0) * NEGATIVE_MARGIN_PER_CARD,
     MIN_NEGATIVE_MARGIN,
   );
 

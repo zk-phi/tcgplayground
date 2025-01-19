@@ -28,7 +28,7 @@ export const rows = [
   [
     { area: "field", label: "場" }
   ], [
-    { area: "shields", label: "シールド" },
+    { area: "shields", label: "シールド", initialCards: 5 },
     { area: "deck", label: "デッキ", width: 1 },
     { area: "graveyard", label: "墓地", width: 1 },
     { area: "grdeck", label: "GR", width: 1, optional: true },
@@ -37,7 +37,7 @@ export const rows = [
     { area: "lands", label: "マナ" },
     { area: "exploring", label: "めくられた", optional: true },
   ], [
-    { area: "hand", label: "手札" },
+    { area: "hand", label: "手札", initialCards: 5 },
   ],
 ];
 
