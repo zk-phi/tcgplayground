@@ -23,8 +23,6 @@ export const CardStack = ({ stack, isSelected, isTargetted, style = {}, ...props
     "dmpg-nonempty"
   );
 
-  console.log(isSelected);
-
   return (
     <div class="dmpg-card-container" style={containerStyles} {...props}>
       <div class={`dmpg-card-inner ${extraClass}`}>

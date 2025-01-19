@@ -17,7 +17,6 @@
 
 .dmpg-area-label {
   position: absolute;
-  z-index: 1;
   padding: 4px 6px;
   left: -2px;
   bottom: -2px;
@@ -26,4 +25,5 @@
   border-radius: 0 8px 0 8px;
   color: #fffc;
   background: #666;
+  pointer-events: none;
 }
