@@ -12,7 +12,7 @@ import { showLightbox } from "../../states/lightbox.js";
 
 export const rows = [[
   { area: "sides", label: "サイド", width: 1 },
-  { area: "field", label: "場" },
+  { area: "field", label: "場", expandThreshold: 5 },
   { area: "graveyard", label: "トラッシュ", width: 1 },
 ], [
   { area: "bench", label: "ベンチ", expandThreshold: 5 },
