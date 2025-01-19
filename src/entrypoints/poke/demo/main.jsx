@@ -11,9 +11,7 @@ import { Button } from "../../../components/Button";
 
 import "../../../styles.min.css";
 import "./style.css";
-import { enableDragDropTouch } from "drag-drop-touch/dist/drag-drop-touch.esm.min.js";
-
-enableDragDropTouch();
+import "../../../utils/dndtouch.js";
 
 const sampleDeck = [
   "https://www.pokemon-card.com/assets/images/card_images/large/ENE/034670_E_KIHONCHOUENERUGI.jpg",
