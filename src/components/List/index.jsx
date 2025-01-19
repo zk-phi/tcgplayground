@@ -4,7 +4,7 @@ import { globalHandlers } from "../../hooks";
 
 export const List = ({ cards, onClose, handlers }) => cards.length > 0 && (
   <Overlay onClick={onClose}>
-    <div class="dmpg-list-container" {...globalHandlers}>
+    <div class="dmpg-list-container">
       {cards.map((card, j) => (
         <CardStack stack={{ cards: [card] }} {...handlers(j)} />
       ))}

@@ -92,20 +92,17 @@ const dragSingleHandlers = (src, si, allowEmpty) => dragHandlers(src, si, (e, de
 const showListWithContextMenu = (e, area, ix, allowEmpty = false) => {
   showList(e, area, ix, (j) => ({
     onClick: e => showLightbox(e, gameState.value[area][ix].cards[j]),
-    onContextMenu: e => {
-      alert("DEBUG: onContextMenu fired");
-      showMenu(e, [
-        ["⚔️ 場に出す", () => moveSingle(area, ix, j, "field", allowEmpty)],
-        ["🛡️ シールドに追加", () => moveSingle(area, ix, j, "shields", allowEmpty)],
-        ["🫳 デッキの上に置く", () => pushSingle(area, ix, j, "deck", 0, allowEmpty)],
-        ["🫴 デッキの下に入れる", () => unshiftSingle(area, ix, j, "deck", 0, allowEmpty)],
-        ["🪦 墓地に送る", () => pushSingle(area, ix, j, "graveyard", 0, allowEmpty)],
-        ["🎰 GRゾーンに置く", () => unshiftSingle(area, ix, j, "grdeck", 0, allowEmpty)],
-        ["⚡ 超次元ゾーンに置く", () => pushSingle(area, ix, j, "exdeck", 0, allowEmpty)],
-        ["⛰️ マナに追加", () => moveSingle(area, ix, j, "lands", allowEmpty, { reversed: true })],
-        ["🃏 手札に加える", () => moveSingle(area, ix, j, "hand", allowEmpty)],
-      ]);
-    },
+    onContextMenu: e => showMenu(e, [
+      ["⚔️ 場に出す", () => moveSingle(area, ix, j, "field", allowEmpty)],
+      ["🛡️ シールドに追加", () => moveSingle(area, ix, j, "shields", allowEmpty)],
+      ["🫳 デッキの上に置く", () => pushSingle(area, ix, j, "deck", 0, allowEmpty)],
+      ["🫴 デッキの下に入れる", () => unshiftSingle(area, ix, j, "deck", 0, allowEmpty)],
+      ["🪦 墓地に送る", () => pushSingle(area, ix, j, "graveyard", 0, allowEmpty)],
+      ["🎰 GRゾーンに置く", () => unshiftSingle(area, ix, j, "grdeck", 0, allowEmpty)],
+      ["⚡ 超次元ゾーンに置く", () => pushSingle(area, ix, j, "exdeck", 0, allowEmpty)],
+      ["⛰️ マナに追加", () => moveSingle(area, ix, j, "lands", allowEmpty, { reversed: true })],
+      ["🃏 手札に加える", () => moveSingle(area, ix, j, "hand", allowEmpty)],
+    ]),
   }));
 };
 
