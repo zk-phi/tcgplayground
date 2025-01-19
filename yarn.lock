@@ -710,9 +710,9 @@ domutils@^3.0.1:
     domelementtype "^2.3.0"
     domhandler "^5.0.3"
 
-drag-drop-touch@drag-drop-touch-js/dragdroptouch#07edc6d:
+drag-drop-touch@zk-phi/dragdroptouch#16ce488:
   version "2.0.0"
-  resolved "https://codeload.github.com/drag-drop-touch-js/dragdroptouch/tar.gz/07edc6d96c029dd83e98c09b8128816bf1438511"
+  resolved "https://codeload.github.com/zk-phi/dragdroptouch/tar.gz/16ce48823d4f772799d0d118e6dbc45ee1ce06a8"
 
 electron-to-chromium@^1.5.73:
   version "1.5.80"
