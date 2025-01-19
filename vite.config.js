@@ -13,6 +13,7 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       input: {
+        main: "src/entrypoints/index.html",
         dm: "src/entrypoints/dm/demo/index.html",
       },
     },
