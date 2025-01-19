@@ -2,7 +2,7 @@ import { render } from "preact";
 import { useEffect } from "preact/hooks";
 import * as configurations from "../configurations.js";
 
-import { gameState,  stack, setGameState, untapAll } from "../../../states/game.js";
+import { stack, setGameState, untapAll } from "../../../states/game.js";
 import { shuffle as shuffleArray } from "../../../utils/array.js";
 
 import { Playground } from "../../../Playground";
@@ -92,7 +92,6 @@ const initialize = () => {
     bench: [],
     exploring: [],
   });
-  console.log(gameState.value);
 };
 
 const App = () => {
