@@ -5,7 +5,6 @@
   background-size: cover;
   overflow: hidden;
   border-radius: 5px;
-  user-select: none;
 }
 
 .dmpg-card-container:has(> .dmpg-card-inner:active) {
