@@ -1,11 +1,17 @@
 # dmplayground
 
-DECK MAKER さまのページ上で、カードを自由に移動して初動の確認などができる便利スクリプトです。
+各種 TCG のデッキ構築などに利用できる、汎用的な一人回しツールフレームワークです。
+
+## WIP スタンドアロン版
 
 DEMO: https://zk-phi.github.io/dmplayground/dm/demo
 
-## 使い方
-### インストール
+## 旧 bookmarklet 版 (廃止予定)
+
+DECK MAKER さまのページ上で、カードを自由に移動して初動の確認などができる便利スクリプトです。
+
+### 使い方
+#### インストール
 
 1. [このファイル](https://raw.githubusercontent.com/zk-phi/dmplayground/refs/heads/main/release/bookmarklet) の中身をまるごとコピーする
 
@@ -16,7 +22,7 @@ DEMO: https://zk-phi.github.io/dmplayground/dm/demo
   - タイトル：わかりやすい名前 (`DM一人回し` とか) に変える
   - URL：1. でコピーしたスクリプトを貼り付ける
 
-### 起動
+#### 起動
 
 1. DECK MAKER さまにアクセス
 
@@ -24,7 +30,7 @@ DEMO: https://zk-phi.github.io/dmplayground/dm/demo
 
 3. その状態で、 `インストール` で登録したブックマークを押す
 
-## ポリシー
+### ポリシー
 
 私のスクリプトが関係者に迷惑をかけることは本意ではないので、もしデュエマ / DECK MAKER 公式さまからこういったスクリプトの利用を望まない旨の声明が出されたり、あるいはこういったスクリプトをブロックするような改修が行われた際には、私はこのスクリプトの更新を停止し、公開も中止します。
 
@@ -53,9 +59,12 @@ then run `yarn run dev` to start dev server.
 $ yarn run dev
 ```
 
-### Build and release
+- Standalone version demo: http://localhost:5173/dmplayground/dm/demo
+- Bookmarklet version: http://localhost:5173/dmplayground/dm/deckmaker
 
-Run `yarn run build` to update build artifacts (`./dist`),
+### Build and release: Bookmarklet
+
+Run `yarn run build` to generate build artifacts (`./dist`),
 
 ``` terminal
 $ yarn run build
@@ -67,11 +76,21 @@ then run `yarn run release` to update `./release/bookmarket`.
 $ yarn run release
 ```
 
-### Dependencies
+### Build and release: Standalone
 
-Released script includes:
+Run `yarn run build-demo` to generate build artifacts (`./dist`).
+
+``` terminal
+$ yarn run build-demo
+```
+
+## License
+
+Released bookmarklet includes:
 
 - Preact (c) Jason Miller / licensed under the MIT License
-- DragDropTouch (c) Bernardo Castilho / licensed under the MIT License
+- DragDropTouch (c) Bernardo Castilho, Pomax / licensed under the MIT License
 
 This is a fanmade content of DuelMasters ((C) Wizards of the Coast), and card images are included under the [WotC Fan Content Policy](https://company.wizards.com/en/legal/fancontentpolicy).
+
+This repo is NOT licensed for redistribution, remixing, etc for now.
