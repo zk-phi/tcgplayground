@@ -48,7 +48,7 @@ const popSingle = (area, i, j) => {
     ...gameState.value,
     [area]: putArray(gameState.value[area], i, {
       ...gameState.value[area][i],
-      cards: gameState.value[area][i].cards.filter((_, j) => i !== j),
+      cards: gameState.value[area][i].cards.filter((_, ix) => j !== ix),
     }),
   };
   return card;
