@@ -11,7 +11,9 @@ import { Button } from "../../../components/Button";
 
 import "../../../styles.min.css";
 import "./style.css";
-import "drag-drop-touch/DragDropTouch.js";
+import { enableDragDropTouch } from "drag-drop-touch/dist/drag-drop-touch.esm.min.js";
+
+enableDragDropTouch();
 
 const sampleDeck = [
   "/dmplayground/dm24sp2-013.jpg",
