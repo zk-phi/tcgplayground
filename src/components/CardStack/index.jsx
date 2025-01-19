@@ -3,7 +3,9 @@ export const CardStack = ({ stack, isSelected, isTargetted, style = {}, ...props
     (stack.tapped ? -30 : 0) + (stack.reversed ? 180 : 0) + (stack.laid ? -90 : 0)
   );
 
-  const containerStyles = stack.cards.length === 0 ? null : {
+  const containerStyles = stack.cards.length === 0 ? {
+    pointerEvents: "none",
+  } : {
     ...style,
     backgroundImage: `url(${stack.cards[0]})`,
     transform: `rotate(${angle}deg)`,
