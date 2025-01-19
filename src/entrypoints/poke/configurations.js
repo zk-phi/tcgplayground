@@ -3,6 +3,8 @@ import {
   stack, gameState, setGameState,
   move, push, unshift, moveSingle, pushSingle, unshiftSingle,
   toggleTapped, toggleReversed, toggleFlipped, toggleLaid,
+  unshiftBatch, pushBatch, moveBatch,
+  unshiftAll, pushAll, moveAll,
   shuffle, untapAll,
 } from "../../states/game.js";
 import { dropHandlers, dragHandlers } from "../../states/drag.js";
@@ -22,10 +24,47 @@ export const rows = [[
   { area: "exploring", label: "めくられた", optional: true },
 ]];
 
+const dragNormalAreaHandlers = (src) => dragHandlers(src, null, (e, dest, di) => {
+  if (dest === "graveyard" || dest === "sides") {
+    pushBatch(src, dest, di ?? 0);
+  } else if (dest === "deck" || dest === "stadium" || di != null) {
+    if (gameState.value[dest][di ?? 0].cards.length <= 0) {
+      pushBatch(src, dest, di ?? 0);
+    } else {
+      showMenu(e, [
+        ["🫳 上に置く", () => pushBatch(src, dest, di ?? 0)],
+        ["🫴 下に入れる", () => unshiftBatch(src, dest, di ?? 0)],
+      ]);
+    }
+  } else {
+    moveBatch(src, dest, { reversed: dest === "lands" });
+  }
+});
+
+const dragDeckAreaHandlers = (src) => dragHandlers(src, null, (e, dest, di) => {
+  if (dest === "graveyard" || dest === "sides") {
+    pushAll(src, dest, di ?? 0);
+  } else if (dest === "deck" || dest === "stadium" || di != null) {
+    if (gameState.value[dest][di ?? 0].cards.length <= 0) {
+      pushBatch(src, dest, di ?? 0);
+    } else {
+      showMenu(e, [
+        ["🫳 上に置く", () => pushAll(src, si, dest, di ?? 0)],
+        ["🫴 下に入れる", () => unshiftAll(src, si, dest, di ?? 0)],
+      ]);
+    }
+  } else {
+    moveAll(src, 0, dest, { reversed: dest === "lands" });
+  }
+});
+
 const dragStackHandlers = (src, si, allowEmpty) => dragHandlers(src, si, (e, dest, di) => {
   if (dest === "graveyard" || dest === "sides") {
     push(src, si, dest, di ?? 0, true);
-  } else if (dest === "stadium" || dest === "deck" || di != null) {
+  } else if (dest === "deck" || dest === "stadium" || di != null) {
+    if (gameState.value[dest][di ?? 0].cards.length <= 0) {
+      push(src, si, dest, di ?? 0, true);
+    }
     showMenu(e, [
       ["🫳 上に置く", () => push(src, si, dest, di ?? 0, true)],
       ["🫴 下に入れる", () => unshift(src, si, dest, di ?? 0, true)],
@@ -38,7 +77,10 @@ const dragStackHandlers = (src, si, allowEmpty) => dragHandlers(src, si, (e, des
 const dragSingleHandlers = (src, si, allowEmpty) => dragHandlers(src, si, (e, dest, di) => {
   if (dest === "graveyard" || dest === "sides") {
     pushSingle(src, si, 0, dest, di ?? 0);
-  } else if (dest === "stadium" || dest === "deck" || di != null) {
+  } else if (dest === "deck" || dest === "stadium" || di != null) {
+    if (gameState.value[dest][di ?? 0].cards.length <= 0) {
+      pushSingle(src, si, 0, dest, di ?? 0);
+    }
     showMenu(e, [
       ["🫳 上に置く", () => pushSingle(src, si, 0, dest, di ?? 0)],
       ["🫴 下に入れる", () => unshiftSingle(src, si, 0, dest, di ?? 0)],
@@ -83,6 +125,7 @@ export const handlers = {
     }),
     area: {
       ...dropHandlers("sides", null),
+      ...dragDeckAreaHandlers("sides"),
     },
   },
 
@@ -98,6 +141,7 @@ export const handlers = {
     }),
     area: {
       ...dropHandlers("field", null),
+      ...dragNormalAreaHandlers("field"),
     },
   },
 
@@ -114,6 +158,7 @@ export const handlers = {
     }),
     area: {
       ...dropHandlers("deck", null),
+      ...dragDeckAreaHandlers("deck"),
     },
   },
 
@@ -126,6 +171,7 @@ export const handlers = {
     }),
     area: {
       ...dropHandlers("graveyard", null),
+      ...dragDeckAreaHandlers("graveyard"),
     },
   },
 
@@ -141,6 +187,7 @@ export const handlers = {
     }),
     area: {
       ...dropHandlers("bench", null),
+      ...dragNormalAreaHandlers("bench"),
     },
   },
 
@@ -156,6 +203,7 @@ export const handlers = {
     }),
     area: {
       ...dropHandlers("hand", null),
+      ...dragNormalAreaHandlers("hand"),
     },
   },
 
@@ -171,6 +219,7 @@ export const handlers = {
     }),
     area: {
       ...dropHandlers("exploring", null),
+      ...dragNormalAreaHandlers("exploring"),
     },
   },
 };
