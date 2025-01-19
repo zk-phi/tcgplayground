@@ -13,10 +13,7 @@ import "../../../styles.min.css";
 import "./style.css";
 import { enableDragDropTouch } from "drag-drop-touch/dist/drag-drop-touch.esm.min.js";
 
-enableDragDropTouch(undefined, undefined, {
-  pressHoldDelayMS: 0,
-  contextMenuDelayMS: 400,
-});
+enableDragDropTouch();
 
 const sampleDeck = [
   "https://www.pokemon-card.com/assets/images/card_images/large/ENE/034670_E_KIHONCHOUENERUGI.jpg",
