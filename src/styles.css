@@ -15,6 +15,7 @@
     sans-serif;
   background: #222;
   font-size: 16px;
+  user-select: none;
 }
 
 .dmpg-rows {
