@@ -193,7 +193,7 @@ export const handlers = {
 
   hand: {
     stack: ix => ({
-      onClick: e => preventDefault(e),
+      onClick: e => e.preventDefault(),
       onContextMenu: e => showMenu(e, [
         ["🔍 拡大", e => showLightbox(e, gameState.value.hand[ix].cards[0])],
         ["👀 重なっているカード", e => showListWithContextMenu(e, "hand", ix)],
@@ -209,7 +209,7 @@ export const handlers = {
 
   exploring: {
     stack: ix => ({
-      onClick: e => preventDefault(e),
+      onClick: e => e.preventDefault(),
       onContextMenu: e => showMenu(e, [
         ["🔍 拡大", e => showLightbox(e, gameState.value.exploring[ix].cards[0])],
         ["👀 重なっているカード", e => showListWithContextMenu(e, "hand", ix)],
