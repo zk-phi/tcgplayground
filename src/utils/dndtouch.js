@@ -2,7 +2,7 @@ import { enableDragDropTouch } from "drag-drop-touch/dist/drag-drop-touch.esm.mi
 
 enableDragDropTouch(undefined, undefined, {
   allowDragScroll: false,
-  contextMenuDelayMS: 500,
+  contextMenuDelayMS: 300,
   /* more permissive to drift before fireing the oncontextmenu event */
   dragThresholdPixels: 32,
 });
