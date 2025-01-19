@@ -51,6 +51,7 @@ export const dragHandlers = (area, ix, handler) => ({
   onDragStart: e => {
     closeMenu();
     drag(area, ix, handler);
+    e.stopPropagation();
   },
 });
 

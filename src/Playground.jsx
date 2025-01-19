@@ -29,6 +29,7 @@ const AreaWithCards = ({ area, handlers }) => {
         label={area.label}
         width={area.width}
         nogrow={area.optional}
+        isSelected={getIsSelected(area.area, null)}
         isTargetted={getIsTargetted(area.area, null)}
         {...handlers[area.area].area}>
       {stacks.map((stack, ix) => (

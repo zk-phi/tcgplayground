@@ -3,6 +3,8 @@ import {
   stack, gameState, setGameState,
   move, push, unshift, moveSingle, pushSingle, unshiftSingle,
   toggleTapped, toggleReversed, toggleFlipped, toggleLaid,
+  unshiftBatch, pushBatch, moveBatch,
+  unshiftAll, pushAll, moveAll,
   shuffle, untapAll,
 } from "../../states/game.js";
 import { dropHandlers, dragHandlers } from "../../states/drag.js";
@@ -25,14 +27,52 @@ export const rows = [[
   { area: "hand", label: "手札", expandThreshold: 5 },
 ]];
 
+const dragNormalAreaHandlers = (src) => dragHandlers(src, null, (e, dest, di) => {
+  if (dest === "graveyard" || dest === "exdeck") {
+    pushBatch(src, dest, di ?? 0);
+  } else if (dest === "deck" || dest === "grdeck" || di != null) {
+    if (gameState.value[dest][di ?? 0].cards.length <= 0) {
+      pushBatch(src, dest, di ?? 0);
+    } else {
+      showMenu(e, [
+        ["🫳 上に置く", () => pushBatch(src, dest, di ?? 0)],
+        ["🫴 下に入れる", () => unshiftBatch(src, dest, di ?? 0)],
+      ]);
+    }
+  } else {
+    moveBatch(src, dest, { reversed: dest === "lands" });
+  }
+});
+
+const dragDeckAreaHandlers = (src) => dragHandlers(src, null, (e, dest, di) => {
+  if (dest === "graveyard" || dest === "exdeck") {
+    pushAll(src, dest, di ?? 0);
+  } else if (dest === "deck" || dest === "grdeck" || di != null) {
+    if (gameState.value[dest][di ?? 0].cards.length <= 0) {
+      pushBatch(src, dest, di ?? 0);
+    } else {
+      showMenu(e, [
+        ["🫳 上に置く", () => pushAll(src, si, dest, di ?? 0)],
+        ["🫴 下に入れる", () => unshiftAll(src, si, dest, di ?? 0)],
+      ]);
+    }
+  } else {
+    moveAll(src, 0, dest, { reversed: dest === "lands" });
+  }
+});
+
 const dragStackHandlers = (src, si) => dragHandlers(src, si, (e, dest, di) => {
   if (dest === "graveyard" || dest === "exdeck") {
     push(src, si, dest, di ?? 0);
   } else if (dest === "deck" || dest === "grdeck" || di != null) {
-    showMenu(e, [
-      ["🫳 上に置く", () => push(src, si, dest, di ?? 0)],
-      ["🫴 下に入れる", () => unshift(src, si, dest, di ?? 0)],
-    ]);
+    if (gameState.value[dest][di ?? 0].cards.length <= 0) {
+      pushBatch(src, dest, di ?? 0);
+    } else {
+      showMenu(e, [
+        ["🫳 上に置く", () => push(src, si, dest, di ?? 0)],
+        ["🫴 下に入れる", () => unshift(src, si, dest, di ?? 0)],
+      ]);
+    }
   } else {
     move(src, si, dest, { reversed: dest === "lands" });
   }
@@ -42,10 +82,14 @@ const dragSingleHandlers = (src, si, allowEmpty) => dragHandlers(src, si, (e, de
   if (dest === "graveyard" || dest === "exdeck") {
     pushSingle(src, si, 0, dest, di ?? 0, allowEmpty);
   } else if (dest === "deck" || dest === "grdeck" || di != null) {
-    showMenu(e, [
-      ["🫳 上に置く", () => pushSingle(src, si, 0, dest, di ?? 0, allowEmpty)],
-      ["🫴 下に入れる", () => unshiftSingle(src, si, 0, dest, di ?? 0, allowEmpty)],
-    ]);
+    if (gameState.value[dest][di ?? 0].cards.length <= 0) {
+      pushBatch(src, dest, di ?? 0);
+    } else {
+      showMenu(e, [
+        ["🫳 上に置く", () => pushSingle(src, si, 0, dest, di ?? 0, allowEmpty)],
+        ["🫴 下に入れる", () => unshiftSingle(src, si, 0, dest, di ?? 0, allowEmpty)],
+      ]);
+    }
   } else {
     moveSingle(src, si, 0, dest, allowEmpty, { reversed: dest === "lands" });
   }
@@ -97,6 +141,7 @@ export const handlers = {
     }),
     area: {
       ...dropHandlers("field", null),
+      ...dragNormalAreaHandlers("field"),
     },
   },
 
@@ -119,6 +164,7 @@ export const handlers = {
     }),
     area: {
       ...dropHandlers("shields", null),
+      ...dragNormalAreaHandlers("shields"),
     },
   },
 
@@ -136,6 +182,7 @@ export const handlers = {
     }),
     area: {
       ...dropHandlers("deck", null),
+      ...dragDeckAreaHandlers("deck"),
     },
   },
 
@@ -148,6 +195,7 @@ export const handlers = {
     }),
     area: {
       ...dropHandlers("graveyard", null),
+      ...dragDeckAreaHandlers("graveyard"),
     },
   },
 
@@ -163,6 +211,7 @@ export const handlers = {
     }),
     area: {
       ...dropHandlers("grdeck", null),
+      ...dragDeckAreaHandlers("grdeck"),
     },
   },
 
@@ -175,6 +224,7 @@ export const handlers = {
     }),
     area: {
       ...dropHandlers("exdeck", null),
+      ...dragNormalAreaHandlers("exdeck"),
     },
   },
 
@@ -192,6 +242,7 @@ export const handlers = {
     }),
     area: {
       ...dropHandlers("lands", null),
+      ...dragNormalAreaHandlers("lands"),
     },
   },
 
@@ -207,6 +258,7 @@ export const handlers = {
     }),
     area: {
       ...dropHandlers("hand", null),
+      ...dragNormalAreaHandlers("hand"),
     },
   },
 
@@ -222,6 +274,7 @@ export const handlers = {
     }),
     area: {
       ...dropHandlers("exploring", null),
+      ...dragNormalAreaHandlers("exploring"),
     },
   },
 };
