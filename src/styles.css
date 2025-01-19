@@ -17,7 +17,7 @@
   font-size: 16px;
   /* disable selection and popup */
   user-select: none;
-  touch-callout: none;
+  -webkit-touch-callout: none;
 }
 
 .dmpg-rows {
