@@ -15,11 +15,15 @@ export const CardStack = ({ stack, isSelected, isTargetted, style = {}, ...props
     "dmpg-selected"
   ) : isTargetted ? (
     "dmpg-targetted"
+  ) : stack.cards.length <= 0 ? (
+    "dmpg-empty"
   ) : stack.cards.length > 0 && stack.flipped ? (
     "dmpg-flipped"
   ) : (
-    ""
+    "dmpg-nonempty"
   );
+
+  console.log(isSelected);
 
   return (
     <div class="dmpg-card-container" style={containerStyles} {...props}>

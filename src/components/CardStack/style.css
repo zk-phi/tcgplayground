@@ -7,7 +7,7 @@
   border-radius: 5px;
 }
 
-.dmpg-card-container:has(> .dmpg-card-inner:active) {
+.dmpg-card-container:active {
   opacity: 0.8;
 }
 
@@ -19,20 +19,20 @@
   align-items: flex-end;
   justify-content: flex-end;
   cursor: pointer;
+}
+
+.dmpg-card-inner.dmpg-empty {
+  pointer-events: none;
+}
+
+.dmpg-card-inner.dmpg-nonempty {
   background: #0002;
+  /* thin shadow gives a slight "reality" to card images */
+  box-shadow: inset 0 0 8px #fff5;
 }
 
-.dmpg-card-inner:hover {
+.dmpg-card-inner.dmpg-nonempty:hover {
   background: transparent;
-}
-
-.dmpg-card-inner.dmpg-selected {
-  background: #fd08;
-}
-
-.dmpg-card-inner.dmpg-targetted {
-  background: #0ff8;
-  box-shadow: inset 0 0 12px #000;
 }
 
 .dmpg-card-inner.dmpg-flipped {
@@ -42,6 +42,15 @@
 
 .dmpg-card-inner.dmpg-flipped:hover {
   background: #028d;
+  box-shadow: none;
+}
+
+.dmpg-card-inner.dmpg-selected {
+  background: #fd08;
+}
+
+.dmpg-card-inner.dmpg-targetted {
+  background: #0ff8;
 }
 
 .dmpg-card-counter {
