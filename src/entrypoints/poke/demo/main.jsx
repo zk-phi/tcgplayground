@@ -14,6 +14,7 @@ import "./style.css";
 import { enableDragDropTouch } from "drag-drop-touch/dist/drag-drop-touch.esm.min.js";
 
 enableDragDropTouch(undefined, undefined, {
+  pressHoldDelayMS: 300,
   contextMenuDelayMS: 400,
 });
 
