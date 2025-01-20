@@ -1,5 +1,5 @@
 {
-  "name": "dm-playground",
+  "name": "tcgplayground",
   "private": true,
   "scripts": {
     "dev": "concurrently 'postcss ./src/styles.css -o ./src/styles.min.css -w' 'vite' 'tsc --watch --noEmit'",

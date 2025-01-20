@@ -1,10 +1,10 @@
-# dmplayground
+# tcgplayground
 
 各種 TCG のデッキ構築などに利用できる、汎用的な一人回しツールフレームワークです。
 
 ## WIP スタンドアロン版
 
-DEMO: https://zk-phi.github.io/dmplayground/dm/demo
+DEMO: https://zk-phi.github.io/tcgplayground/dm/demo
 
 ## 旧 bookmarklet 版 (廃止予定)
 
@@ -13,7 +13,7 @@ DECK MAKER さまのページ上で、カードを自由に移動して初動の
 ### 使い方
 #### インストール
 
-1. [このファイル](https://raw.githubusercontent.com/zk-phi/dmplayground/refs/heads/main/release/bookmarklet) の中身をまるごとコピーする
+1. [このファイル](https://raw.githubusercontent.com/zk-phi/tcgplayground/refs/heads/main/release/bookmarklet) の中身をまるごとコピーする
 
 2. ブラウザで適当なページをブックマークに追加する
 
@@ -59,8 +59,8 @@ then run `yarn run dev` to start dev server.
 $ yarn run dev
 ```
 
-- Standalone version demo: http://localhost:5173/dmplayground/dm/demo
-- Bookmarklet version: http://localhost:5173/dmplayground/dm/deckmaker
+- Standalone version demo: http://localhost:5173/tcgplayground/dm/demo
+- Bookmarklet version: http://localhost:5173/tcgplayground/dm/deckmaker
 
 ### Build and release: Bookmarklet
 
