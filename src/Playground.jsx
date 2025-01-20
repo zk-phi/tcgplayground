@@ -1,10 +1,10 @@
-import { globalHandlers } from "./hooks.js";
+import { globalHandlers } from "./hooks";
 
-import { gameState, getStacks } from "./states/game.js";
-import { getIsSelected, getIsTargetted, dragStop } from "./states/drag.js";
-import { getListProps } from "./states/list.js";
-import { getMenuProps, closeMenu } from "./states/menu.js";
-import { getLightboxProps } from "./states/lightbox.js";
+import { gameState, getStacks } from "./states/game";
+import { getIsSelected, getIsTargetted, dragStop } from "./states/drag";
+import { getListProps } from "./states/list";
+import { getMenuProps, closeMenu } from "./states/menu";
+import { getLightboxProps } from "./states/lightbox";
 
 import { Area } from "./components/Area";
 import { Menu } from "./components/Menu";

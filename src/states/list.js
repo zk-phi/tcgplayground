@@ -1,6 +1,6 @@
 import { signal, computed } from "@preact/signals";
-import { getStack } from "./game.js";
-import { closeMenu } from "./menu.js";
+import { getStack } from "./game";
+import { closeMenu } from "./menu";
 
 const list = signal(null);
 

@@ -1,5 +1,5 @@
 import { signal } from "@preact/signals";
-import { closeMenu } from "./menu.js"
+import { closeMenu } from "./menu"
 
 const lightbox = signal(null);
 

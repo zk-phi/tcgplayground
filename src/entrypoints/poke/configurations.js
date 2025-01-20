@@ -6,11 +6,11 @@ import {
   unshiftBatch, pushBatch, moveBatch,
   unshiftAll, pushAll, moveAll,
   shuffle, untapAll,
-} from "../../states/game.js";
-import { dropHandlers, dragHandlers } from "../../states/drag.js";
-import { showList } from "../../states/list.js";
-import { showMenu } from "../../states/menu.js";
-import { showLightbox } from "../../states/lightbox.js";
+} from "../../states/game";
+import { dropHandlers, dragHandlers } from "../../states/drag";
+import { showList } from "../../states/list";
+import { showMenu } from "../../states/menu";
+import { showLightbox } from "../../states/lightbox";
 
 export const rows = [[
   { area: "sides", label: "サイド", width: 1 },

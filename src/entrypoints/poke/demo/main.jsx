@@ -1,12 +1,12 @@
 import { render } from "preact";
 import { useEffect } from "preact/hooks";
-import * as configurations from "../configurations.js";
+import * as configurations from "../configurations";
 
-import { shuffle as shuffleArray } from "../../../utils/array.js";
+import { shuffle as shuffleArray } from "../../../utils/array";
 import {
   makeStack, setGameState, untapAll,
   undo, redo, getUndoState, getRedoState,
-} from "../../../states/game.js";
+} from "../../../states/game";
 
 import { Playground } from "../../../Playground";
 import { FloatingButtons } from "../../../components/FloatingButtons";
@@ -14,7 +14,7 @@ import { Button } from "../../../components/Button";
 
 import "../../../styles.min.css";
 import "./style.css";
-import "../../../utils/dndtouch.js";
+import "../../../utils/dndtouch";
 
 const sampleDeck = [
   "https://www.pokemon-card.com/assets/images/card_images/large/ENE/034670_E_KIHONCHOUENERUGI.jpg",

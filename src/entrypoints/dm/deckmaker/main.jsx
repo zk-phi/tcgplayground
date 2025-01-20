@@ -1,9 +1,9 @@
 import { render } from "preact";
 import { useState, useEffect } from "preact/hooks";
-import * as configurations from "../configurations.js";
+import * as configurations from "../configurations";
 
-import { makeStack, setGameState, untapAll } from "../../../states/game.js";
-import { shuffle as shuffleArray } from "../../../utils/array.js";
+import { makeStack, setGameState, untapAll } from "../../../states/game";
+import { shuffle as shuffleArray } from "../../../utils/array";
 
 import { Playground } from "../../../Playground";
 import { FloatingButtons } from "../../../components/FloatingButtons";

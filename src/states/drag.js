@@ -1,6 +1,6 @@
 import { signal } from "@preact/signals";
-import { globalDragEndHooks } from "../hooks.js";
-import { closeMenu } from "./menu.js";
+import { globalDragEndHooks } from "../hooks";
+import { closeMenu } from "./menu";
 
 export const dragging = signal(null);
 
