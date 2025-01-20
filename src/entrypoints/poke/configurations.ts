@@ -5,11 +5,11 @@ import {
   unshiftBatch, pushBatch, moveBatch,
   unshiftAll, pushAll, moveAll,
   shuffle,
-} from "../../states/game";
-import { dropHandlers, dragHandlers } from "../../states/drag";
-import { showList } from "../../states/list";
-import { showMenu } from "../../states/menu";
-import { showLightbox } from "../../states/lightbox";
+} from "../../playground/states/game";
+import { dropHandlers, dragHandlers } from "../../playground/states/drag";
+import { showList } from "../../playground/states/list";
+import { showMenu } from "../../playground/states/menu";
+import { showLightbox } from "../../playground/states/lightbox";
 
 const layout: LayoutConfig = [[
   { area: "sides", label: "サイド", width: 1 },

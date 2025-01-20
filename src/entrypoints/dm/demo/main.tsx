@@ -2,61 +2,61 @@ import { render } from "preact";
 import { useEffect } from "preact/hooks";
 import { configurations } from "../configurations";
 
-import { shuffle as shuffleArray } from "../../../utils/array";
+import { shuffle as shuffleArray } from "../../../playground/utils/array";
 import {
   makeStack, setGameState, untapAll,
   undo, redo, getUndoState, getRedoState,
-} from "../../../states/game";
+} from "../../../playground/states/game";
 
-import { Playground } from "../../../Playground";
-import { FloatingButtons } from "../../../components/FloatingButtons";
-import { Button } from "../../../components/Button";
+import { Playground } from "../../../playground/Playground";
+import { FloatingButtons } from "../../../playground/components/FloatingButtons";
+import { Button } from "../../../playground/components/Button";
 
-import "../../../styles.min.css";
+import "../../../playground/styles.min.css";
 import "./style.css";
-import "../../../utils/dndtouch";
+import "../../../playground/utils/dndtouch";
 
 const sampleDeck = [
-  "/dmplayground/dm24sp2-013.jpg",
-  "/dmplayground/dm24sp2-013.jpg",
-  "/dmplayground/dm24sp2-013.jpg",
-  "/dmplayground/dm24sp2-013.jpg",
-  "/dmplayground/dm23bd5-060.jpg",
-  "/dmplayground/dm23bd5-060.jpg",
-  "/dmplayground/dm23bd5-060.jpg",
-  "/dmplayground/dm23bd5-060.jpg",
-  "/dmplayground/dm24sp2-010.jpg",
-  "/dmplayground/dm24sp2-010.jpg",
-  "/dmplayground/dm24sp2-010.jpg",
-  "/dmplayground/dm24sp2-010.jpg",
-  "/dmplayground/dm23ex3-030.jpg",
-  "/dmplayground/dm23ex3-030.jpg",
-  "/dmplayground/dm23ex3-030.jpg",
-  "/dmplayground/dm23ex3-030.jpg",
-  "/dmplayground/dm23ex3-029.jpg",
-  "/dmplayground/dm23ex3-029.jpg",
-  "/dmplayground/dm23ex3-029.jpg",
-  "/dmplayground/dm23ex3-029.jpg",
-  "/dmplayground/dm24sp2-009.jpg",
-  "/dmplayground/dm24sp2-009.jpg",
-  "/dmplayground/dm24sp2-009.jpg",
-  "/dmplayground/dm24sp2-009.jpg",
-  "/dmplayground/dm23ex3-008.jpg",
-  "/dmplayground/dm23ex3-008.jpg",
-  "/dmplayground/dm24sp2-002.jpg",
-  "/dmplayground/dm24sp2-002.jpg",
-  "/dmplayground/dm24sp2-002.jpg",
-  "/dmplayground/dm23ex3-002.jpg",
-  "/dmplayground/dm23ex3-002.jpg",
-  "/dmplayground/dm23ex3-002.jpg",
-  "/dmplayground/dm23ex3-002.jpg",
-  "/dmplayground/dm24sp2-003.jpg",
-  "/dmplayground/dm24sp2-003.jpg",
-  "/dmplayground/dm24sp2-003.jpg",
-  "/dmplayground/dm24sp2-003.jpg",
-  "/dmplayground/dm24sp2-001.jpg",
-  "/dmplayground/dm24sp2-001.jpg",
-  "/dmplayground/dm24sp2-001.jpg",
+  "/tcgplayground/dm24sp2-013.jpg",
+  "/tcgplayground/dm24sp2-013.jpg",
+  "/tcgplayground/dm24sp2-013.jpg",
+  "/tcgplayground/dm24sp2-013.jpg",
+  "/tcgplayground/dm23bd5-060.jpg",
+  "/tcgplayground/dm23bd5-060.jpg",
+  "/tcgplayground/dm23bd5-060.jpg",
+  "/tcgplayground/dm23bd5-060.jpg",
+  "/tcgplayground/dm24sp2-010.jpg",
+  "/tcgplayground/dm24sp2-010.jpg",
+  "/tcgplayground/dm24sp2-010.jpg",
+  "/tcgplayground/dm24sp2-010.jpg",
+  "/tcgplayground/dm23ex3-030.jpg",
+  "/tcgplayground/dm23ex3-030.jpg",
+  "/tcgplayground/dm23ex3-030.jpg",
+  "/tcgplayground/dm23ex3-030.jpg",
+  "/tcgplayground/dm23ex3-029.jpg",
+  "/tcgplayground/dm23ex3-029.jpg",
+  "/tcgplayground/dm23ex3-029.jpg",
+  "/tcgplayground/dm23ex3-029.jpg",
+  "/tcgplayground/dm24sp2-009.jpg",
+  "/tcgplayground/dm24sp2-009.jpg",
+  "/tcgplayground/dm24sp2-009.jpg",
+  "/tcgplayground/dm24sp2-009.jpg",
+  "/tcgplayground/dm23ex3-008.jpg",
+  "/tcgplayground/dm23ex3-008.jpg",
+  "/tcgplayground/dm24sp2-002.jpg",
+  "/tcgplayground/dm24sp2-002.jpg",
+  "/tcgplayground/dm24sp2-002.jpg",
+  "/tcgplayground/dm23ex3-002.jpg",
+  "/tcgplayground/dm23ex3-002.jpg",
+  "/tcgplayground/dm23ex3-002.jpg",
+  "/tcgplayground/dm23ex3-002.jpg",
+  "/tcgplayground/dm24sp2-003.jpg",
+  "/tcgplayground/dm24sp2-003.jpg",
+  "/tcgplayground/dm24sp2-003.jpg",
+  "/tcgplayground/dm24sp2-003.jpg",
+  "/tcgplayground/dm24sp2-001.jpg",
+  "/tcgplayground/dm24sp2-001.jpg",
+  "/tcgplayground/dm24sp2-001.jpg",
 ];
 
 const initialize = () => {

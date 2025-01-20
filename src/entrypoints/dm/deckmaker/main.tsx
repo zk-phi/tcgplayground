@@ -3,13 +3,13 @@ import type { CSSProperties } from "preact/compat";
 import { useState, useEffect } from "preact/hooks";
 import { configurations } from "../configurations";
 
-import { makeStack, setGameState, untapAll } from "../../../states/game";
-import { shuffle as shuffleArray } from "../../../utils/array";
+import { makeStack, setGameState, untapAll } from "../../../playground/states/game";
+import { shuffle as shuffleArray } from "../../../playground/utils/array";
 
-import { Playground } from "../../../Playground";
-import { FloatingButtons } from "../../../components/FloatingButtons";
-import { Button } from "../../../components/Button";
-import styles from "../../../styles.min.css?raw";
+import { Playground } from "../../../playground/Playground";
+import { FloatingButtons } from "../../../playground/components/FloatingButtons";
+import { Button } from "../../../playground/components/Button";
+import styles from "../../../playground/styles.min.css?raw";
 
 const extractSrcs = (classname: string) => {
   const elements = document.getElementsByClassName(classname)?.[0]?.children;
