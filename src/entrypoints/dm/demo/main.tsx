@@ -92,12 +92,12 @@ const App = () => {
           リセット
         </Button>
       </FloatingButtons>
-      <Playground initialize={initialize} {...configurations} />
+      <Playground {...configurations} />
     </>
   );
 };
 
-const div = document.getElementById("dmplayground");
+const div = document.getElementById("dmplayground")!;
 document.body.append(div);
 
 render(<App />, div)

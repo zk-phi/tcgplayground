@@ -17,7 +17,10 @@ import { Link } from "./components/Link";
 const NEGATIVE_MARGIN_PER_CARD = -8;
 const MIN_NEGATIVE_MARGIN = -72;
 
-const AreaWithCards = ({ area, handlers }) => {
+const AreaWithCards = ({ area, handlers }: {
+  area: Area,
+  handlers: HandlerConfig,
+}) => {
   const stacks = getStacks(area.area);
   const margin = Math.max(
     Math.max(stacks.length - (area.expandThreshold ?? 2), 0) * NEGATIVE_MARGIN_PER_CARD,
@@ -45,7 +48,10 @@ const AreaWithCards = ({ area, handlers }) => {
   );
 };
 
-const Rows = ({ rows, handlers }) => (
+const Rows = ({ rows, handlers }: {
+  rows: LayoutConfig,
+  handlers: HandlerConfig,
+}) => (
   <div class="dmpg-rows">
     {rows.map(row => (
       <div class="dmpg-row">
@@ -55,7 +61,10 @@ const Rows = ({ rows, handlers }) => (
   </div>
 );
 
-const Areas = ({ areas, handlers }) => (
+const Areas = ({ areas, handlers }: {
+  areas: LayoutRow,
+  handlers: HandlerConfig,
+}) => (
   areas.map(area => (
     Array.isArray(area) ? (
       <Rows rows={area} handlers={handlers} />
@@ -65,7 +74,7 @@ const Areas = ({ areas, handlers }) => (
   ))
 );
 
-export const Playground = ({ rows, handlers }) => (
+export const Playground = ({ rows, handlers }: Configuration) => (
   <div class="dmpg-wrapper" {...globalHandlers}>
     <Menu {...getMenuProps()} />
     <List {...getListProps()} />

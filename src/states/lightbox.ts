@@ -1,9 +1,14 @@
 import { signal } from "@preact/signals";
 import { closeMenu } from "./menu"
 
-const lightbox = signal(null);
+export type LightboxProps = {
+  onClose: () => void,
+  src: string | null,
+};
 
-export const showLightbox = (e, src) => {
+const lightbox = signal<string | null>(null);
+
+export const showLightbox = (e: MouseEvent, src: string) => {
   lightbox.value = src;
 
   /* Prevent browser from showing the default context menu */
@@ -18,7 +23,7 @@ export const closeLightbox = () => {
   lightbox.value = null;
 };
 
-export const getLightboxProps = () => ({
+export const getLightboxProps = (): LightboxProps => ({
   onClose: closeLightbox,
   src: lightbox.value,
 });

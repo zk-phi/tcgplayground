@@ -1,4 +1,4 @@
-export const shuffle = (arr) => {
+export const shuffle = <T>(arr: T[]): T[] => {
   const result = [...arr];
   // Fisher–Yates shuffle
   for (let i = result.length - 1; i > 0; i--) {
@@ -8,7 +8,7 @@ export const shuffle = (arr) => {
   return result;
 };
 
-export const put = (arr, ix, value) => [
+export const put = <T>(arr: T[], ix: number, value: T): T[] => [
   ...arr.slice(0, ix),
   value,
   ...arr.slice(ix + 1, arr.length),

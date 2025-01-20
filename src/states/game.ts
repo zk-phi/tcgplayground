@@ -2,38 +2,41 @@ import { signal, computed } from "@preact/signals";
 import { shuffle as shuffleArray, put as putArray } from "../utils/array";
 import { closeList } from "./list";
 
+type GameState = { [K in string]: Stack[] };
+
 export const makeStack = ({
   cards,
   flipped = false,
   reversed = false,
   tapped = false,
   laid = false,
-}) => ({ cards, flipped, reversed, tapped, laid });
+}: { cards: string[] } & Partial<StackAttributes>): Stack => (
+  { cards, flipped, reversed, tapped, laid }
+);
 
-/* Map<AreaName, Stack[]> */
-export const gameState = signal({});
+export const gameState = signal<GameState>({});
 
-const history = signal([]);
-const forwardHistory = signal([]);
+const history = signal<GameState[]>([]);
+const forwardHistory = signal<GameState[]>([]);
 
 const undoBoundary = () => {
   history.value = [gameState.value, ...history.value.slice(0, 9)];
   forwardHistory.value = [];
 };
 
-export const getStacks = (src) => (
+export const getStacks = (src: string): Stack[] => (
   gameState.value[src] ?? []
 );
 
-export const getStack = (src, ix) => (
+export const getStack = (src: string, ix: number): Stack => (
   gameState.value[src]?.[ix]
 );
 
-export const getUndoState = () => (
+export const getUndoState = (): boolean => (
   history.value.length > 1
 );
 
-export const getRedoState = () => (
+export const getRedoState = (): boolean => (
   forwardHistory.value.length > 0
 );
 
@@ -52,7 +55,7 @@ export const redo = () => {
 /* --- utils */
 
 /* Get and remove the IX-th stack from SRC. */
-const pop = (src, ix) => {
+const pop = (src: string, ix: number): Stack => {
   closeList();
   const stack = gameState.value[src][ix];
   gameState.value = {
@@ -63,7 +66,7 @@ const pop = (src, ix) => {
 };
 
 /* Get and remove all stacks from SRC. */
-const popBatch = (src) => {
+const popBatch = (src: string): Stack[] => {
   closeList();
   const stacks = gameState.value[src];
   gameState.value = { ...gameState.value, [src]: [] };
@@ -72,7 +75,7 @@ const popBatch = (src) => {
 
 /* Get and remove J-th cards from the I-th stack of AREA.
  * When J is negative, count from the bottom of the stack. */
-const popSingle = (area, i, j) => {
+const popSingle = (area: string, i: number, j: number): string => {
   if (j < 0) {
     j += gameState.value[area][i].cards.length;
   }
@@ -88,7 +91,7 @@ const popSingle = (area, i, j) => {
 };
 
 /* Get and remove all cards from the IX-th stack of AREA. */
-const popAll = (area, ix) => {
+const popAll = (area: string, ix: number): string[] => {
   closeList();
   const cards = gameState.value[area][ix].cards;
   gameState.value = {
@@ -102,7 +105,7 @@ const popAll = (area, ix) => {
 };
 
 /* Add STACKS to AREA. */
-const put = (stacks, area) => {
+const put = (stacks: Stack[], area: string) => {
   gameState.value = {
     ...gameState.value,
     [area]: [...gameState.value[area], ...stacks],
@@ -110,7 +113,7 @@ const put = (stacks, area) => {
 };
 
 /* Add CARDS on top of the IX-th stack of AREA. */
-const unshiftCards = (cards, area, ix) => {
+const unshiftCards = (cards: string[], area: string, ix: number) => {
   gameState.value = {
     ...gameState.value,
     [area]: putArray(gameState.value[area], ix, {
@@ -121,7 +124,7 @@ const unshiftCards = (cards, area, ix) => {
 };
 
 /* Add CARDS to bottom of the IX-th stack of AREA. */
-const pushCards = (cards, area, ix) => {
+const pushCards = (cards: string[], area: string, ix: number) => {
   gameState.value = {
     ...gameState.value,
     [area]: putArray(gameState.value[area], ix, {
@@ -132,12 +135,12 @@ const pushCards = (cards, area, ix) => {
 };
 
 /* Get all cards from STACKS. */
-const reduceStacks = (stacks) => (
-  stacks.reduce((l, r) => l.concat(r.cards), [])
+const reduceStacks = (stacks: Stack[]): string[] => (
+  stacks.reduce((l: string[], r: Stack) => l.concat(r.cards), [])
 );
 
 /* Merge all stacks in AREA into one stack. */
-const mergeStacks = (area, firstStackIx) => {
+const mergeStacks = (area: string, firstStackIx: number) => {
   closeList();
   const stack = pop(area, firstStackIx);
   gameState.value = {
@@ -151,7 +154,7 @@ const mergeStacks = (area, firstStackIx) => {
 
 /* ---- operate on stacks */
 
-export const unshift = (src, ix, dest, di) => {
+export const unshift = (src: string, ix: number, dest: string, di: number) => {
   if (!gameState.value[dest][di]) {
     move(src, ix, dest, {}, true);
   } else {
@@ -161,7 +164,7 @@ export const unshift = (src, ix, dest, di) => {
   undoBoundary();
 };
 
-export const push = (src, ix, dest, di) => {
+export const push = (src: string, ix: number, dest: string, di: number) => {
   if (!gameState.value[dest][di]) {
     move(src, ix, dest, {}, true);
   } else {
@@ -171,7 +174,13 @@ export const push = (src, ix, dest, di) => {
   undoBoundary();
 };
 
-export const move = (src, ix, dest, attrs = {}, keepStacked = false) => {
+export const move = (
+  src: string,
+  ix: number,
+  dest: string,
+  attrs: Partial<StackAttributes> = {},
+  keepStacked: boolean = false,
+) => {
   const cards = pop(src, ix).cards;
   if (keepStacked) {
     put([makeStack({ cards, ...attrs })], dest);
@@ -181,7 +190,12 @@ export const move = (src, ix, dest, attrs = {}, keepStacked = false) => {
   undoBoundary();
 };
 
-export const setAttr = (src, ix, key, value) => {
+export const setAttr = (
+  src: string,
+  ix: number,
+  key: keyof StackAttributes,
+  value: boolean,
+) => {
   gameState.value = {
     ...gameState.value,
     [src]: putArray(gameState.value[src], ix, {
@@ -192,31 +206,35 @@ export const setAttr = (src, ix, key, value) => {
   undoBoundary();
 };
 
-export const toggleTapped = (src, ix) => {
+export const toggleTapped = (src: string, ix: number) => {
   setAttr(src, ix, "tapped", !gameState.value[src][ix].tapped);
 };
 
-export const toggleFlipped = (src, ix) => {
+export const toggleFlipped = (src: string, ix: number) => {
   setAttr(src, ix, "flipped", !gameState.value[src][ix].flipped);
 };
 
-export const toggleReversed = (src, ix) => {
+export const toggleReversed = (src: string, ix: number) => {
   setAttr(src, ix, "reversed", !gameState.value[src][ix].flipped);
 };
 
-export const toggleLaid = (src, ix) => {
+export const toggleLaid = (src: string, ix: number) => {
   setAttr(src, ix, "laid", !gameState.value[src][ix].flipped);
 };
 
 /* ---- Operate on areas */
 
-export const moveBatch = (src, dest, attrs = {}) => {
+export const moveBatch = (
+  src: string,
+  dest: string,
+  attrs: Partial<StackAttributes> = {},
+) => {
   const stacks = popBatch(src);
-  put(stacks.map(stack => ({ cards: stack.cards, ...attrs })), dest);
+  put(stacks.map((stack: Stack) => makeStack({ cards: stack.cards, ...attrs })), dest);
   undoBoundary();
 };
 
-export const pushBatch = (src, dest, di) => {
+export const pushBatch = (src: string, dest: string, di: number) => {
   if (src === dest) {
     mergeStacks(dest, di);
   } else {
@@ -226,7 +244,7 @@ export const pushBatch = (src, dest, di) => {
   undoBoundary();
 };
 
-export const unshiftBatch = (src, dest, di) => {
+export const unshiftBatch = (src: string, dest: string, di: number) => {
   if (src === dest) {
     mergeStacks(dest, di);
   } else {
@@ -238,7 +256,14 @@ export const unshiftBatch = (src, dest, di) => {
 
 /* ---- Operate on a card in stacks */
 
-export const moveSingle = (src, ix, sj, dest, allowEmpty = false, attrs = {}) => {
+export const moveSingle = (
+  src: string,
+  ix: number,
+  sj: number,
+  dest: string,
+  allowEmpty: boolean = false,
+  attrs: Partial<StackAttributes> = {},
+) => {
   if (gameState.value[src][ix].cards.length <= 1 && !allowEmpty) {
     move(src, ix, dest, attrs);
   } else {
@@ -248,7 +273,14 @@ export const moveSingle = (src, ix, sj, dest, allowEmpty = false, attrs = {}) =>
   undoBoundary();
 };
 
-export const pushSingle = (src, ix, sj, dest, di, allowEmpty = false) => {
+export const pushSingle = (
+  src: string,
+  ix: number,
+  sj: number,
+  dest: string,
+  di: number,
+  allowEmpty = false,
+) => {
   if (gameState.value[src][ix].cards.length <= 1 && !allowEmpty) {
     push(src, ix, dest, di);
   } else if (!gameState.value[dest][di]) {
@@ -260,7 +292,14 @@ export const pushSingle = (src, ix, sj, dest, di, allowEmpty = false) => {
   undoBoundary();
 };
 
-export const unshiftSingle = (src, ix, sj, dest, di, allowEmpty = false) => {
+export const unshiftSingle = (
+  src: string,
+  ix: number,
+  sj: number,
+  dest: string,
+  di: number,
+  allowEmpty = false,
+) => {
   if (gameState.value[src][ix].cards.length <= 1 && !allowEmpty) {
     unshift(src, ix, dest, di);
   } else if (!gameState.value[dest][di]) {
@@ -274,7 +313,13 @@ export const unshiftSingle = (src, ix, sj, dest, di, allowEmpty = false) => {
 
 /* ---- Operate on all cards in stacks */
 
-export const moveAll = (src, ix, dest, attrs, keepStacked = false) => {
+export const moveAll = (
+  src: string,
+  ix: number,
+  dest: string,
+  attrs: Partial<StackAttributes> = {},
+  keepStacked = false,
+) => {
   const cards = popAll(src, ix);
   if (keepStacked) {
     put([makeStack({ cards, ...attrs})], dest);
@@ -284,13 +329,13 @@ export const moveAll = (src, ix, dest, attrs, keepStacked = false) => {
   undoBoundary();
 };
 
-export const pushAll = (src, si, dest, di) => {
+export const pushAll = (src: string, si: number, dest: string, di: number) => {
   const cards = popAll(src, si);
   pushCards(cards, dest, di);
   undoBoundary();
 };
 
-export const unshiftAll = (src, si, dest, di) => {
+export const unshiftAll = (src: string, si: number, dest: string, di: number) => {
   const cards = popAll(src, si);
   unshiftCards(cards, dest, di);
   undoBoundary();
@@ -298,13 +343,13 @@ export const unshiftAll = (src, si, dest, di) => {
 
 /* --- other */
 
-export const setGameState = (value) => {
+export const setGameState = (value: GameState) => {
   closeList();
   gameState.value = value;
   undoBoundary();
 }
 
-export const untapAll = (srcs) => {
+export const untapAll = (srcs: string[]) => {
   const untapped = Object.fromEntries(srcs.map(src => [
     src,
     gameState.value[src].map(stack => ({ ...stack, tapped: false })),
@@ -313,7 +358,7 @@ export const untapAll = (srcs) => {
   undoBoundary();
 };
 
-export const shuffle = (src, ix) => {
+export const shuffle = (src: string, ix: number) => {
   const shuffled = shuffleArray(gameState.value[src][ix].cards);
   gameState.value = {
     ...gameState.value,

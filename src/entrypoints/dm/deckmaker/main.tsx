@@ -1,4 +1,5 @@
 import { render } from "preact";
+import type { CSSProperties } from "preact/compat";
 import { useState, useEffect } from "preact/hooks";
 import * as configurations from "../configurations";
 
@@ -10,8 +11,9 @@ import { FloatingButtons } from "../../../components/FloatingButtons";
 import { Button } from "../../../components/Button";
 import styles from "../../../styles.min.css?raw";
 
-const extractSrcs = (classname) => {
+const extractSrcs = (classname: string) => {
   const elements = document.getElementsByClassName(classname)?.[0]?.children;
+  // @ts-ignore
   return Array.from(elements ?? []).map(el => el?.children?.[0]?.src ?? "");
 }
 
@@ -32,7 +34,10 @@ const initialize = () => {
   });
 };
 
-const FloatingMenu = ({ show, setShow }) => (
+const FloatingMenu = ({ show, setShow }: {
+  show: boolean,
+  setShow: (show: boolean) => void,
+}) => (
   <FloatingButtons>
     {show && (
       <>
@@ -44,13 +49,13 @@ const FloatingMenu = ({ show, setShow }) => (
         </Button>
       </>
     )}
-    <Button onClick={() => setShow(show => !show)}>
+    <Button onClick={() => setShow(!show)}>
       {show ? "閉じる" : "開く"}
     </Button>
   </FloatingButtons>
 );
 
-const containerStyles = {
+const containerStyles: CSSProperties = {
   position: "fixed",
   zIndex: 99999,
   top: 0,
@@ -72,7 +77,7 @@ const App = () => {
       <FloatingMenu show={show} setShow={setShow} />
       {show && (
         <div style={containerStyles}>
-          <Playground initialize={initialize} {...configurations} />
+          <Playground {...configurations} />
         </div>
       )}
     </>

@@ -1,9 +1,25 @@
 import { signal } from "@preact/signals";
 import { globalClickHooks } from "../hooks";
 
-const menu = signal(null);
+type MenuOption = [string, MouseEventHandler];
 
-export const showMenu = (e, options) => {
+type MenuState = {
+  options: MenuOption[],
+  pos: {
+    top: number | null,
+    left: number | null,
+    bottom: number | null,
+    right: number | null,
+  },
+};
+
+export type MenuProps = Partial<MenuState> & {
+  onClose: () => void,
+};
+
+const menu = signal<MenuState | null>(null);
+
+export const showMenu = (e: MouseEvent, options: MenuOption[]) => {
   const ypos = e.clientY / window.innerHeight;
   const xpos = e.clientX / window.innerWidth;
 
@@ -27,7 +43,7 @@ export const closeMenu = () => {
   menu.value = null;
 };
 
-export const getMenuProps = () => ({
+export const getMenuProps = (): MenuProps => ({
   onClose: closeMenu,
   ...menu.value,
 });

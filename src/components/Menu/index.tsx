@@ -1,7 +1,8 @@
 import { useCallback } from "preact/hooks";
+import type { MenuProps } from "../../states/menu";
 
-export const Menu = ({ onClose, pos, options }) => {
-  const onClickMenu = useCallback((e, handler) => {
+export const Menu = ({ onClose, pos, options }: MenuProps) => {
+  const onClickMenu = useCallback((e: MouseEvent, handler: MouseEventHandler) => {
     handler(e);
     e.stopPropagation();
     onClose();

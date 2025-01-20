@@ -2,9 +2,26 @@ import { signal, computed } from "@preact/signals";
 import { getStack } from "./game";
 import { closeMenu } from "./menu";
 
-const list = signal(null);
+type ListState = {
+  area: string,
+  ix: number,
+  handlers: IndexedHandlers,
+};
 
-export const showList = (e, area, ix, handlers) => {
+export type ListProps = {
+  onClose: () => void,
+  cards: string[],
+  handlers: IndexedHandlers,
+};
+
+const list = signal<ListState | null>(null);
+
+export const showList = (
+  e: MouseEvent,
+  area: string,
+  ix: number,
+  handlers: IndexedHandlers,
+) => {
   list.value = { area, ix, handlers };
 
   /* Prevent browser from showing the default context menu */
@@ -19,8 +36,8 @@ export const closeList = () => {
   list.value = null;
 };
 
-export const getListProps = () => ({
+export const getListProps = (): ListProps => ({
   onClose: closeList,
   cards: list.value ? getStack(list.value.area, list.value.ix).cards : [],
-  handlers: list.value?.handlers,
+  handlers: list.value?.handlers ?? (() => ({})),
 });

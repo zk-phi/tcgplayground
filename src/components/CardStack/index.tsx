@@ -1,4 +1,11 @@
-export const CardStack = ({ stack, isSelected, isTargetted, style = {}, ...props }) => {
+import type { CSSProperties } from "preact/compat";
+
+export const CardStack = ({ stack, isSelected, isTargetted, style = {}, ...handlers }: {
+  stack: Stack,
+  isSelected?: boolean,
+  isTargetted?: boolean,
+  style?: CSSProperties,
+} & Handlers) => {
   const angle = (
     (stack.tapped ? -30 : 0) + (stack.reversed ? 180 : 0) + (stack.laid ? -90 : 0)
   );
@@ -24,7 +31,7 @@ export const CardStack = ({ stack, isSelected, isTargetted, style = {}, ...props
   );
 
   return (
-    <div class="dmpg-card-container" style={containerStyles} {...props}>
+    <div class="dmpg-card-container" style={containerStyles} {...handlers}>
       <div class={`dmpg-card-inner ${extraClass}`}>
         {stack.cards.length > 1 && (
           <div class={`dmpg-card-counter ${stack.flipped ? 'dmpg-flipped' : ''}`}>

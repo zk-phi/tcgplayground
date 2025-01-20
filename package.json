@@ -2,11 +2,12 @@
   "name": "dm-playground",
   "private": true,
   "scripts": {
-    "dev": "concurrently 'postcss ./src/styles.css -o ./src/styles.min.css -w' 'vite'",
+    "dev": "concurrently 'postcss ./src/styles.css -o ./src/styles.min.css -w' 'vite' 'tsc --watch --noEmit'",
     "build": "postcss ./src/styles.css -o ./src/styles.min.css && vite build --config ./dmdeckmaker.vite.config.js",
     "build-demo": "postcss ./src/styles.css -o ./src/styles.min.css && vite build",
     "preview": "vite preview",
-    "release": "echo javascript:$(cat ./dist/bundle.js) > ./release/bookmarklet"
+    "release": "echo javascript:$(cat ./dist/bundle.js) > ./release/bookmarklet",
+    "check": "tsc --noEmit"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.9.4",
@@ -20,6 +21,7 @@
     "postcss-minify": "^1.1.0",
     "postcss-nested": "^7.0.2",
     "preact": "^10.25.4",
+    "typescript": "^5.7.3",
     "vite": "^6.0.7"
   }
 }

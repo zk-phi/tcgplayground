@@ -2,10 +2,18 @@ import { signal } from "@preact/signals";
 import { globalDragEndHooks } from "../hooks";
 import { closeMenu } from "./menu";
 
-export const dragging = signal(null);
+type DragHandler = (e: MouseEvent, area: string, ix: number | null) => void;
+
+type DragState = {
+  handler: DragHandler,
+  src: { area: string, ix: number | null },
+  dest: { area: string, ix: number | null } | null,
+};
+
+export const dragging = signal<DragState | null>(null);
 
 /* start dragging from (AREA, IX) */
-export const drag = (area, ix, handler) => {
+export const drag = (area: string, ix: number | null, handler: DragHandler) => {
   dragging.value = { handler, src: { area, ix }, dest: null };
 };
 
@@ -15,29 +23,29 @@ export const dragStop = () => {
 };
 
 /* generate a set of handlers for droppable elements */
-export const dropHandlers = (area, ix) => ({
-  onDragEnter: e => {
+export const dropHandlers = (area: string, ix: number | null) => ({
+  onDragEnter: (e: MouseEvent) => {
     if (!dragging.value) return;
     dragging.value = { ...dragging.value, dest: { area, ix } };
     e.stopPropagation();
   },
-  onDragLeave: e => {
+  onDragLeave: (e: MouseEvent) => {
     if (!dragging.value) return;
     const { dest } = dragging.value;
-    if (dest.area === area && dest.ix === ix) {
+    if (dest && dest.area === area && dest.ix === ix) {
       dragging.value = { ...dragging.value, dest: null };
     }
     e.stopPropagation();
   },
-  onDragOver: e => {
+  onDragOver: (e: MouseEvent) => {
     if (!dragging.value) return;
     e.preventDefault();
   },
-  onDrop: e => {
+  onDrop: (e: MouseEvent) => {
     if (!dragging.value) return;
     const { dest, src } = dragging.value;
     /* cancel if src and dest is the same */
-    if (src.area !== dest.area || src.ix !== dest.ix) {
+    if (dest && (src.area !== dest.area || src.ix !== dest.ix)) {
       dragging.value.handler(e, dest.area, dest.ix);
     }
     dragStop();
@@ -46,9 +54,9 @@ export const dropHandlers = (area, ix) => ({
 });
 
 /* generate a set of handlers for draggable elements */
-export const dragHandlers = (area, ix, handler) => ({
+export const dragHandlers = (area: string, ix: number | null, handler: DragHandler) => ({
   draggable: true,
-  onDragStart: e => {
+  onDragStart: (e: MouseEvent) => {
     closeMenu();
     drag(area, ix, handler);
     e.stopPropagation();
@@ -56,13 +64,17 @@ export const dragHandlers = (area, ix, handler) => ({
 });
 
 /* query if (AREA, IX) is selected */
-export const getIsSelected = (area, ix) => dragging.value?.src && (
-  dragging.value.src.area === area && dragging.value.src.ix === ix
+export const getIsSelected = (area: string, ix: number | null): boolean => (
+  !!dragging.value?.src && (
+    dragging.value.src.area === area && dragging.value.src.ix === ix
+  )
 );
 
 /* query if (AREA, IX) is targetted */
-export const getIsTargetted = (area, ix) => dragging.value?.dest && (
-  dragging.value.dest.area === area && dragging.value.dest.ix === ix
+export const getIsTargetted = (area: string, ix: number | null): boolean => (
+  !!dragging.value?.dest && (
+    dragging.value.dest.area === area && dragging.value.dest.ix === ix
+  )
 );
 
 globalDragEndHooks.push(dragStop);

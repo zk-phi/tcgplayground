@@ -1,0 +1,16 @@
+import type { ComponentChildren } from "preact";
+import type { ListProps } from "../../states/list";
+import { makeStack } from "../../states/game";
+import { Overlay } from "../Overlay";
+import { CardStack } from "../CardStack";
+import { globalHandlers } from "../../hooks";
+
+export const List = ({ cards, onClose, handlers }: ListProps) => cards.length > 0 && (
+  <Overlay onClick={onClose}>
+    <div class="dmpg-list-container" {...globalHandlers}>
+      {cards.map((card, j) => (
+        <CardStack stack={makeStack({ cards: [card] })} {...handlers(j)} />
+      ))}
+    </div>
+  </Overlay>
+);
