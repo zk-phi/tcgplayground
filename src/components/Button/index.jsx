@@ -1,5 +1,5 @@
 export const Button = ({ children, ...props }) => (
-  <div class="dmpg-button" {...props}>
+  <button class="dmpg-button" {...props}>
     {children}
-  </div>
+  </button>
 );

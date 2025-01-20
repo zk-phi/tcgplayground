@@ -13,15 +13,39 @@ export const stack = ({
 /* Map<AreaName, Stack[]> */
 export const gameState = signal({});
 
-export const setGameState = (value) => {
-  closeList();
-  gameState.value = value;
-}
+const history = signal([]);
+const forwardHistory = signal([]);
+
+const undoBoundary = () => {
+  history.value = [gameState.value, ...history.value.slice(0, 9)];
+  forwardHistory.value = [];
+};
+
+export const getUndoState = () => (
+  history.value.length > 1
+);
+
+export const getRedoState = () => (
+  forwardHistory.value.length > 0
+);
+
+export const undo = () => {
+  forwardHistory.value = [history.value[0], ...forwardHistory.value];
+  history.value = history.value.slice(1);
+  gameState.value = history.value[0];
+};
+
+export const redo = () => {
+  history.value = [forwardHistory.value[0], ...history.value];
+  forwardHistory.value = forwardHistory.value.slice(1);
+  gameState.value = history.value[0];
+};
 
 /* --- utils */
 
 /* Get and remove the IX-th stack from SRC. */
 const pop = (src, ix) => {
+  closeList();
   const stack = gameState.value[src][ix];
   gameState.value = {
     ...gameState.value,
@@ -32,6 +56,7 @@ const pop = (src, ix) => {
 
 /* Get and remove all stacks from SRC. */
 const popBatch = (src) => {
+  closeList();
   const stacks = gameState.value[src];
   gameState.value = { ...gameState.value, [src]: [] };
   return stacks;
@@ -56,6 +81,7 @@ const popSingle = (area, i, j) => {
 
 /* Get and remove all cards from the IX-th stack of AREA. */
 const popAll = (area, ix) => {
+  closeList();
   const cards = gameState.value[area][ix].cards;
   gameState.value = {
     ...gameState.value,
@@ -104,6 +130,7 @@ const reduceStacks = (stacks) => (
 
 /* Merge all stacks in AREA into one stack. */
 const mergeStacks = (area, firstStackIx) => {
+  closeList();
   const stack = pop(area, firstStackIx);
   gameState.value = {
     ...gameState.value,
@@ -117,33 +144,33 @@ const mergeStacks = (area, firstStackIx) => {
 /* ---- operate on stacks */
 
 export const unshift = (src, ix, dest, di) => {
-  closeList();
   if (!gameState.value[dest][di]) {
     move(src, ix, dest, {}, true);
   } else {
     const stack = pop(src, ix);
     unshiftCards(stack.cards, dest, (src === dest && di > ix) ? di - 1 : di);
   }
+  undoBoundary();
 };
 
 export const push = (src, ix, dest, di) => {
-  closeList();
   if (!gameState.value[dest][di]) {
     move(src, ix, dest, {}, true);
   } else {
     const stack = pop(src, ix);
     pushCards(stack.cards, dest, (src === dest && di > ix) ? di - 1 : di);
   }
+  undoBoundary();
 };
 
 export const move = (src, ix, dest, attrs = {}, keepStacked = false) => {
-  closeList();
   const cards = pop(src, ix).cards;
   if (keepStacked) {
     put([stack({ cards, ...attrs })], dest);
   } else {
     put(cards.map(card => stack({ cards: [card], ...attrs })), dest);
   }
+  undoBoundary();
 };
 
 export const setAttr = (src, ix, key, value) => {
@@ -154,6 +181,7 @@ export const setAttr = (src, ix, key, value) => {
       [key]: value,
     }),
   };
+  undoBoundary();
 };
 
 export const toggleTapped = (src, ix) => {
@@ -175,29 +203,29 @@ export const toggleLaid = (src, ix) => {
 /* ---- Operate on areas */
 
 export const moveBatch = (src, dest, attrs = {}) => {
-  closeList();
   const stacks = popBatch(src);
   put(stacks.map(stack => ({ cards: stack.cards, ...attrs })), dest);
+  undoBoundary();
 };
 
 export const pushBatch = (src, dest, di) => {
-  closeList();
   if (src === dest) {
     mergeStacks(dest, di);
   } else {
     const stacks = popBatch(src);
     pushCards(reduceStacks(stacks), dest, di);
   }
+  undoBoundary();
 };
 
 export const unshiftBatch = (src, dest, di) => {
-  closeList();
   if (src === dest) {
     mergeStacks(dest, di);
   } else {
     const stacks = popBatch(src);
     unshiftCards(reduceStacks(stacks), dest, di);
   }
+  undoBoundary();
 };
 
 /* ---- Operate on a card in stacks */
@@ -209,6 +237,7 @@ export const moveSingle = (src, ix, sj, dest, allowEmpty = false, attrs = {}) =>
     const card = popSingle(src, ix, sj);
     put([stack({ cards: [card], ...attrs })], dest);
   }
+  undoBoundary();
 };
 
 export const pushSingle = (src, ix, sj, dest, di, allowEmpty = false) => {
@@ -220,6 +249,7 @@ export const pushSingle = (src, ix, sj, dest, di, allowEmpty = false) => {
     const card = popSingle(src, ix, sj);
     pushCards([card], dest, di);
   }
+  undoBoundary();
 };
 
 export const unshiftSingle = (src, ix, sj, dest, di, allowEmpty = false) => {
@@ -231,6 +261,7 @@ export const unshiftSingle = (src, ix, sj, dest, di, allowEmpty = false) => {
     const card = popSingle(src, ix, sj);
     unshiftCards([card], dest, di);
   }
+  undoBoundary();
 };
 
 /* ---- Operate on all cards in stacks */
@@ -242,19 +273,28 @@ export const moveAll = (src, ix, dest, attrs, keepStacked = false) => {
   } else {
     put(cards.map(card => stack({ cards: [card], ...attrs })), dest);
   }
+  undoBoundary();
 };
 
 export const pushAll = (src, si, dest, di) => {
   const cards = popAll(src, si);
   pushCards(cards, dest, di);
+  undoBoundary();
 };
 
 export const unshiftAll = (src, si, dest, di) => {
   const cards = popAll(src, si);
   unshiftCards(cards, dest, di);
+  undoBoundary();
 };
 
 /* --- other */
+
+export const setGameState = (value) => {
+  closeList();
+  gameState.value = value;
+  undoBoundary();
+}
 
 export const untapAll = (srcs) => {
   const untapped = Object.fromEntries(srcs.map(src => [
@@ -262,6 +302,7 @@ export const untapAll = (srcs) => {
     gameState.value[src].map(stack => ({ ...stack, tapped: false })),
   ]));
   gameState.value = { ...gameState.value, ...untapped };
+  undoBoundary();
 };
 
 export const shuffle = (src, ix) => {
@@ -270,4 +311,5 @@ export const shuffle = (src, ix) => {
     ...gameState.value,
     [src]: [{ ...gameState.value[src][ix], cards: shuffled }],
   };
+  undoBoundary();
 };

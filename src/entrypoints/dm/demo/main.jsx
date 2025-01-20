@@ -2,8 +2,11 @@ import { render } from "preact";
 import { useEffect } from "preact/hooks";
 import * as configurations from "../configurations.js";
 
-import { stack, setGameState, untapAll } from "../../../states/game.js";
 import { shuffle as shuffleArray } from "../../../utils/array.js";
+import {
+  stack, setGameState, untapAll,
+  undo, redo, getUndoState, getRedoState,
+} from "../../../states/game.js";
 
 import { Playground } from "../../../Playground";
 import { FloatingButtons } from "../../../components/FloatingButtons";
@@ -76,6 +79,12 @@ const App = () => {
   return (
     <>
       <FloatingButtons>
+        <Button onClick={undo} disabled={!getUndoState()}>
+          一手戻す
+        </Button>
+        <Button onClick={redo} disabled={!getRedoState()}>
+          一手進む
+        </Button>
         <Button onClick={() => untapAll(["field", "lands"])}>
           アンタップ
         </Button>

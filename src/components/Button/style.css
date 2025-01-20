@@ -7,12 +7,21 @@
   padding: 4px 12px;
   border-radius: 0.5em;
   cursor: pointer;
+  /* reset default styles */
+  outline: none;
+  appearance: none;
+  border: none;
 }
 
-.dmpg-button:hover {
+.dmpg-button:disabled {
+  background: #aaa;
+  cursor: not-allowed;
+}
+
+.dmpg-button:hover:not(:disabled) {
   opacity: 0.8;
 }
 
-.dmpg-button:active {
+.dmpg-button:active:not(:disabled) {
   opacity: 0.6;
 }

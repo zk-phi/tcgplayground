@@ -20,7 +20,7 @@ export const rows = [[
   { area: "bench", label: "ベンチ", expandThreshold: 5 },
   { area: "deck", label: "山", width: 1 },
 ], [
-  { area: "hand", label: "手札", expandThreshold: 3 },
+  { area: "hand", label: "手札" },
   { area: "exploring", label: "めくられた", optional: true },
 ]];
 
