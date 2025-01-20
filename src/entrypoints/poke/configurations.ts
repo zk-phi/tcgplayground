@@ -1,18 +1,17 @@
-import { shuffle as shuffleArray } from "../../utils/array";
 import {
-  getStack, getStacks,
+  getStack,
   move, push, unshift, moveSingle, pushSingle, unshiftSingle,
-  toggleTapped, toggleReversed, toggleFlipped, toggleLaid,
+  toggleTapped,
   unshiftBatch, pushBatch, moveBatch,
   unshiftAll, pushAll, moveAll,
-  shuffle, untapAll,
+  shuffle,
 } from "../../states/game";
 import { dropHandlers, dragHandlers } from "../../states/drag";
 import { showList } from "../../states/list";
 import { showMenu } from "../../states/menu";
 import { showLightbox } from "../../states/lightbox";
 
-export const rows: LayoutConfig = [[
+const layout: LayoutConfig = [[
   { area: "sides", label: "サイド", width: 1 },
   { area: "field", label: "場", expandThreshold: 5 },
   { area: "graveyard", label: "トラッシュ", width: 1 },
@@ -62,7 +61,7 @@ const dragDeckAreaHandlers = (src: string) => (
   })
 );
 
-const dragStackHandlers = (src: string, si: number, allowEmpty = false) => (
+const dragStackHandlers = (src: string, si: number) => (
   dragHandlers(src, si, (e: MouseEvent, dest: string, di: number | null) => {
     if (dest === "graveyard" || dest === "sides") {
       push(src, si, dest, di ?? 0);
@@ -80,7 +79,7 @@ const dragStackHandlers = (src: string, si: number, allowEmpty = false) => (
   })
 );
 
-const dragSingleHandlers = (src: string, si: number, allowEmpty?: boolean) => (
+const dragSingleHandlers = (src: string, si: number) => (
   dragHandlers(src, si, (e: MouseEvent, dest: string, di: number | null) => {
     if (dest === "graveyard" || dest === "sides") {
       pushSingle(src, si, 0, dest, di ?? 0);
@@ -128,13 +127,13 @@ const showListWithContextMenu = (
   }));
 };
 
-export const handlers: HandlerConfig = {
+const handlers: HandlerConfig = {
   sides: {
     stack: (ix: number) => ({
       onClick: (e: MouseEvent) => showListWithContextMenu(e, "sides", ix, true),
       onContextMenu: (e: MouseEvent) => showListWithContextMenu(e, "sides", ix, true),
       ...dropHandlers("sides", ix),
-      ...dragSingleHandlers("sides", ix, true),
+      ...dragSingleHandlers("sides", ix),
     }),
     area: {
       ...dropHandlers("sides", null),
@@ -160,14 +159,14 @@ export const handlers: HandlerConfig = {
 
   deck: {
     stack: (ix: number) => ({
-      onClick: (e: MouseEvent) => moveSingle("deck", ix, 0, "exploring", true),
+      onClick: () => moveSingle("deck", ix, 0, "exploring", true),
       onContextMenu: (e: MouseEvent) => showMenu(e, [
         ["🤏 ボトムから引く", () => moveSingle("deck", ix, -1, "hand", true)],
         ["♻️ シャッフル", () => shuffle("deck", ix)],
         ["👀 リスト", (e: MouseEvent) => showListWithContextMenu(e, "deck", ix, true)],
       ]),
       ...dropHandlers("deck", ix),
-      ...dragSingleHandlers("deck", ix, true),
+      ...dragSingleHandlers("deck", ix),
     }),
     area: {
       ...dropHandlers("deck", null),
@@ -180,7 +179,7 @@ export const handlers: HandlerConfig = {
       onClick: (e: MouseEvent) => showListWithContextMenu(e, "graveyard", ix, true),
       onContextMenu: (e: MouseEvent) => showListWithContextMenu(e, "graveyard", ix, true),
       ...dropHandlers("graveyard", ix),
-      ...dragSingleHandlers("graveyard", ix, true),
+      ...dragSingleHandlers("graveyard", ix),
     }),
     area: {
       ...dropHandlers("graveyard", null),
@@ -190,7 +189,7 @@ export const handlers: HandlerConfig = {
 
   bench: {
     stack: (ix: number) => ({
-      onClick: (e: MouseEvent) => toggleTapped("bench", ix),
+      onClick: () => toggleTapped("bench", ix),
       onContextMenu: (e: MouseEvent) => showMenu(e, [
         ["🔍 拡大", (e: MouseEvent) => showLightbox(e, getStack("bench", ix).cards[0])],
         ["👀 重なっているカード", (e: MouseEvent) => showListWithContextMenu(e, "bench", ix)],
@@ -236,3 +235,5 @@ export const handlers: HandlerConfig = {
     },
   },
 };
+
+export const configurations = { layout, handlers };

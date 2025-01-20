@@ -1,9 +1,9 @@
 import { globalHandlers } from "./hooks";
 
-import { gameState, getStacks } from "./states/game";
-import { getIsSelected, getIsTargetted, dragStop } from "./states/drag";
+import { getStacks } from "./states/game";
+import { getIsSelected, getIsTargetted, } from "./states/drag";
 import { getListProps } from "./states/list";
-import { getMenuProps, closeMenu } from "./states/menu";
+import { getMenuProps, } from "./states/menu";
 import { getLightboxProps } from "./states/lightbox";
 
 import { Area } from "./components/Area";
@@ -11,7 +11,6 @@ import { Menu } from "./components/Menu";
 import { List } from "./components/List";
 import { Lightbox } from "./components/Lightbox";
 import { CardStack } from "./components/CardStack";
-import { Button } from "./components/Button";
 import { Link } from "./components/Link";
 
 const NEGATIVE_MARGIN_PER_CARD = -8;
@@ -37,6 +36,7 @@ const AreaWithCards = ({ area, handlers }: {
         {...handlers[area.area].area}>
       {stacks.map((stack, ix) => (
         <CardStack
+            key={stack.id}
             stack={stack}
             isSelected={getIsSelected(area.area, ix)}
             isTargetted={getIsTargetted(area.area, ix)}
@@ -53,8 +53,8 @@ const Rows = ({ rows, handlers }: {
   handlers: HandlerConfig,
 }) => (
   <div class="dmpg-rows">
-    {rows.map(row => (
-      <div class="dmpg-row">
+    {rows.map((row, ix) => (
+      <div key={ix} class="dmpg-row">
         <Areas areas={row} handlers={handlers} />
       </div>
     ))}
@@ -65,21 +65,21 @@ const Areas = ({ areas, handlers }: {
   areas: LayoutRow,
   handlers: HandlerConfig,
 }) => (
-  areas.map(area => (
+  areas.map((area: Area | LayoutRow[], ix: number) => (
     Array.isArray(area) ? (
-      <Rows rows={area} handlers={handlers} />
+      <Rows key={ix} rows={area} handlers={handlers} />
     ) : getStacks(area.area).length > 0 || !area.optional ? (
-      <AreaWithCards area={area} handlers={handlers} />
+      <AreaWithCards key={area.area} area={area} handlers={handlers} />
     ) : null
   ))
 );
 
-export const Playground = ({ rows, handlers }: Configuration) => (
+export const Playground = ({ layout, handlers }: Configuration) => (
   <div class="dmpg-wrapper" {...globalHandlers}>
     <Menu {...getMenuProps()} />
     <List {...getListProps()} />
     <Lightbox {...getLightboxProps()} />
-    <Rows rows={rows} handlers={handlers} />
+    <Rows rows={layout} handlers={handlers} />
     <div class="dmpg-footer">
       <Link href="https://zk-phi.github.io/handanalyze" target="_blank">→ 確率計算機</Link>
       {" / "}

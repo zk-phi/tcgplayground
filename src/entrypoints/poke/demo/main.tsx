@@ -1,6 +1,6 @@
 import { render } from "preact";
 import { useEffect } from "preact/hooks";
-import * as configurations from "../configurations";
+import { configurations } from "../configurations";
 
 import { shuffle as shuffleArray } from "../../../utils/array";
 import {

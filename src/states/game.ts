@@ -1,4 +1,5 @@
-import { signal, computed } from "@preact/signals";
+import { signal } from "@preact/signals";
+import { gensym } from "../utils/gensym";
 import { shuffle as shuffleArray, put as putArray } from "../utils/array";
 import { closeList } from "./list";
 
@@ -11,7 +12,7 @@ export const makeStack = ({
   tapped = false,
   laid = false,
 }: { cards: string[] } & Partial<StackAttributes>): Stack => (
-  { cards, flipped, reversed, tapped, laid }
+  { id: gensym(), cards, flipped, reversed, tapped, laid }
 );
 
 export const gameState = signal<GameState>({});
@@ -179,7 +180,7 @@ export const move = (
   ix: number,
   dest: string,
   attrs: Partial<StackAttributes> = {},
-  keepStacked: boolean = false,
+  keepStacked = false,
 ) => {
   const cards = pop(src, ix).cards;
   if (keepStacked) {
@@ -261,7 +262,7 @@ export const moveSingle = (
   ix: number,
   sj: number,
   dest: string,
-  allowEmpty: boolean = false,
+  allowEmpty = false,
   attrs: Partial<StackAttributes> = {},
 ) => {
   if (gameState.value[src][ix].cards.length <= 1 && !allowEmpty) {

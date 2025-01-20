@@ -11,7 +11,7 @@ type StackAttributes = {
   laid: boolean,
 };
 
-type Stack = StackAttributes & { cards: string[] };
+type Stack = StackAttributes & { id: number, cards: string[] };
 
 // --- game configurations
 
@@ -46,4 +46,4 @@ type Area = {
 type LayoutRow = (Area | LayoutConfig)[];
 type LayoutConfig = LayoutRow[];
 
-type Configuration = { rows: LayoutConfig, handlers: HandlerConfig };
+type Configuration = { layout: LayoutConfig, handlers: HandlerConfig };

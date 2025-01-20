@@ -3,11 +3,15 @@ export const globalClickHooks: MouseEventHandler[] = [];
 
 export const globalHandlers = {
   onDragEnd: (e: MouseEvent) => {
-    globalDragEndHooks.forEach(hook => hook(e));
+    for (const hook of globalDragEndHooks) {
+      hook(e);
+    }
     e.stopPropagation();
   },
   onClick: (e: MouseEvent) => {
-    globalClickHooks.forEach(hook => hook(e));
+    for (const hook of globalClickHooks) {
+      hook(e);
+    }
     e.stopPropagation();
   },
 };

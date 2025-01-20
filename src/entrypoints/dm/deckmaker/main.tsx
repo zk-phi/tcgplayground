@@ -1,7 +1,7 @@
 import { render } from "preact";
 import type { CSSProperties } from "preact/compat";
 import { useState, useEffect } from "preact/hooks";
-import * as configurations from "../configurations";
+import { configurations } from "../configurations";
 
 import { makeStack, setGameState, untapAll } from "../../../states/game";
 import { shuffle as shuffleArray } from "../../../utils/array";
@@ -28,8 +28,8 @@ const initialize = () => {
     hand: deck.splice(0, 5).map(src => makeStack({ cards: [src] })),
     shields: deck.splice(0, 5).map(src => makeStack({ cards: [src], flipped: true })),
     deck: [makeStack({ cards: deck, flipped: true })],
-    grdeck: grdeck.length ? [makeStack({ cards: grdeck, flipped: true })] : [],
-    exdeck: exdeck.length ? [makeStack({ cards: exdeck })] : [],
+    grdeck: grdeck.length > 0 ? [makeStack({ cards: grdeck, flipped: true })] : [],
+    exdeck: exdeck.length > 0 ? [makeStack({ cards: exdeck })] : [],
     exploring: [],
   });
 };

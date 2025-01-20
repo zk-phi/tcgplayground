@@ -1,18 +1,17 @@
-import { shuffle as shuffleArray } from "../../utils/array";
 import {
-  getStacks, getStack,
+  getStack,
   move, push, unshift, moveSingle, pushSingle, unshiftSingle,
   toggleTapped, toggleReversed, toggleFlipped, toggleLaid,
   unshiftBatch, pushBatch, moveBatch,
   unshiftAll, pushAll, moveAll,
-  shuffle, untapAll,
+  shuffle,
 } from "../../states/game";
 import { dropHandlers, dragHandlers } from "../../states/drag";
 import { showList } from "../../states/list";
 import { showMenu } from "../../states/menu";
 import { showLightbox } from "../../states/lightbox";
 
-export const rows: LayoutConfig = [[
+const layout: LayoutConfig = [[
   { area: "field", label: "場", expandThreshold: 8 }
 ], [
   { area: "shields", label: "シールド", expandThreshold: 5 },
@@ -137,7 +136,7 @@ const showListWithContextMenu = (
   }));
 };
 
-export const handlers = {
+const handlers = {
   field: {
     stack: (ix: number) => ({
       onClick: (e: MouseEvent) => showLightbox(e, getStack("field", ix).cards[0]),
@@ -183,7 +182,7 @@ export const handlers = {
 
   deck: {
     stack: (ix: number) => ({
-      onClick: (e: MouseEvent) => moveSingle("deck", ix, 0, "exploring", true),
+      onClick: () => moveSingle("deck", ix, 0, "exploring", true),
       onContextMenu: (e: MouseEvent) => showMenu(e, [
         ["⚡ 超次元送り", () => pushSingle("deck", ix, 0, "exdeck", 0)],
         ["🤏 ボトムから引く", () => moveSingle("deck", ix, -1, "hand", true)],
@@ -214,7 +213,7 @@ export const handlers = {
 
   grdeck: {
     stack: (ix: number) => ({
-      onClick: (e: MouseEvent) => moveSingle("grdeck", ix, 0, "exploring", true),
+      onClick: () => moveSingle("grdeck", ix, 0, "exploring", true),
       onContextMenu: (e: MouseEvent) => showMenu(e, [
         ["♻️ シャッフル", () => shuffle("grdeck", ix)],
         ["👀 リスト", (e: MouseEvent) => showListWithContextMenu(e, "grdeck", ix, true)],
@@ -291,3 +290,5 @@ export const handlers = {
     },
   },
 };
+
+export const configurations = { layout, handlers };
