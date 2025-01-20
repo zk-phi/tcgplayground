@@ -2,7 +2,7 @@ import { signal, computed } from "@preact/signals";
 import { shuffle as shuffleArray, put as putArray } from "../utils/array.js";
 import { closeList } from "./list.js";
 
-export const stack = ({
+export const makeStack = ({
   cards,
   flipped = false,
   reversed = false,
@@ -20,6 +20,14 @@ const undoBoundary = () => {
   history.value = [gameState.value, ...history.value.slice(0, 9)];
   forwardHistory.value = [];
 };
+
+export const getStacks = (src) => (
+  gameState.value[src] ?? []
+);
+
+export const getStack = (src, ix) => (
+  gameState.value[src]?.[ix]
+);
 
 export const getUndoState = () => (
   history.value.length > 1
@@ -166,9 +174,9 @@ export const push = (src, ix, dest, di) => {
 export const move = (src, ix, dest, attrs = {}, keepStacked = false) => {
   const cards = pop(src, ix).cards;
   if (keepStacked) {
-    put([stack({ cards, ...attrs })], dest);
+    put([makeStack({ cards, ...attrs })], dest);
   } else {
-    put(cards.map(card => stack({ cards: [card], ...attrs })), dest);
+    put(cards.map(card => makeStack({ cards: [card], ...attrs })), dest);
   }
   undoBoundary();
 };
@@ -235,7 +243,7 @@ export const moveSingle = (src, ix, sj, dest, allowEmpty = false, attrs = {}) =>
     move(src, ix, dest, attrs);
   } else {
     const card = popSingle(src, ix, sj);
-    put([stack({ cards: [card], ...attrs })], dest);
+    put([makeStack({ cards: [card], ...attrs })], dest);
   }
   undoBoundary();
 };
@@ -269,9 +277,9 @@ export const unshiftSingle = (src, ix, sj, dest, di, allowEmpty = false) => {
 export const moveAll = (src, ix, dest, attrs, keepStacked = false) => {
   const cards = popAll(src, ix);
   if (keepStacked) {
-    put([stack({ cards, ...attrs})], dest);
+    put([makeStack({ cards, ...attrs})], dest);
   } else {
-    put(cards.map(card => stack({ cards: [card], ...attrs })), dest);
+    put(cards.map(card => makeStack({ cards: [card], ...attrs })), dest);
   }
   undoBoundary();
 };

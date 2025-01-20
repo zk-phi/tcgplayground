@@ -1,6 +1,6 @@
 import { globalHandlers } from "./hooks.js";
 
-import { gameState } from "./states/game.js";
+import { gameState, getStacks } from "./states/game.js";
 import { getIsSelected, getIsTargetted, dragStop } from "./states/drag.js";
 import { getListProps } from "./states/list.js";
 import { getMenuProps, closeMenu } from "./states/menu.js";
@@ -18,7 +18,7 @@ const NEGATIVE_MARGIN_PER_CARD = -8;
 const MIN_NEGATIVE_MARGIN = -72;
 
 const AreaWithCards = ({ area, handlers }) => {
-  const stacks = gameState.value[area.area] ?? [];
+  const stacks = getStacks(area.area);
   const margin = Math.max(
     Math.max(stacks.length - (area.expandThreshold ?? 2), 0) * NEGATIVE_MARGIN_PER_CARD,
     MIN_NEGATIVE_MARGIN,
@@ -59,7 +59,7 @@ const Areas = ({ areas, handlers }) => (
   areas.map(area => (
     Array.isArray(area) ? (
       <Rows rows={area} handlers={handlers} />
-    ) : gameState.value[area.area]?.length || !area.optional ? (
+    ) : getStacks(area.area).length > 0 || !area.optional ? (
       <AreaWithCards area={area} handlers={handlers} />
     ) : null
   ))

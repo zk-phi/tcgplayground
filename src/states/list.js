@@ -1,5 +1,5 @@
 import { signal, computed } from "@preact/signals";
-import { gameState } from "./game.js";
+import { getStack } from "./game.js";
 import { closeMenu } from "./menu.js";
 
 const list = signal(null);
@@ -21,6 +21,6 @@ export const closeList = () => {
 
 export const getListProps = () => ({
   onClose: closeList,
-  cards: list.value ? gameState.value[list.value.area][list.value.ix].cards : [],
+  cards: list.value ? getStack(list.value.area, list.value.ix).cards : [],
   handlers: list.value?.handlers,
 });

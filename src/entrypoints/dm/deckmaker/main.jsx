@@ -2,7 +2,7 @@ import { render } from "preact";
 import { useState, useEffect } from "preact/hooks";
 import * as configurations from "../configurations.js";
 
-import { stack, setGameState, untapAll } from "../../../states/game.js";
+import { makeStack, setGameState, untapAll } from "../../../states/game.js";
 import { shuffle as shuffleArray } from "../../../utils/array.js";
 
 import { Playground } from "../../../Playground";
@@ -22,12 +22,12 @@ const initialize = () => {
   setGameState({
     field: [],
     lands: [],
-    graveyard: [stack({ cards: [] })],
-    hand: deck.splice(0, 5).map(src => stack({ cards: [src] })),
-    shields: deck.splice(0, 5).map(src => stack({ cards: [src], flipped: true })),
-    deck: [stack({ cards: deck, flipped: true })],
-    grdeck: grdeck.length ? [stack({ cards: grdeck, flipped: true })] : [],
-    exdeck: exdeck.length ? [stack({ cards: exdeck })] : [],
+    graveyard: [makeStack({ cards: [] })],
+    hand: deck.splice(0, 5).map(src => makeStack({ cards: [src] })),
+    shields: deck.splice(0, 5).map(src => makeStack({ cards: [src], flipped: true })),
+    deck: [makeStack({ cards: deck, flipped: true })],
+    grdeck: grdeck.length ? [makeStack({ cards: grdeck, flipped: true })] : [],
+    exdeck: exdeck.length ? [makeStack({ cards: exdeck })] : [],
     exploring: [],
   });
 };

@@ -4,7 +4,7 @@ import * as configurations from "../configurations.js";
 
 import { shuffle as shuffleArray } from "../../../utils/array.js";
 import {
-  stack, setGameState, untapAll,
+  makeStack, setGameState, untapAll,
   undo, redo, getUndoState, getRedoState,
 } from "../../../states/game.js";
 
@@ -64,10 +64,10 @@ const initialize = () => {
   setGameState({
     field: [],
     lands: [],
-    graveyard: [stack({ cards: [] })],
-    hand: deck.splice(0, 5).map(src => stack({ cards: [src] })),
-    shields: deck.splice(0, 5).map(src => stack({ cards: [src], flipped: true })),
-    deck: [stack({ cards: deck, flipped: true })],
+    graveyard: [makeStack({ cards: [] })],
+    hand: deck.splice(0, 5).map(src => makeStack({ cards: [src] })),
+    shields: deck.splice(0, 5).map(src => makeStack({ cards: [src], flipped: true })),
+    deck: [makeStack({ cards: deck, flipped: true })],
     grdeck: [],
     exdeck: [],
     exploring: [],

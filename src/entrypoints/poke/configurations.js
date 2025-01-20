@@ -1,6 +1,6 @@
 import { shuffle as shuffleArray } from "../../utils/array";
 import {
-  stack, gameState, setGameState,
+  getStack, getStacks,
   move, push, unshift, moveSingle, pushSingle, unshiftSingle,
   toggleTapped, toggleReversed, toggleFlipped, toggleLaid,
   unshiftBatch, pushBatch, moveBatch,
@@ -28,7 +28,7 @@ const dragNormalAreaHandlers = (src) => dragHandlers(src, null, (e, dest, di) =>
   if (dest === "graveyard" || dest === "sides") {
     pushBatch(src, dest, di ?? 0);
   } else if (dest === "deck" || dest === "stadium" || di != null) {
-    if (gameState.value[dest][di ?? 0].cards.length <= 0) {
+    if (getStack(dest, di ?? 0).cards.length <= 0) {
       pushBatch(src, dest, di ?? 0);
     } else {
       showMenu(e, [
@@ -45,7 +45,7 @@ const dragDeckAreaHandlers = (src) => dragHandlers(src, null, (e, dest, di) => {
   if (dest === "graveyard" || dest === "sides") {
     pushAll(src, dest, di ?? 0);
   } else if (dest === "deck" || dest === "stadium" || di != null) {
-    if (gameState.value[dest][di ?? 0].cards.length <= 0) {
+    if (getStack(dest, di ?? 0).cards.length <= 0) {
       pushBatch(src, dest, di ?? 0);
     } else {
       showMenu(e, [
@@ -62,7 +62,7 @@ const dragStackHandlers = (src, si, allowEmpty) => dragHandlers(src, si, (e, des
   if (dest === "graveyard" || dest === "sides") {
     push(src, si, dest, di ?? 0, true);
   } else if (dest === "deck" || dest === "stadium" || di != null) {
-    if (gameState.value[dest][di ?? 0].cards.length <= 0) {
+    if (getStack(dest, di ?? 0).cards.length <= 0) {
       push(src, si, dest, di ?? 0, true);
     }
     showMenu(e, [
@@ -78,7 +78,7 @@ const dragSingleHandlers = (src, si, allowEmpty) => dragHandlers(src, si, (e, de
   if (dest === "graveyard" || dest === "sides") {
     pushSingle(src, si, 0, dest, di ?? 0);
   } else if (dest === "deck" || dest === "stadium" || di != null) {
-    if (gameState.value[dest][di ?? 0].cards.length <= 0) {
+    if (getStack(dest, di ?? 0).cards.length <= 0) {
       pushSingle(src, si, 0, dest, di ?? 0);
     }
     showMenu(e, [
@@ -93,7 +93,7 @@ const dragSingleHandlers = (src, si, allowEmpty) => dragHandlers(src, si, (e, de
 const showListWithContextMenu = (e, area, ix, allowEmpty = false) => {
   showList(e, area, ix, (j) => ({
     onClick: e => showMenu(e, [
-      ["🔍 拡大", () => showLightbox(e, gameState.value[area][ix].cards[j])],
+      ["🔍 拡大", () => showLightbox(e, getStack(area, ix).cards[j])],
       ["⚔️ バトル場に出す", () => moveSingle(area, ix, j, "field", allowEmpty)],
       ["🫳 デッキの上に置く", () => pushSingle(area, ix, j, "deck", 0, allowEmpty)],
       ["🫴 デッキの下に入れる", () => unshiftSingle(area, ix, j, "deck", 0, allowEmpty)],
@@ -103,7 +103,7 @@ const showListWithContextMenu = (e, area, ix, allowEmpty = false) => {
       ["🃏 手札に加える", () => moveSingle(area, ix, j, "hand", allowEmpty)],
     ]),
     onContextMenu: e => showMenu(e, [
-      ["🔍 拡大", () => showLightbox(e, gameState.value[area][ix].cards[j])],
+      ["🔍 拡大", () => showLightbox(e, getStack(area, ix).cards[j])],
       ["⚔️ バトル場に出す", () => moveSingle(area, ix, j, "field", allowEmpty)],
       ["🫳 デッキの上に置く", () => pushSingle(area, ix, j, "deck", 0, allowEmpty)],
       ["🫴 デッキの下に入れる", () => unshiftSingle(area, ix, j, "deck", 0, allowEmpty)],
@@ -133,7 +133,7 @@ export const handlers = {
     stack: ix => ({
       onClick: () => toggleTapped("field", ix),
       onContextMenu: e => showMenu(e, [
-        ["🔍 拡大", e => showLightbox(e, gameState.value.field[ix].cards[0])],
+        ["🔍 拡大", e => showLightbox(e, getStack("field", ix).cards[0])],
         ["👀 重なっているカード", e => showListWithContextMenu(e, "field", ix)],
       ]),
       ...dropHandlers("field", ix),
@@ -179,7 +179,7 @@ export const handlers = {
     stack: ix => ({
       onClick: e => toggleTapped("bench", ix),
       onContextMenu: e => showMenu(e, [
-        ["🔍 拡大", e => showLightbox(e, gameState.value.bench[ix].cards[0])],
+        ["🔍 拡大", e => showLightbox(e, getStack("bench", ix).cards[0])],
         ["👀 重なっているカード", e => showListWithContextMenu(e, "bench", ix)],
       ]),
       ...dropHandlers("bench", ix),
@@ -195,7 +195,7 @@ export const handlers = {
     stack: ix => ({
       onClick: e => e.preventDefault(),
       onContextMenu: e => showMenu(e, [
-        ["🔍 拡大", e => showLightbox(e, gameState.value.hand[ix].cards[0])],
+        ["🔍 拡大", e => showLightbox(e, getStack("hand", ix).cards[0])],
         ["👀 重なっているカード", e => showListWithContextMenu(e, "hand", ix)],
       ]),
       ...dropHandlers("hand", ix),
@@ -211,7 +211,7 @@ export const handlers = {
     stack: ix => ({
       onClick: e => e.preventDefault(),
       onContextMenu: e => showMenu(e, [
-        ["🔍 拡大", e => showLightbox(e, gameState.value.exploring[ix].cards[0])],
+        ["🔍 拡大", e => showLightbox(e, getStack("exploring", ix).cards[0])],
         ["👀 重なっているカード", e => showListWithContextMenu(e, "hand", ix)],
       ]),
       ...dropHandlers("exploring", ix),
