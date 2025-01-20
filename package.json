@@ -7,9 +7,12 @@
     "build-demo": "postcss ./src/styles.css -o ./src/styles.min.css && vite build",
     "preview": "vite preview",
     "release": "echo javascript:$(cat ./dist/bundle.js) > ./release/bookmarklet",
-    "check": "tsc --noEmit"
+    "check": "tsc --noEmit",
+    "lint": "biome lint",
+    "fix": "biome lint --write"
   },
   "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
     "@preact/preset-vite": "^2.9.4",
     "@preact/signals": "^2.0.1",
     "concurrently": "^9.1.2",
