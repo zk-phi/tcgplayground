@@ -1,8 +1,13 @@
-module.exports = {
+import nestedPlugin from "postcss-nested";
+import importGlobPlugin from "postcss-import-ext-glob";
+import importPlugin from "postcss-import";
+import minifyPlugin from "postcss-minify";
+
+export default {
   plugins: [
-    require("postcss-nested"),
-    require("postcss-import-ext-glob"),
-    require("postcss-import"),
-    require("postcss-minify"),
+    nestedPlugin,
+    importGlobPlugin,
+    importPlugin,
+    minifyPlugin,
   ],
 };
