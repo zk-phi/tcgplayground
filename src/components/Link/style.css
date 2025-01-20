@@ -1,13 +1,13 @@
-.dmpg-link {
+.tcgpg-link {
   color: #fffb;
   text-decoration: none;
   border-bottom: 1px dotted currentColor;
 }
 
-.dmpg-link:hover {
+.tcgpg-link:hover {
   color: #fff;
 }
 
-.dmpg-link:active {
+.tcgpg-link:active {
   opacity: 0.8;
 }

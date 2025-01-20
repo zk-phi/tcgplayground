@@ -19,22 +19,22 @@ export const CardStack = ({ stack, isSelected, isTargetted, style = {}, ...handl
   };
 
   const extraClass = isSelected ? (
-    "dmpg-selected"
+    "tcgpg-selected"
   ) : isTargetted ? (
-    "dmpg-targetted"
+    "tcgpg-targetted"
   ) : stack.cards.length <= 0 ? (
-    "dmpg-empty"
+    "tcgpg-empty"
   ) : stack.cards.length > 0 && stack.flipped ? (
-    "dmpg-flipped"
+    "tcgpg-flipped"
   ) : (
-    "dmpg-nonempty"
+    "tcgpg-nonempty"
   );
 
   return (
-    <div class="dmpg-card-container" style={containerStyles} {...handlers}>
-      <div class={`dmpg-card-inner ${extraClass}`}>
+    <div class="tcgpg-card-container" style={containerStyles} {...handlers}>
+      <div class={`tcgpg-card-inner ${extraClass}`}>
         {stack.cards.length > 1 && (
-          <div class={`dmpg-card-counter ${stack.flipped ? 'dmpg-flipped' : ''}`}>
+          <div class={`tcgpg-card-counter ${stack.flipped ? 'tcgpg-flipped' : ''}`}>
             {stack.flipped ? stack.cards.length : `+${stack.cards.length - 1}`}
           </div>
         )}

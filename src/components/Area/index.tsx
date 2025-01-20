@@ -10,23 +10,23 @@ export const Area = ({ label, children, width, nogrow, isSelected, isTargetted, 
 } & Handlers) => {
   const style = {
     width: width == null ? undefined : (
-      `calc(var(--dmpg-card-width) * ${width} + var(--dmpg-card-gap) * ${width - 1})`
+      `calc(var(--tcgpg-card-width) * ${width} + var(--tcgpg-card-gap) * ${width - 1})`
     ),
     flexGrow: (width || nogrow) ? 0 : 1,
   };
 
   const extraClass = isSelected ? (
-    "dmpg-selected"
+    "tcgpg-selected"
   ) : isTargetted ? (
-    "dmpg-targetted"
+    "tcgpg-targetted"
   ) : (
     ""
   );
 
   return (
-    <div class={`dmpg-area ${extraClass}`} style={style} {...handlers}>
+    <div class={`tcgpg-area ${extraClass}`} style={style} {...handlers}>
       {children}
-      <span class="dmpg-area-label">{label}</span>
+      <span class="tcgpg-area-label">{label}</span>
     </div>
   );
 };

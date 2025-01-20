@@ -5,7 +5,7 @@ export const Link = ({ href, target, children }: {
   target?: string,
   children: ComponentChildren,
 }) => (
-  <a class="dmpg-link" href={href} target={target}>
+  <a class="tcgpg-link" href={href} target={target}>
     {children}
   </a>
 )

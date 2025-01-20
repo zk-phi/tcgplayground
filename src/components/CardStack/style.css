@@ -1,58 +1,58 @@
-.dmpg-card-container {
+.tcgpg-card-container {
   display: inline-flex;
-  width: var(--dmpg-card-width);
-  height: var(--dmpg-card-height);
+  width: var(--tcgpg-card-width);
+  height: var(--tcgpg-card-height);
   background-size: cover;
   overflow: hidden;
   border-radius: 5px;
 }
 
-.dmpg-card-container:active {
+.tcgpg-card-container:active {
   opacity: 0.8;
 }
 
-.dmpg-card-inner {
+.tcgpg-card-inner {
   position: relative;
   display: inline-flex;
-  width: var(--dmpg-card-width);
-  height: var(--dmpg-card-height);
+  width: var(--tcgpg-card-width);
+  height: var(--tcgpg-card-height);
   align-items: flex-end;
   justify-content: flex-end;
   cursor: pointer;
 }
 
-.dmpg-card-inner.dmpg-empty {
+.tcgpg-card-inner.tcgpg-empty {
   pointer-events: none;
 }
 
-.dmpg-card-inner.dmpg-nonempty {
+.tcgpg-card-inner.tcgpg-nonempty {
   background: #0002;
   /* thin shadow gives a slight "reality" to card images */
   box-shadow: inset 0 0 8px #fff5;
 }
 
-.dmpg-card-inner.dmpg-nonempty:hover {
+.tcgpg-card-inner.tcgpg-nonempty:hover {
   background: transparent;
 }
 
-.dmpg-card-inner.dmpg-flipped {
+.tcgpg-card-inner.tcgpg-flipped {
   background: #028;
   box-shadow: inset 0 0 8px #fff5;
 }
 
-.dmpg-card-inner.dmpg-flipped:hover {
+.tcgpg-card-inner.tcgpg-flipped:hover {
   background: #028d;
 }
 
-.dmpg-card-inner.dmpg-selected {
+.tcgpg-card-inner.tcgpg-selected {
   background: #fd08;
 }
 
-.dmpg-card-inner.dmpg-targetted {
+.tcgpg-card-inner.tcgpg-targetted {
   background: #0ff8;
 }
 
-.dmpg-card-counter {
+.tcgpg-card-counter {
   display: inline-block;
   padding: 6px 8px;
   border-radius: 4px;
@@ -62,11 +62,11 @@
   pointer-events: none;
 }
 
-.dmpg-card-counter:not(.dmpg-flipped) {
+.tcgpg-card-counter:not(.tcgpg-flipped) {
   background: radial-gradient(#fffa, #fff0);
   color: black;
 }
 
-.dmpg-card-counter.dmpg-flipped {
+.tcgpg-card-counter.tcgpg-flipped {
   color: #fff4;
 }

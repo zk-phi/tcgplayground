@@ -1,11 +1,11 @@
 @import-glob "components/**/*.css";
 
-.dmpg-wrapper {
-  --dmpg-global-margin: 8px;
-  --dmpg-area-padding: 8px;
-  --dmpg-card-height: 140px;
-  --dmpg-card-width: 100px;
-  --dmpg-card-gap: 4px;
+.tcgpg-wrapper {
+  --tcgpg-global-margin: 8px;
+  --tcgpg-area-padding: 8px;
+  --tcgpg-card-height: 140px;
+  --tcgpg-card-width: 100px;
+  --tcgpg-card-gap: 4px;
   font-family:
     "Helvetica Neue",
     Arial,
@@ -19,17 +19,17 @@
   user-select: none;
 }
 
-.dmpg-rows {
+.tcgpg-rows {
   flex-grow: 1;
 }
 
-.dmpg-row {
+.tcgpg-row {
   display: flex;
-  gap:  var(--dmpg-global-margin);
-  margin-bottom: var(--dmpg-global-margin);
+  gap:  var(--tcgpg-global-margin);
+  margin-bottom: var(--tcgpg-global-margin);
 }
 
-.dmpg-footer {
+.tcgpg-footer {
   margin-top: 16px;
   text-align: right;
 }

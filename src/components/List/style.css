@@ -1,4 +1,4 @@
-.dmpg-list-container {
+.tcgpg-list-container {
   display: flex;
   flex-wrap: wrap;
   padding: 20px;
@@ -10,6 +10,6 @@
   z-index: 50;
   border-radius: 0.5em;
   overflow: hidden;
-  min-height: var(--dmpg-card-height);
+  min-height: var(--tcgpg-card-height);
   background: #444;
 }

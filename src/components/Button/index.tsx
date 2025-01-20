@@ -4,7 +4,7 @@ export const Button = ({ children, disabled, ...handlers }: {
   children: ComponentChildren,
   disabled?: boolean,
 } & Handlers) => (
-  <button class="dmpg-button" disabled={disabled} {...handlers}>
+  <button class="tcgpg-button" disabled={disabled} {...handlers}>
     {children}
   </button>
 );

@@ -4,7 +4,7 @@ export const Overlay = ({ children, onClick }: {
   children: ComponentChildren,
   onClick: MouseEventHandler,
 }) => (
-  <div class="dmpg-overlay" onClick={onClick}>
+  <div class="tcgpg-overlay" onClick={onClick}>
     {children}
   </div>
 );

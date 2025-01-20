@@ -3,7 +3,7 @@ import type { ComponentChildren } from "preact";
 export const FloatingButtons = ({ children }: {
   children: ComponentChildren,
 }) => (
-  <div class="dmpg-floating-buttons">
+  <div class="tcgpg-floating-buttons">
     {children}
   </div>
 )

@@ -1,4 +1,4 @@
-.dmpg-button {
+.tcgpg-button {
   display: inline-block;
   color: white;
   background: #ea0;
@@ -13,15 +13,15 @@
   border: none;
 }
 
-.dmpg-button:disabled {
+.tcgpg-button:disabled {
   background: #aaa;
   cursor: not-allowed;
 }
 
-.dmpg-button:hover:not(:disabled) {
+.tcgpg-button:hover:not(:disabled) {
   opacity: 0.8;
 }
 
-.dmpg-button:active:not(:disabled) {
+.tcgpg-button:active:not(:disabled) {
   opacity: 0.6;
 }

@@ -52,9 +52,9 @@ const Rows = ({ rows, handlers }: {
   rows: LayoutConfig,
   handlers: HandlerConfig,
 }) => (
-  <div class="dmpg-rows">
+  <div class="tcgpg-rows">
     {rows.map((row, ix) => (
-      <div key={ix} class="dmpg-row">
+      <div key={ix} class="tcgpg-row">
         <Areas areas={row} handlers={handlers} />
       </div>
     ))}
@@ -75,12 +75,12 @@ const Areas = ({ areas, handlers }: {
 );
 
 export const Playground = ({ layout, handlers }: Configuration) => (
-  <div class="dmpg-wrapper" {...globalHandlers}>
+  <div class="tcgpg-wrapper" {...globalHandlers}>
     <Menu {...getMenuProps()} />
     <List {...getListProps()} />
     <Lightbox {...getLightboxProps()} />
     <Rows rows={layout} handlers={handlers} />
-    <div class="dmpg-footer">
+    <div class="tcgpg-footer">
       <Link href="https://zk-phi.github.io/handanalyze" target="_blank">→ 確率計算機</Link>
       {" / "}
       <Link href="https://x.com/zk_phi" target="_blank">@zk_phi</Link>

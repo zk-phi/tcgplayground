@@ -9,9 +9,9 @@ export const Menu = ({ onClose, pos, options }: MenuProps) => {
   }, [onClose]);
 
   return options && (
-    <div class="dmpg-menu-container" style={pos}>
+    <div class="tcgpg-menu-container" style={pos}>
       {options.map(option => (
-        <div key={option[0]} class="dmpg-menu-option" onClick={e => onClickMenu(e, option[1])}>
+        <div key={option[0]} class="tcgpg-menu-option" onClick={e => onClickMenu(e, option[1])}>
           {option[0]}
         </div>
       ))}
