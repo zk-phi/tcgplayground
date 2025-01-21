@@ -20,7 +20,8 @@ import styles from "../../../playground/styles.min.css?raw";
 const extractSrcs = (classname: string) => {
   const elements = document.getElementsByClassName(classname)?.[0]?.children;
   // @ts-ignore
-  return Array.from(elements ?? []).map(el => el?.children?.[0]?.src ?? "");
+  const thumbs = Array.from(elements ?? []).map(el => el?.children?.[0]?.src ?? "");
+  return thumbs.map(thumb => thumb.replace("/s/", "/"));
 }
 
 const initialize = () => {
