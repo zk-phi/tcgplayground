@@ -3,7 +3,10 @@ import type { CSSProperties } from "preact/compat";
 import { useState, useEffect } from "preact/hooks";
 import { configurations } from "../configurations";
 
-import { makeStack, setGameState, untapAll } from "../../../playground/states/game";
+import {
+  makeStack, setGameState, untapAll,
+  undo, redo, getUndoState, getRedoState,
+} from "../../../playground/states/game";
 import { shuffle as shuffleArray } from "../../../playground/utils/array";
 
 import { Playground } from "../../../playground/Playground";
@@ -41,6 +44,12 @@ const FloatingMenu = ({ show, setShow }: {
   <FloatingButtons>
     {show && (
       <>
+        <Button onClick={undo} disabled={!getUndoState()}>
+          一手戻す
+        </Button>
+        <Button onClick={redo} disabled={!getRedoState()}>
+          一手進む
+        </Button>
         <Button onClick={() => untapAll(["field", "lands"])}>
           アンタップ
         </Button>
@@ -55,17 +64,22 @@ const FloatingMenu = ({ show, setShow }: {
   </FloatingButtons>
 );
 
-const containerStyles: CSSProperties = {
+const backgroundStyles: CSSProperties = {
   position: "fixed",
   zIndex: 99999,
   top: 0,
   left: 0,
   width: "100vw",
   height: "100vh",
-  padding: "20px 3vw",
   margin: 0,
   boxSizing: "border-box",
   background: "#222",
+};
+
+const containerStyles: CSSProperties = {
+  padding: "20px 3vw",
+  maxWidth: "960px",
+  margin: "auto",
 };
 
 const App = () => {
@@ -76,8 +90,10 @@ const App = () => {
     <>
       <FloatingMenu show={show} setShow={setShow} />
       {show && (
-        <div style={containerStyles}>
-          <Playground {...configurations} />
+        <div style={backgroundStyles}>
+          <div style={containerStyles}>
+            <Playground {...configurations} />
+          </div>
         </div>
       )}
     </>
