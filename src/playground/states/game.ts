@@ -216,11 +216,11 @@ export const toggleFlipped = (src: string, ix: number) => {
 };
 
 export const toggleReversed = (src: string, ix: number) => {
-  setAttr(src, ix, "reversed", !gameState.value[src][ix].flipped);
+  setAttr(src, ix, "reversed", !gameState.value[src][ix].reversed);
 };
 
 export const toggleLaid = (src: string, ix: number) => {
-  setAttr(src, ix, "laid", !gameState.value[src][ix].flipped);
+  setAttr(src, ix, "laid", !gameState.value[src][ix].laid);
 };
 
 /* ---- Operate on areas */
