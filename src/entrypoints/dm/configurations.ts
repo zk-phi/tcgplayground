@@ -12,18 +12,17 @@ import { showMenu } from "../../playground/states/menu";
 import { showLightbox } from "../../playground/states/lightbox";
 
 const layout: LayoutConfig = [[
-  { area: "field", label: "場", expandThreshold: 8 }
+  { area: "shields", label: "シールド", stacked: true },
+  { area: "field", label: "場", expandThreshold: 6 }
 ], [
-  { area: "shields", label: "シールド", expandThreshold: 5 },
+  { area: "lands", label: "マナ", expandThreshold: 3 },
   { area: "deck", label: "デッキ", width: 1 },
   { area: "graveyard", label: "墓地", width: 1 },
   { area: "grdeck", label: "GR", width: 1, optional: true },
   { area: "exdeck", label: "超次元", width: 1, optional: true },
 ], [
-  { area: "lands", label: "マナ" },
+  { area: "hand", label: "手札" },
   { area: "exploring", label: "めくられた", optional: true },
-], [
-  { area: "hand", label: "手札", expandThreshold: 5 },
 ]];
 
 const dragNormalAreaHandlers = (src: string) => (

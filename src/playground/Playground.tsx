@@ -13,15 +13,16 @@ import { Lightbox } from "./components/Lightbox";
 import { CardStack } from "./components/CardStack";
 import { Link } from "./components/Link";
 
-const NEGATIVE_MARGIN_PER_CARD = -8;
-const MIN_NEGATIVE_MARGIN = -72;
+const NEGATIVE_MARGIN_PER_CARD = -10;
+const MIN_NEGATIVE_MARGIN = -70;
+const STACKED_NEGATIVE_MARGIN = -90;
 
 const AreaWithCards = ({ area, handlers }: {
   area: Area,
   handlers: HandlerConfig,
 }) => {
   const stacks = getStacks(area.area);
-  const margin = Math.max(
+  const margin = area.stacked ? STACKED_NEGATIVE_MARGIN : Math.max(
     Math.max(stacks.length - (area.expandThreshold ?? 2), 0) * NEGATIVE_MARGIN_PER_CARD,
     MIN_NEGATIVE_MARGIN,
   );
@@ -30,7 +31,7 @@ const AreaWithCards = ({ area, handlers }: {
     <Area
         label={area.label}
         width={area.width}
-        nogrow={area.optional}
+        nogrow={area.optional || area.stacked}
         isSelected={getIsSelected(area.area, null)}
         isTargetted={getIsTargetted(area.area, null)}
         {...handlers[area.area].area}>

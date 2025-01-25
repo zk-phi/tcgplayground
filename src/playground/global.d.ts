@@ -39,6 +39,7 @@ type Area = {
   area: string,
   label: string,
   width?: number,
+  stacked?: boolean,
   expandThreshold?: number,
   optional?: boolean,
 };
