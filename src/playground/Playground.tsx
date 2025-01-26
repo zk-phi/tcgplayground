@@ -29,7 +29,7 @@ const AreaWithCards = ({ area, handlers }: {
 
   return (
     <Area
-        label={`${area.label}${stacks.length > 1 ? ' (' + stacks.length + ')' : ''}`}
+        label={`${area.label}${stacks.length > 1 ? ` (${stacks.length})` : ''}`}
         width={area.width}
         nogrow={area.optional || area.stacked}
         isSelected={getIsSelected(area.area, null)}
