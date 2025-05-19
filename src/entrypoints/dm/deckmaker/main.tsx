@@ -12,6 +12,9 @@ import { shuffle as shuffleArray } from "../../../playground/utils/array";
 import { Playground } from "../../../playground/Playground";
 import { FloatingButtons } from "../../../playground/components/FloatingButtons";
 import { Button } from "../../../playground/components/Button";
+
+/* CSS-in-JS frameworks may interfere with the Deckmaker,
+ * so we manually inject raw CSS string into a plain style-tag */
 import styles from "../../../playground/styles.min.css?raw";
 
 const extractSrcs = (classname: string) => {
