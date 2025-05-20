@@ -16,8 +16,8 @@
   display: inline-flex;
   width: var(--tcgpg-card-width);
   height: var(--tcgpg-card-height);
-  align-items: flex-end;
-  justify-content: flex-end;
+  align-items: flex-start;
+  justify-content: flex-start;
   cursor: pointer;
 }
 
