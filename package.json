@@ -4,10 +4,10 @@
   "type": "module",
   "scripts": {
     "dev": "concurrently 'postcss ./src/playground/styles.css -o ./src/playground/styles.min.css -w' 'vite' 'tsc --watch --noEmit'",
-    "build": "postcss ./src/playground/styles.css -o ./src/playground/styles.min.css && vite build --config ./dmdeckmaker.vite.config.js",
+    "build-deckmaker": "postcss ./src/playground/styles.css -o ./src/playground/styles.min.css && vite build --config ./dmdeckmaker.vite.config.js",
     "build-demo": "postcss ./src/playground/styles.css -o ./src/playground/styles.min.css && vite build",
     "preview": "vite preview",
-    "release": "echo javascript:$(cat ./dist/bundle.js) > ./release/bookmarklet",
+    "release-deckmaker": "echo javascript:$(cat ./dist/bundle.js) > ./release/bookmarklet",
     "check": "tsc --noEmit",
     "lint": "biome lint",
     "fix": "biome lint --write"
