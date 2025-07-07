@@ -15,6 +15,8 @@ type Stack = StackAttributes & { id: number, cards: string[] };
 
 // --- game configurations
 
+type AreaName = string;
+
 type Handlers = {
   onClick?: MouseEventHandler,
   onContextMenu?: MouseEventHandler,
@@ -33,10 +35,10 @@ type AreaHandlers = {
   stack: IndexedHandlers,
 };
 
-type HandlerConfig = { [K in string]: AreaHandlers };
+type HandlerConfig = { [K in AreaName]: AreaHandlers };
 
-type Area = {
-  area: string,
+type AreaConfig = {
+  area: AreaName,
   label: string,
   width?: number,
   stacked?: boolean,
@@ -44,7 +46,7 @@ type Area = {
   optional?: boolean,
 };
 
-type LayoutRow = (Area | LayoutConfig)[];
+type LayoutRow = (AreaConfig | LayoutConfig)[];
 type LayoutConfig = LayoutRow[];
 
 type Configuration = { layout: LayoutConfig, handlers: HandlerConfig };

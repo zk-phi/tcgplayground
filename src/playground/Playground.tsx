@@ -18,7 +18,7 @@ const MIN_NEGATIVE_MARGIN = -70;
 const STACKED_NEGATIVE_MARGIN = -90;
 
 const AreaWithCards = ({ area, handlers }: {
-  area: Area,
+  area: AreaConfig,
   handlers: HandlerConfig,
 }) => {
   const stacks = getStacks(area.area);
@@ -66,7 +66,7 @@ const Areas = ({ areas, handlers }: {
   areas: LayoutRow,
   handlers: HandlerConfig,
 }) => (
-  areas.map((area: Area | LayoutRow[], ix: number) => (
+  areas.map((area: AreaConfig | LayoutRow[], ix: number) => (
     Array.isArray(area) ? (
       <Rows key={ix} rows={area} handlers={handlers} />
     ) : getStacks(area.area).length > 0 || !area.optional ? (
