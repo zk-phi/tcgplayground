@@ -105,7 +105,7 @@ const showListWithContextMenu = (
 ) => {
   showList(e, area, ix, (j: number) => ({
     onClick: (e: MouseEvent) => showMenu(e, [
-      ["🔍 拡大", () => showLightbox(e, getStack(area, ix).cards[j])],
+      ["🔍 拡大", () => showLightbox(e, getStack(area, ix), j)],
       ["⚔️ バトル場に出す", () => moveSingle(area, ix, j, "field", allowEmpty)],
       ["🫳 デッキの上に置く", () => pushSingle(area, ix, j, "deck", 0, allowEmpty)],
       ["🫴 デッキの下に入れる", () => unshiftSingle(area, ix, j, "deck", 0, allowEmpty)],
@@ -115,7 +115,7 @@ const showListWithContextMenu = (
       ["🃏 手札に加える", () => moveSingle(area, ix, j, "hand", allowEmpty)],
     ]),
     onContextMenu: (e: MouseEvent) => showMenu(e, [
-      ["🔍 拡大", () => showLightbox(e, getStack(area, ix).cards[j])],
+      ["🔍 拡大", () => showLightbox(e, getStack(area, ix), j)],
       ["⚔️ バトル場に出す", () => moveSingle(area, ix, j, "field", allowEmpty)],
       ["🫳 デッキの上に置く", () => pushSingle(area, ix, j, "deck", 0, allowEmpty)],
       ["🫴 デッキの下に入れる", () => unshiftSingle(area, ix, j, "deck", 0, allowEmpty)],
@@ -145,7 +145,7 @@ const handlers: HandlerConfig = {
     stack: (ix: number) => ({
       onClick: () => toggleTapped("field", ix),
       onContextMenu: (e: MouseEvent) => showMenu(e, [
-        ["🔍 拡大", (e: MouseEvent) => showLightbox(e, getStack("field", ix).cards[0])],
+        ["🔍 拡大", (e: MouseEvent) => showLightbox(e, getStack("field", ix), 0)],
         ["👀 重なっているカード", (e: MouseEvent) => showListWithContextMenu(e, "field", ix)],
       ]),
       ...dropHandlers("field", ix),
@@ -191,7 +191,7 @@ const handlers: HandlerConfig = {
     stack: (ix: number) => ({
       onClick: () => toggleTapped("bench", ix),
       onContextMenu: (e: MouseEvent) => showMenu(e, [
-        ["🔍 拡大", (e: MouseEvent) => showLightbox(e, getStack("bench", ix).cards[0])],
+        ["🔍 拡大", (e: MouseEvent) => showLightbox(e, getStack("bench", ix), 0)],
         ["👀 重なっているカード", (e: MouseEvent) => showListWithContextMenu(e, "bench", ix)],
       ]),
       ...dropHandlers("bench", ix),
@@ -207,7 +207,7 @@ const handlers: HandlerConfig = {
     stack: (ix: number) => ({
       onClick: (e: MouseEvent) => e.preventDefault(),
       onContextMenu: (e: MouseEvent) => showMenu(e, [
-        ["🔍 拡大", (e: MouseEvent) => showLightbox(e, getStack("hand", ix).cards[0])],
+        ["🔍 拡大", (e: MouseEvent) => showLightbox(e, getStack("hand", ix), 0)],
         ["👀 重なっているカード", (e: MouseEvent) => showListWithContextMenu(e, "hand", ix)],
       ]),
       ...dropHandlers("hand", ix),
@@ -223,7 +223,7 @@ const handlers: HandlerConfig = {
     stack: (ix: number) => ({
       onClick: (e: MouseEvent) => e.preventDefault(),
       onContextMenu: (e: MouseEvent) => showMenu(e, [
-        ["🔍 拡大", (e: MouseEvent) => showLightbox(e, getStack("exploring", ix).cards[0])],
+        ["🔍 拡大", (e: MouseEvent) => showLightbox(e, getStack("exploring", ix), 0)],
         ["👀 重なっているカード", (e: MouseEvent) => showListWithContextMenu(e, "hand", ix)],
       ]),
       ...dropHandlers("exploring", ix),

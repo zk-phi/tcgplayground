@@ -109,7 +109,7 @@ const showListWithContextMenu = (
 ) => {
   showList(e, area, ix, (j: number) => ({
     onClick: (e: MouseEvent) => showMenu(e, [
-      ["🔍 拡大", () => showLightbox(e, getStack(area, ix).cards[j])],
+      ["🔍 拡大", () => showLightbox(e, getStack(area, ix), j)],
       ["⚔️ 場に出す", () => moveSingle(area, ix, j, "field", allowEmpty)],
       ["🛡️ シールドに追加", () => moveSingle(area, ix, j, "shields", allowEmpty)],
       ["🫳 デッキの上に置く", () => pushSingle(area, ix, j, "deck", 0, allowEmpty)],
@@ -121,7 +121,7 @@ const showListWithContextMenu = (
       ["🃏 手札に加える", () => moveSingle(area, ix, j, "hand", allowEmpty)],
     ]),
     onContextMenu: (e: MouseEvent) => showMenu(e, [
-      ["🔍 拡大", () => showLightbox(e, getStack(area, ix).cards[j])],
+      ["🔍 拡大", () => showLightbox(e, getStack(area, ix), j)],
       ["⚔️ 場に出す", () => moveSingle(area, ix, j, "field", allowEmpty)],
       ["🛡️ シールドに追加", () => moveSingle(area, ix, j, "shields", allowEmpty)],
       ["🫳 デッキの上に置く", () => pushSingle(area, ix, j, "deck", 0, allowEmpty)],
@@ -138,7 +138,7 @@ const showListWithContextMenu = (
 const handlers = {
   field: {
     stack: (ix: number) => ({
-      onClick: (e: MouseEvent) => showLightbox(e, getStack("field", ix).cards[0]),
+      onClick: (e: MouseEvent) => showLightbox(e, getStack("field", ix), 0),
       onContextMenu: (e: MouseEvent) => showMenu(e, [
         ["✅ タップ", () => toggleTapped("field", ix)],
         ["⚡ 超次元ゾーン送り", () => push("field", ix, "exdeck", 0)],
@@ -162,7 +162,7 @@ const handlers = {
         if (getStack("shields", ix).flipped) {
           toggleFlipped("shields", ix);
         } else {
-          showLightbox(e, getStack("shields", ix).cards[0]);
+          showLightbox(e, getStack("shields", ix), 0);
         }
       },
       onContextMenu: (e: MouseEvent) => showMenu(e, [
@@ -243,7 +243,7 @@ const handlers = {
     stack: (ix: number) => ({
       onClick: () => toggleTapped("lands", ix),
       onContextMenu: (e: MouseEvent) => showMenu(e, [
-        ["🔍 拡大", () => showLightbox(e, getStack("lands", ix).cards[0])],
+        ["🔍 拡大", () => showLightbox(e, getStack("lands", ix), 0)],
         ["⚡ 超次元送り", () => push("lands", ix, "exdeck", 0)],
         ["🔄 裏返す", () => toggleFlipped("lands", ix)],
         ["👀 重なっているカード", (e: MouseEvent) => showListWithContextMenu(e, "lands", ix)],
@@ -259,7 +259,7 @@ const handlers = {
 
   hand: {
     stack: (ix: number) => ({
-      onClick: (e: MouseEvent) => showLightbox(e, getStack("hand", ix).cards[0]),
+      onClick: (e: MouseEvent) => showLightbox(e, getStack("hand", ix), 0),
       onContextMenu: (e: MouseEvent) => showMenu(e, [
         ["⚡ 超次元送り", () => push("hand", ix, "exdeck", 0)],
         ["👀 重なっているカード", (e: MouseEvent) => showListWithContextMenu(e, "hand", ix)],
@@ -275,7 +275,7 @@ const handlers = {
 
   exploring: {
     stack: (ix: number) => ({
-      onClick: (e: MouseEvent) => showLightbox(e, getStack("exploring", ix).cards[0]),
+      onClick: (e: MouseEvent) => showLightbox(e, getStack("exploring", ix), 0),
       onContextMenu: (e: MouseEvent) => showMenu(e, [
         ["⚡ 超次元送り", () => push("exploring", ix, "exdeck", 0)],
         ["👀 重なっているカード", (e: MouseEvent) => showListWithContextMenu(e, "hand", ix)],

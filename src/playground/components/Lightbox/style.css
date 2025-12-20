@@ -3,3 +3,7 @@
   width: 75vw;
   height: 75vh;
 }
+
+.tcgpg-lightbox-img.laid {
+  transform: rotate(-90deg);
+}

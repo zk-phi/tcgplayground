@@ -4,12 +4,13 @@ import { closeMenu } from "./menu"
 export type LightboxProps = {
   onClose: () => void,
   src: string | null,
+  laid: boolean,
 };
 
-const lightbox = signal<string | null>(null);
+const lightbox = signal<Omit<LightboxProps, "onClose">>({ src: null, laid: false });
 
-export const showLightbox = (e: MouseEvent, src: string) => {
-  lightbox.value = src;
+export const showLightbox = (e: MouseEvent, stack: Stack, ix: number) => {
+  lightbox.value = { src: stack.cards[ix], laid: stack.laid };
 
   /* Prevent browser from showing the default context menu */
   e.preventDefault();
@@ -20,10 +21,10 @@ export const showLightbox = (e: MouseEvent, src: string) => {
 };
 
 export const closeLightbox = () => {
-  lightbox.value = null;
+  lightbox.value = { src: null, laid: false };
 };
 
 export const getLightboxProps = (): LightboxProps => ({
   onClose: closeLightbox,
-  src: lightbox.value,
+  ...lightbox.value
 });
