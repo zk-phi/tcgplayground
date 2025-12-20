@@ -3,7 +3,7 @@
 .tcgpg-wrapper {
   --tcgpg-global-margin: 8px;
   --tcgpg-area-padding: 8px;
-  --tcgpg-card-height: 140px;
+  --tcgpg-card-height: min(140px, 25vh);
   --tcgpg-card-width: 100px;
   --tcgpg-card-gap: 4px;
   font-family:
@@ -32,10 +32,4 @@
 .tcgpg-footer {
   margin-top: 16px;
   text-align: right;
-}
-
-@media (min-aspect-ratio: 16/9) {
-  .tcgpg-wrapper {
-    --tcgpg-card-height: 90px;
-  }
 }
