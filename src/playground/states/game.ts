@@ -330,6 +330,11 @@ export const moveAll = (
   undoBoundary();
 };
 
+export const removeAll = (src: string, si: number) => {
+  popAll(src, si);
+  undoBoundary();
+};
+
 export const pushAll = (src: string, si: number, dest: string, di: number) => {
   const cards = popAll(src, si);
   pushCards(cards, dest, di);

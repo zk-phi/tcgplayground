@@ -3,7 +3,7 @@ import {
   move, push, unshift, moveSingle, pushSingle, unshiftSingle,
   toggleTapped, toggleReversed, toggleFlipped, toggleLaid,
   unshiftBatch, pushBatch, moveBatch,
-  unshiftAll, pushAll, moveAll,
+  unshiftAll, pushAll, moveAll, removeAll,
   shuffle,
 } from "../../playground/states/game";
 import { dropHandlers, dragHandlers } from "../../playground/states/drag";
@@ -86,6 +86,15 @@ const dragSingleHandlers = (src: string, si: number, allowEmpty = false) => (
   dragHandlers(src, si, (e: MouseEvent, dest: string, di: number | null) => {
     if (dest === "graveyard" || dest === "exdeck") {
       pushSingle(src, si, 0, dest, di ?? 0, allowEmpty);
+    } else if (src === "deck" && dest === "field" && di != null) {
+      showMenu(e, [
+        ["🫳 上に置く", () => pushSingle(src, si, 0, dest, di, allowEmpty)],
+        ["🫴 下に入れる", () => unshiftSingle(src, si, 0, dest, di, allowEmpty)],
+        ["❌ 封印する", () => {
+          pushSingle(src, si, 0, dest, di, allowEmpty);
+          toggleFlipped("field", di);
+        }],
+      ]);
     } else if (dest === "deck" || dest === "grdeck" || di != null) {
       if (getStack(dest, di ?? 0).cards.length <= 0) {
         pushBatch(src, dest, di ?? 0);
@@ -145,6 +154,7 @@ const handlers = {
         ["⬅️ 横向きにする", () => toggleLaid("field", ix)],
         ["↕️ 上下反転する", () => toggleReversed("field", ix)],
         ["🔄 裏返す", () => toggleFlipped("field", ix)],
+        ["💀 深淵送り", () => removeAll("field", ix)],
         ["👀 重なっているカード", (e: MouseEvent) => showListWithContextMenu(e, "field", ix)],
       ]),
       ...dropHandlers("field", ix),
