@@ -21,7 +21,7 @@ const history = signal<GameState[]>([]);
 const forwardHistory = signal<GameState[]>([]);
 
 const undoBoundary = () => {
-  history.value = [gameState.value, ...history.value.slice(0, 9)];
+  history.value = [gameState.value, ...history.value];
   forwardHistory.value = [];
 };
 
