@@ -331,7 +331,7 @@ export const moveAll = (
 };
 
 export const removeAll = (src: string, si: number) => {
-  popAll(src, si);
+  pop(src, si);
   undoBoundary();
 };
 
