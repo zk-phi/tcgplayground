@@ -105,7 +105,10 @@ const dragSingleHandlers = (src: string, si: number, allowEmpty = false) => (
         ]);
       }
     } else {
-      moveSingle(src, si, 0, dest, allowEmpty, { reversed: dest === "lands" });
+      moveSingle(src, si, 0, dest, allowEmpty, {
+        reversed: dest === "lands",
+        flipped: dest === "shields" && (src === "deck" || src === "grdeck"),
+      });
     }
   })
 );
