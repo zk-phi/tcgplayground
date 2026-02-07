@@ -1,7 +1,7 @@
 @import-glob "components/**/*.css";
 
 .tcgpg-wrapper {
-  --tcgpg-global-margin: 8px;
+  --tcgpg-global-margin: 4px;
   --tcgpg-area-padding: 8px;
   --tcgpg-card-height: min(140px, 25vh);
   --tcgpg-card-width: 100px;
