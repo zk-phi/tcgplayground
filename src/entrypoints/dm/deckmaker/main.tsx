@@ -81,7 +81,7 @@ const backgroundStyles: CSSProperties = {
 };
 
 const containerStyles: CSSProperties = {
-  padding: "12px",
+  padding: "8px",
   maxWidth: "960px",
   margin: "auto",
 };
