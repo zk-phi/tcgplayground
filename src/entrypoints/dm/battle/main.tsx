@@ -160,7 +160,8 @@ const neoEnemies = shuffleArray([
   "/tcgplayground/neo-battle/creatures/dmrp14-013.webp", // ダセンゼ
   "/tcgplayground/neo-battle/creatures/dmrp05-043.webp", // マタドール
   "/tcgplayground/neo-battle/creatures/dm25rp1-017.webp", // ベリュガデス
-  "/tcgplayground/neo-battle/creatures/dmrp19-031.webp", // クリティブ-1
+  // "/tcgplayground/neo-battle/creatures/dmrp19-031.webp", // クリティブ-1
+  "/tcgplayground/neo-battle/creatures/HEFgSiqbMAAf-az.jpeg", // ボルメテハック
   "/tcgplayground/neo-battle/creatures/dm24ex3-075.webp", // コユキ
   "/tcgplayground/neo-battle/creatures/dmrp16-078.jpg", // ザイタクチュリス
   "/tcgplayground/neo-battle/creatures/dm24rp2-033.jpg", // ワールプール
