@@ -160,13 +160,13 @@ const neoEnemies = shuffleArray([
   "/tcgplayground/neo-battle/creatures/dmrp14-013.webp", // ダセンゼ
   "/tcgplayground/neo-battle/creatures/dmrp05-043.webp", // マタドール
   "/tcgplayground/neo-battle/creatures/dm25rp1-017.webp", // ベリュガデス
-  // "/tcgplayground/neo-battle/creatures/dmrp19-031.webp", // クリティブ-1
-  "/tcgplayground/neo-battle/creatures/HEFgSiqbMAAf-az.jpeg", // ボルメテハック
+  "/tcgplayground/neo-battle/creatures/dmrp19-031.webp", // クリティブ-1
   "/tcgplayground/neo-battle/creatures/dm24ex3-075.webp", // コユキ
   "/tcgplayground/neo-battle/creatures/dmrp16-078.jpg", // ザイタクチュリス
   "/tcgplayground/neo-battle/creatures/dm24rp2-033.jpg", // ワールプール
   "/tcgplayground/neo-battle/creatures/dm25rp4-056.webp", // ペナルティフリート
-  "/tcgplayground/neo-battle/creatures/dmrp19-041.webp", // フロッガ-1
+  // "/tcgplayground/neo-battle/creatures/dmrp19-041.webp", // フロッガ-1
+  "/tcgplayground/neo-battle/creatures/HEFgSiqbMAAf-az.jpeg", // ボルメテハック
   "/tcgplayground/neo-battle/creatures/dmbd16-teki003.webp", // メルニア
   "/tcgplayground/neo-battle/creatures/dmsd21-015.webp", // アヤツリ
   // "/tcgplayground/neo-battle/creatures/dmsd15-007.webp", // ザブラック
